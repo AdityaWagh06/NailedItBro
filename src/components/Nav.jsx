@@ -142,7 +142,7 @@ export default function Nav({ onNavigate }) {
               animate={{ opacity: 1, y: 0, transition: { ...t, delay: reduced ? 0 : 0.5 } }}
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
             >
-              <a href={`mailto:${EMAIL}`} className="u-link">{EMAIL}</a>
+              <a href={`mailto:${EMAIL}`} target="_blank" rel="noopener noreferrer" className="u-link">{EMAIL}</a>
               <span>Remote-first · Worldwide</span>
             </m.div>
           </m.div>

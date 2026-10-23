@@ -3479,6 +3479,60 @@ ul, ol { padding: 0; list-style: none; }
 .contact__check { width: 56px; fill: none; stroke: var(--orange); stroke-width: 2; stroke-linecap: round; }
 .contact__check circle { stroke-dasharray: 160; stroke-dashoffset: 160; animation: drawto 1s var(--ease-out) forwards; }
 .contact__check path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: drawto .6s var(--ease-out) .5s forwards; }
+.contact__brief-preview {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.contact__brief-preview-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.contact__brief-title {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+.contact__brief-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--orange);
+  background: rgba(255, 94, 20, 0.12);
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.contact__brief-meta {
+  display: grid;
+  gap: 6px;
+  font-size: 13.5px;
+  color: #BFBAC9;
+}
+.contact__brief-meta span strong {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+.contact__brief-msg {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  font-size: 13.5px;
+  font-style: italic;
+  color: #9D99A8;
+  line-height: 1.5;
+}
 @media (min-width: 1000px) { .contact__grid { grid-template-columns: 1fr 1.05fr; gap: 80px; } }
 
 /* ==========================================================================
@@ -4059,111 +4113,414 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 /* ==========================================================================
-   Our Team: Modern Spotlight Cards (Light Theme)
+   Our Team: Chroma Grid (React Bits Style — Static Side-by-Side Cards)
+   Grayscale resting state that reveals vibrant color and tone spotlight on hover
    ========================================================================== */
 .about-team-section {
-  padding-block: clamp(60px, 8vw, 100px);
-}
-
-.team-spotlight-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 24px;
-}
-
-.team-spotlight-card {
   position: relative;
-  background: #FFFFFF;
-  border-radius: 24px;
-  border: 1px solid rgba(20, 19, 26, 0.08);
-  padding: 32px;
+  width: 100%;
+  padding-block: clamp(60px, 8vw, 110px);
+}
+
+.chroma-team-grid {
   display: grid;
-  grid-template-columns: 68px 1fr;
-  gap: 22px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.025);
-  overflow: hidden;
-  transition: transform 0.35s var(--ease-out), box-shadow 0.35s ease, border-color 0.35s ease;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin-top: 36px;
+  box-sizing: border-box;
 }
 
-.team-spotlight-card:hover {
-  transform: translateY(-5px);
+@media (max-width: 1100px) {
+  .chroma-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .chroma-team-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Chroma Member Card: Grayscale at rest, cursor spotlight brings back color */
+.chroma-member-card {
+  position: relative;
+  border-radius: 28px;
+  background: #14131A;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  padding: 26px 22px 24px;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 16px 40px -15px rgba(20, 19, 26, 0.25);
+  overflow: visible; /* Allows the speech bubble notes to pop cleanly without clipping */
+  filter: grayscale(85%) contrast(92%);
+  opacity: 0.92;
+  transition:
+    filter 0.4s var(--ease-out),
+    opacity 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
+  box-sizing: border-box;
+  isolation: isolate;
+}
+
+/* On hover / cursor spotlight: Chroma effect brings full color back! */
+.chroma-member-card:hover {
+  filter: grayscale(0%) contrast(106%);
+  opacity: 1;
   border-color: var(--member-tone, var(--orange));
-  box-shadow: 0 20px 40px -15px rgba(20, 19, 26, 0.08), 0 0 20px color-mix(in oklab, var(--member-tone, var(--orange)) 15%, transparent);
+  box-shadow:
+    0 24px 50px -12px rgba(20, 19, 26, 0.35),
+    0 0 32px color-mix(in oklab, var(--member-tone, var(--orange)) 28%, transparent);
+  transform: translateY(-5px);
 }
 
-.team-spotlight__avatar-wrap {
+/* React Bits Chroma Cursor Spotlight Layer */
+.chroma-card__spotlight {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    340px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    color-mix(in oklab, var(--member-tone, #FF5E14) 28%, transparent) 0%,
+    transparent 72%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.chroma-member-card:hover .chroma-card__spotlight {
+  opacity: 1;
+}
+
+.chroma-card__inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Top Row: Avatar & Status (No share button) */
+.member-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.member-card__avatar-wrap {
   position: relative;
   width: 64px;
   height: 64px;
 }
 
-.team-spotlight__avatar {
+.member-card__avatar {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: color-mix(in oklab, var(--member-tone, #FF5E14) 12%, #FFFFFF);
-  border: 2px solid var(--member-tone, #FF5E14);
+  border: 2px solid;
   display: grid;
   place-items: center;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: 0.02em;
-  color: var(--member-tone, #FF5E14);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.35s var(--ease-out), border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
-.team-spotlight__status {
+.chroma-member-card:hover .member-card__avatar {
+  transform: scale(1.06);
+  box-shadow: 0 10px 24px color-mix(in oklab, var(--member-tone, #FF5E14) 30%, rgba(0, 0, 0, 0.5));
+}
+
+.member-card__status {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 14px;
-  height: 14px;
+  bottom: 2px;
+  right: 2px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   background: #10B981;
-  border: 2px solid #FFFFFF;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  border: 2px solid #14131A;
+  box-shadow: 0 0 8px #10B981;
 }
 
-.team-spotlight__info {
-  display: flex;
-  flex-direction: column;
+/* Member Identity: Name & Co-Founder */
+.member-card__body {
+  margin-bottom: 24px;
 }
 
-.team-spotlight__name {
-  font-size: 20px;
-  font-weight: 700;
-  color: #14131A;
+.member-card__name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
   margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+}
+
+.member-card__role {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9D99A8;
+  margin: 0;
   letter-spacing: -0.01em;
 }
 
-.team-spotlight__role {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--member-tone, var(--orange));
-  margin-bottom: 12px;
-}
-
-.team-spotlight__bio {
-  font-size: 14px;
-  line-height: 1.55;
-  color: #636070;
-  margin: 0 0 16px 0;
-}
-
-.team-spotlight__skills {
+/* ==========================================================================
+   Folder Pop-Out Notes (Inspired by reference image)
+   "Get in touch" button with LinkedIn & Instagram speech bubble pills popping out
+   ========================================================================== */
+.member-card__pop-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
 }
 
-.team-skill-pill {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
+/* Floating fan bubbles container above the button */
+.member-card__fan-bubbles {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(14px) scale(0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 20;
+  transition:
+    opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.36s cubic-bezier(0.34, 1.56, 0.64, 1),
+    visibility 0.28s;
+  white-space: nowrap;
+}
+
+/* Invisible hover bridge so moving cursor up from button to bubbles never drops hover */
+.member-card__fan-bubbles::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -20px;
+  right: -20px;
+  height: 20px;
+}
+
+/* Open ONLY when hovering or focusing on the Get in Touch button area (not the entire card) */
+.member-card__pop-wrapper:hover .member-card__fan-bubbles,
+.member-card__pop-wrapper:focus-within .member-card__fan-bubbles,
+.member-card__pop-wrapper.is-fanned .member-card__fan-bubbles {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+}
+
+.member-card__pop-wrapper.is-fanned .member-card__touch-btn {
+  background: var(--member-tone, var(--orange)) !important;
+  border-color: var(--member-tone, var(--orange)) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--member-tone, var(--orange)) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.member-card__pop-wrapper.is-fanned .member-card__heart {
+  transform: scale(1.22);
+  stroke: #FFFFFF;
+}
+
+/* Individual Speech Bubble / Note Pill */
+.member-fan-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 14px;
   border-radius: 999px;
-  background: #F4F0E8;
-  border: 1px solid rgba(20, 19, 26, 0.06);
-  color: #423F4D;
+  background: #FFFFFF;
+  color: #14131A;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  user-select: none;
+}
+
+.member-fan-pill svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* Speech bubble notch pointing downwards into the card folder */
+.member-fan-pill::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 5px;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transition: background 0.25s ease;
+}
+
+/* Natural note angles popping out like the reference image */
+.member-fan-pill--li {
+  transform: rotate(-4deg) translateY(-2px);
+  color: #14131A;
+}
+
+.member-fan-pill--li svg {
+  color: #0A66C2;
+  transition: color 0.2s ease, transform 0.25s ease;
+}
+
+.member-fan-pill--ig {
+  transform: rotate(3.5deg) translateY(2px);
+  color: #14131A;
+}
+
+.member-fan-pill--ig svg {
+  color: #E1306C;
+  transition: color 0.2s ease, transform 0.25s ease;
+}
+
+/* Pill Hover Effects: Elevates, levels out, and shines with brand colors */
+.member-fan-pill--li:hover {
+  background: #0A66C2;
+  color: #FFFFFF;
+  border-color: #0A66C2;
+  transform: rotate(0deg) translateY(-7px) scale(1.1);
+  box-shadow: 0 14px 30px rgba(10, 102, 194, 0.55), 0 4px 10px rgba(10, 102, 194, 0.3);
+}
+
+.member-fan-pill--li:hover svg {
+  color: #FFFFFF;
+  transform: scale(1.12);
+}
+
+.member-fan-pill--ig:hover {
+  background: linear-gradient(135deg, #f09433 0%, #dc2743 50%, #bc1888 100%);
+  color: #FFFFFF;
+  border-color: transparent;
+  transform: rotate(0deg) translateY(-7px) scale(1.1);
+  box-shadow: 0 14px 30px rgba(220, 39, 67, 0.55), 0 4px 10px rgba(220, 39, 67, 0.3);
+}
+
+.member-fan-pill--ig:hover svg {
+  color: #FFFFFF;
+  transform: scale(1.12);
+}
+
+/* The Primary "Get in touch" Button */
+.member-card__touch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out),
+    transform 0.28s var(--ease-out);
+  box-sizing: border-box;
+}
+
+.chroma-member-card:hover .member-card__touch-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.member-card__touch-btn:hover {
+  background: var(--member-tone, var(--orange)) !important;
+  border-color: var(--member-tone, var(--orange)) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--member-tone, var(--orange)) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.member-card__heart {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.25s ease;
+}
+
+.member-card__touch-btn:hover .member-card__heart {
+  transform: scale(1.22);
+  stroke: #FFFFFF;
+}
+
+@media (max-width: 899px) {
+  .circular-gallery-bottom {
+    display: none;
+  }
+}
+
+.circular-gallery-cue {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #716D7C;
+}
+
+.circular-gallery-bar {
+  width: 160px;
+  height: 3px;
+  background: rgba(20, 19, 26, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.circular-gallery-bar-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--orange);
+  transform-origin: left;
+  transform: scaleX(0);
+  box-shadow: 0 0 8px var(--orange);
 }
 
 /* ==========================================================================
@@ -4935,6 +5292,277 @@ ul, ol { padding: 0; list-style: none; }
   gap: 16px;
   justify-content: center;
   margin-top: 14px;
+}
+
+/* ==========================================================================
+   Email Composer Chooser Modal (Direct Gmail, Outlook, Default App & Copy)
+   ========================================================================== */
+.email-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 9, 14, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: fadeInModal 0.25s ease-out;
+}
+
+.email-modal {
+  position: relative;
+  background: #17161F;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: 28px;
+  padding: clamp(26px, 4vw, 36px);
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 40px 90px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 94, 20, 0.12);
+  box-sizing: border-box;
+  color: #FFFFFF;
+  animation: scaleUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.email-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.email-modal__eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--orange);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.email-modal__title {
+  font-size: clamp(22px, 2vw, 26px);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.email-modal__close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.email-modal__close:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: scale(1.08);
+}
+
+.email-modal__desc {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: #A3A0AF;
+  margin: 0 0 22px 0;
+}
+
+.email-modal__desc strong {
+  color: #FFFFFF;
+}
+
+.email-modal__options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.email-option-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #FFFFFF;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.email-option-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.email-option-card--gmail {
+  border-color: rgba(234, 67, 53, 0.4);
+  background: linear-gradient(135deg, rgba(234, 67, 53, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);
+}
+
+.email-option-card--gmail:hover {
+  border-color: #EA4335;
+  box-shadow: 0 8px 24px rgba(234, 67, 53, 0.3);
+}
+
+.email-option-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.email-option-card__icon--gmail {
+  background: #EA4335;
+  color: #FFFFFF;
+}
+
+.email-option-card__icon--outlook {
+  background: #0078D4;
+  color: #FFFFFF;
+}
+
+.email-option-card__icon--default {
+  background: var(--orange);
+  color: #FFFFFF;
+}
+
+.email-option-card__icon--copy {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+}
+
+.email-option-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.email-option-card__info h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 3px 0;
+  color: #FFFFFF;
+}
+
+.email-option-card__info span {
+  font-size: 12px;
+  color: #9D99A8;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.email-option-card__arrow {
+  font-size: 16px;
+  color: #9D99A8;
+  transition: transform 0.25s var(--ease-out), color 0.25s ease;
+}
+
+.email-option-card:hover .email-option-card__arrow {
+  color: #FFFFFF;
+  transform: translateX(4px);
+}
+
+/* Contact form action pills grid in sent state */
+.contact-sent-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-top: 24px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 580px) {
+  .contact-sent-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sent-action-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+}
+
+.sent-action-pill:hover {
+  transform: translateY(-2px);
+}
+
+.sent-action-pill--gmail {
+  background: #EA4335;
+  border-color: #EA4335;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(234, 67, 53, 0.35);
+}
+
+.sent-action-pill--gmail:hover {
+  background: #D93025;
+  box-shadow: 0 8px 24px rgba(234, 67, 53, 0.5);
+}
+
+.sent-action-pill--outlook {
+  background: #0078D4;
+  border-color: #0078D4;
+  color: #FFFFFF;
+}
+
+.sent-action-pill--outlook:hover {
+  background: #006CBE;
+  box-shadow: 0 6px 20px rgba(0, 120, 212, 0.4);
+}
+
+.sent-action-pill--default {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+.sent-action-pill--default:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  box-shadow: 0 6px 20px var(--orange-glow);
+}
+
+.sent-action-pill--copy {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  color: #A3A0AF;
+}
+
+.sent-action-pill--copy:hover {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* ==========================================================================

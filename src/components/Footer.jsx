@@ -24,7 +24,14 @@ export default function Footer({ onNavigate }) {
       <div className="container footer__top">
         <div>
           <p className="eyebrow">Say hello</p>
-          <a href={`mailto:${EMAIL}`} className="footer__email u-link">{EMAIL}</a>
+          <a
+            href={`mailto:${EMAIL}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer__email u-link"
+          >
+            {EMAIL}
+          </a>
         </div>
         <nav aria-label="Footer" className="footer__nav">
           {NAV.map((l) => (

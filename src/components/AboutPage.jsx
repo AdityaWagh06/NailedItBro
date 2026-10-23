@@ -6,6 +6,7 @@ import Magnetic from './Magnetic'
 export default function AboutPage({ onNavigate }) {
   const root = useRef(null)
   const [activeTab, setActiveTab] = useState('all')
+  const [activeMemberTouch, setActiveMemberTouch] = useState(null)
 
   // Real-time telemetry state & metrics
   const [isSyncing, setIsSyncing] = useState(false)
@@ -99,53 +100,65 @@ export default function AboutPage({ onNavigate }) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia()
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        revealHeading('.about-l-hero__title')
-        gsap.from('.about-spotlight', {
-          y: 35,
-          opacity: 0,
-          stagger: 0.08,
-          duration: 0.9,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: { trigger: '.about-bento-grid', start: 'top 85%', once: true },
-        })
-        gsap.from('.step-card', {
-          y: 40,
-          opacity: 0,
-          stagger: 0.08,
-          duration: 0.85,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: { trigger: '.steps-grid', start: 'top 80%', once: true },
-        })
-        gsap.from('.team-spotlight-card', {
-          y: 35,
-          opacity: 0,
-          stagger: 0.07,
-          duration: 0.85,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: { trigger: '.team-spotlight-grid', start: 'top 80%', once: true },
-        })
-        gsap.from('.socials-telemetry-bar', {
-          y: 25,
-          opacity: 0,
-          duration: 0.7,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: { trigger: '.socials-telemetry-bar', start: 'top 88%', once: true },
-        })
-        gsap.from('.glass-social-card', {
-          y: 40,
-          opacity: 0,
-          stagger: 0.1,
-          duration: 0.9,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: { trigger: '.socials-glass-grid', start: 'top 85%', once: true },
-        })
-      })
+      mm.add(
+        {
+          horizontal: '(min-width: 900px) and (prefers-reduced-motion: no-preference)',
+          vertical: '(max-width: 899px) and (prefers-reduced-motion: no-preference)',
+          reduced: '(prefers-reduced-motion: reduce)',
+        },
+        (ctx) => {
+          revealHeading('.about-l-hero__title')
+          gsap.from('.about-spotlight', {
+            y: 35,
+            opacity: 0,
+            stagger: 0.08,
+            duration: 0.9,
+            ease: 'power3.out',
+            clearProps: 'all',
+            scrollTrigger: { trigger: '.about-bento-grid', start: 'top 85%', once: true },
+          })
+          gsap.from('.step-card', {
+            y: 40,
+            opacity: 0,
+            stagger: 0.08,
+            duration: 0.85,
+            ease: 'power3.out',
+            clearProps: 'all',
+            scrollTrigger: { trigger: '.steps-grid', start: 'top 80%', once: true },
+          })
+          gsap.from('.socials-telemetry-bar', {
+            y: 25,
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            clearProps: 'all',
+            scrollTrigger: { trigger: '.socials-telemetry-bar', start: 'top 88%', once: true },
+          })
+          gsap.from('.glass-social-card', {
+            y: 40,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 0.9,
+            ease: 'power3.out',
+            clearProps: 'all',
+            scrollTrigger: { trigger: '.socials-glass-grid', start: 'top 85%', once: true },
+          })
+
+          gsap.fromTo(
+            '.chroma-member-card',
+            { y: 24, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.08,
+              duration: 0.7,
+              ease: 'power2.out',
+              clearProps: 'opacity,transform',
+              scrollTrigger: { trigger: '.chroma-team-grid', start: 'top 95%', once: true },
+            },
+          )
+        },
+      )
       return () => mm.revert()
     },
     { scope: root },
@@ -373,54 +386,122 @@ export default function AboutPage({ onNavigate }) {
         </div>
       </section>
 
-      {/* 3. OUR TEAM (Modern Interactive Spotlight Cards) */}
-      <section className="about-team-section section">
+      {/* 3. OUR TEAM (Chroma Grid from React Bits — Static Side-by-Side Cards) */}
+      <section className="about-team-section section" id="team">
         <div className="container">
           <div className="section-head">
             <div className="about-pill-badge">
               <span className="about-pill-dot" />
               <span>THE COLLECTIVE</span>
+              <span className="about-pill-sep">/</span>
+              <span className="about-pill-tag">CO-FOUNDERS</span>
             </div>
             <h2 className="display-2">
-              The multidisciplinary minds <br />
-              <em className="serif">behind Nailed It Bro.</em>
+              The minds behind <br />
+              <em className="serif">Nailed It Bro.</em>
             </h2>
             <p className="about-l-hero__sub">
-              A tight-knit crew of obsessive digital craftsmen, principal engineers, and growth architects.
+              Obsessive digital craftsmen, principal engineers, and growth architects.
             </p>
           </div>
 
-          <div className="team-spotlight-grid">
+          {/* Static Side-by-Side Chroma Grid (4 Columns) */}
+          <div className="chroma-team-grid">
             {TEAM_MEMBERS.map((member) => (
               <div
                 key={member.name}
-                className="team-spotlight-card"
+                className="chroma-member-card"
                 onMouseMove={handleSpotlight}
                 style={{ '--member-tone': member.avatarTone }}
               >
-                <div className="team-spotlight__avatar-wrap">
-                  <div className="team-spotlight__avatar">
-                    <span>
-                      {member.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </span>
+                {/* Dynamic Spotlight Glare that reveals color */}
+                <div className="chroma-card__spotlight" aria-hidden="true" />
+
+                <div className="chroma-card__inner">
+                  {/* Top Row: Circular Avatar & Status */}
+                  <div className="member-card__top">
+                    <div className="member-card__avatar-wrap">
+                      <div
+                        className="member-card__avatar"
+                        style={{
+                          background: `linear-gradient(135deg, ${member.avatarTone}28 0%, #17161F 100%)`,
+                          borderColor: member.avatarTone,
+                          color: member.avatarTone,
+                        }}
+                      >
+                        <span>{member.initials}</span>
+                      </div>
+                      <span className="member-card__status" title="Active in Studio" />
+                    </div>
                   </div>
-                  <span className="team-spotlight__status" title="Active in Studio" />
-                </div>
 
-                <div className="team-spotlight__info">
-                  <h3 className="team-spotlight__name">{member.name}</h3>
-                  <span className="team-spotlight__role">{member.role}</span>
-                  <p className="team-spotlight__bio">{member.bio}</p>
+                  {/* Member Identity: Name & Co-Founder role */}
+                  <div className="member-card__body">
+                    <h3 className="member-card__name">{member.name}</h3>
+                    <p className="member-card__role">Co-Founder</p>
+                  </div>
 
-                  <div className="team-spotlight__skills">
-                    {member.skills.map((skill) => (
-                      <span key={skill} className="team-skill-pill">
-                        {skill}
-                      </span>
-                    ))}
+                  {/* Interactive Get in Touch Button that fans out LinkedIn & Instagram like notes from a folder */}
+                  <div
+                    className={`member-card__pop-wrapper ${activeMemberTouch === member.name ? 'is-fanned' : ''}`}
+                    onMouseEnter={() => setActiveMemberTouch(member.name)}
+                    onMouseLeave={() => setActiveMemberTouch(null)}
+                  >
+                    <div className="member-card__fan-bubbles" aria-label="Social connect links">
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="member-fan-pill member-fan-pill--li"
+                        title={`Connect with ${member.name} on LinkedIn`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                        <span>LinkedIn</span>
+                      </a>
+
+                      <a
+                        href={member.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="member-fan-pill member-fan-pill--ig"
+                        title={`Follow ${member.name} on Instagram`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                        <span>Instagram</span>
+                      </a>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="member-card__touch-btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCta('#contact')
+                      }}
+                      title={`Get in touch with ${member.name}`}
+                    >
+                      <span>Get in touch</span>
+                      <svg
+                        className="member-card__heart"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -615,12 +696,12 @@ export default function AboutPage({ onNavigate }) {
                 <div className="glass-social-card__bottom">
                   <span className="glass-card-meta-note">Active Daily</span>
                   <a
-                    href="https://instagram.com/naileditbro"
+                    href="https://instagram.com/nailedit.bro"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="glass-cta-btn glass-cta-btn--instagram"
                   >
-                    <span>Follow @naileditbro</span>
+                    <span>Follow @nailedit.bro</span>
                     <span className="glass-cta-btn-arrow">↗</span>
                   </a>
                 </div>
@@ -748,7 +829,7 @@ export default function AboutPage({ onNavigate }) {
               </div>
 
               <div className="socials-api-env-box">
-                <div>VITE_INSTAGRAM_USER_ID=naileditbro</div>
+                <div>VITE_INSTAGRAM_USER_ID=nailedit.bro</div>
                 <div>VITE_INSTAGRAM_GRAPH_TOKEN=EAA...your_token_here</div>
                 <div>VITE_LINKEDIN_ORG_URN=urn:li:organization:12345678</div>
                 <div>VITE_FACEBOOK_PAGE_ID=naileditbro</div>
