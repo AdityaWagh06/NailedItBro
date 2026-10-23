@@ -4324,10 +4324,10 @@ ul, ol { padding: 0; list-style: none; }
   width: 100%;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 860px) {
   .socials-glass-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
   }
 }
 
