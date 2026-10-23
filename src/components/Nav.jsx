@@ -16,7 +16,7 @@ export function Logo() {
   )
 }
 
-export default function Nav() {
+export default function Nav({ onNavigate }) {
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -64,9 +64,18 @@ export default function Nav() {
   const go = (e, href) => {
     e.preventDefault()
     setOpen(false)
-    history.replaceState(null, '', href)
-    // Let the overlay close before scrolling.
-    setTimeout(() => scrollToTarget(href), open ? 350 : 0)
+    if (onNavigate) {
+      onNavigate(href)
+    } else {
+      history.pushState(null, '', href)
+      window.dispatchEvent(new Event('hashchange'))
+      if (href === '#about') {
+        window.scrollTo(0, 0)
+        getLenis()?.scrollTo(0, { immediate: true })
+      } else {
+        setTimeout(() => scrollToTarget(href), open ? 350 : 80)
+      }
+    }
   }
 
   const t = reduced ? { duration: 0 } : { duration: 0.7, ease: MOTION_EASE }

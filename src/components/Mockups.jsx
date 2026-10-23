@@ -24,7 +24,46 @@ export function Phone({ children, className = '', style }) {
 const lines = (n, w = []) =>
   Array.from({ length: n }, (_, i) => <i key={i} className="mk-line" style={{ width: w[i] || '100%' }} />)
 
-/* ----- Hero screens (Diverse Real-World Client Work) ----- */
+/* Laptop Mockup: Sleek MacBook Pro chassis wrapping the live Brew & Bloom cafe website */
+export function LaptopMockup({ children, url = 'brewandbloom.co' }) {
+  return (
+    <div className="laptop-mockup">
+      <div className="laptop">
+        {/* Screen Bezel & Lid */}
+        <div className="laptop__lid">
+          <div className="laptop__notch">
+            <span className="laptop__camera" />
+          </div>
+          {/* Laptop Browser Bar */}
+          <div className="laptop__browser-bar">
+            <div className="laptop__dots">
+              <span className="dot dot--red" />
+              <span className="dot dot--yellow" />
+              <span className="dot dot--green" />
+            </div>
+            <div className="laptop__url-pill">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <span>{url}</span>
+            </div>
+            <span className="laptop__browser-tag">WEBSITE DEVELOPMENT</span>
+          </div>
+          <div className="laptop__screen">
+            {children}
+          </div>
+        </div>
+        {/* Aluminum Unibody Base */}
+        <div className="laptop__base">
+          <div className="laptop__notch-cut" />
+        </div>
+        {/* Soft Table Shadow */}
+        <div className="laptop__shadow" />
+      </div>
+    </div>
+  )
+}
 
 /* 1. Desktop: "Brew & Bloom" Artisan Cafe Website UI */
 export function HeroSite() {

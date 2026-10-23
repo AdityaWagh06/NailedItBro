@@ -3,7 +3,7 @@ import { NAV, EMAIL } from '../data'
 import { gsap, useGSAP } from '../lib/motion'
 import { scrollToTarget } from '../lib/useSmoothScroll'
 
-export default function Footer() {
+export default function Footer({ onNavigate }) {
   const root = useRef(null)
   useGSAP(
     () => {
@@ -27,9 +27,33 @@ export default function Footer() {
           <a href={`mailto:${EMAIL}`} className="footer__email u-link">{EMAIL}</a>
         </div>
         <nav aria-label="Footer" className="footer__nav">
-          {NAV.map((l) => <a key={l.href} className="u-link" href={l.href} onClick={(e) => { e.preventDefault(); scrollToTarget(l.href) }}>{l.label}</a>)}
+          {NAV.map((l) => (
+            <a
+              key={l.href}
+              className="u-link"
+              href={l.href}
+              onClick={(e) => {
+                e.preventDefault()
+                if (onNavigate) onNavigate(l.href)
+                else scrollToTarget(l.href)
+              }}
+            >
+              {l.label}
+            </a>
+          ))}
         </nav>
-        <button className="footer__top-btn" onClick={() => scrollToTarget('#top')}>Back to top <span aria-hidden="true">↑</span></button>
+        <button
+          className="footer__top-btn"
+          onClick={() => {
+            if (onNavigate && window.location.hash === '#about') {
+              window.scrollTo(0, 0)
+            } else {
+              scrollToTarget('#top')
+            }
+          }}
+        >
+          Back to top <span aria-hidden="true">↑</span>
+        </button>
       </div>
       <div className="footer__mark" aria-label="Nailed It Bro" role="img">
         {words.map((w, wi) => (

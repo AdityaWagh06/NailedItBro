@@ -1,68 +1,91 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap, useGSAP, splitLines, EASE, DUR, STAGGER } from '../lib/motion'
 import { scrollToTarget } from '../lib/useSmoothScroll'
-import { HeroSite, MobileGameDummy } from './Mockups'
 import Magnetic from './Magnetic'
 
 const SHOWCASE_ITEMS = [
   {
+    id: 'studio',
+    title: 'Nailed It Bro Studio',
+    thumbLabel: 'Overview',
+    accent: '#FF5E14',
+    img: '/naileditbro.png',
+    eyebrow: 'Digital studio · Brands, websites & apps',
+    titlePrefix: 'We craft digital products that feel',
+    titleHighlight: 'nailed.',
+    sub: 'Nailed It Bro is a high-impact design and engineering studio. We shape ambitious brands, build fast websites, launch addictive apps, and drive viral social media growth.',
+    cta1: 'Start a Project',
+    cta2: 'Explore Selected Work',
+    isDesktop: false,
+  },
+  {
     id: 'desktop',
     title: 'Website Development',
-    subtitle: 'Artisan Cafe & Bakery · High-conversion responsive website with custom motion',
-    tag: 'Website Development',
-    badge: 'Desktop Website · Artisan Cafe',
-    url: 'brewandbloom.co',
-    img: '/brew-bloom.jpg',
-    accent: '#FF5E14',
     thumbLabel: 'Website Dev',
+    accent: '#FF5E14',
+    img: '/web.png',
+    eyebrow: 'Website Design & Development',
+    titlePrefix: 'Artisan web experiences built to',
+    titleHighlight: 'convert.',
+    sub: 'Custom-designed marketing websites and web apps built on modern tech stacks, with smooth purposeful motion, easy CMS management, and uncompromising performance.',
+    cta1: 'Build Your Website',
+    cta2: 'Explore Selected Work',
     isDesktop: true,
   },
   {
-    id: 'brand',
-    title: 'Brand Identity & Digital Presence',
-    subtitle: 'Aurélia Studio · Bespoke editorial typography & complete visual system',
-    tag: 'Brand & Digital Presence',
-    badge: 'Visual Identity System',
-    url: 'aurelia.studio',
-    img: '/brand-identity.jpg',
+    id: 'ai',
+    title: 'QR Solutions & AI Automation',
+    thumbLabel: 'AI Automation',
     accent: '#D97706',
-    thumbLabel: 'Brand Identity',
+    img: '/qr.png',
+    eyebrow: 'QR Solutions & Booking Automation',
+    titlePrefix: 'Smart automated booking that fills your',
+    titleHighlight: 'schedule.',
+    sub: 'Scan-to-book QR table stands, instant WhatsApp appointment reminders, AI chat assistants, and automated client retention funnels that multiply your revenue.',
+    cta1: 'Automate Your Bookings',
+    cta2: 'Explore Selected Work',
     isDesktop: false,
   },
   {
     id: 'app',
     title: 'Mobile App Development',
-    subtitle: 'Buddy · All-in-One Pet Care super-app with instant health logs & booking',
-    tag: 'Mobile App Development',
-    badge: 'iOS & Android App',
-    url: 'apps.apple.com/buddy-pet',
-    img: '/pet.png',
-    accent: '#10B981',
     thumbLabel: 'Mobile App',
+    accent: '#10B981',
+    img: '/pet.png',
+    eyebrow: 'iOS & Android App Engineering',
+    titlePrefix: 'Addictive mobile apps users love',
+    titleHighlight: 'daily.',
+    sub: 'Native-feeling iOS and Android apps with fluid gestures, instant offline sync, scalable cloud infrastructure, and habit-forming product design.',
+    cta1: 'Launch an App',
+    cta2: 'Explore Selected Work',
     isDesktop: false,
   },
   {
     id: 'game',
     title: 'Mobile Game Development',
-    subtitle: 'Cyber Racer · High-speed 3D racing simulator crafted by our studio member',
-    tag: 'Mobile Game Development',
-    badge: 'Studio Member Built',
-    url: 'games.naileditbro.com/racer',
-    img: '/mobile_game.jpeg',
-    accent: '#06B6D4',
     thumbLabel: 'Mobile Game',
+    accent: '#06B6D4',
+    img: '/game.png',
+    eyebrow: '3D Mobile Game Development',
+    titlePrefix: 'High-speed games that keep players',
+    titleHighlight: 'hooked.',
+    sub: 'Custom 3D game mechanics, responsive physics engines, real-time multiplayer networking, and smooth mobile touchscreen controls built for viral engagement.',
+    cta1: 'Develop a Game',
+    cta2: 'Explore Selected Work',
     isDesktop: false,
   },
   {
     id: 'social',
     title: 'Social Media Management & Marketing',
-    subtitle: 'Multi-platform viral content strategy, growth campaigns & audience engagement',
-    tag: 'Social Media & Marketing',
-    badge: 'Omnichannel Growth',
-    url: 'growth.naileditbro.com',
-    img: '/social.png',
-    accent: '#EC4899',
     thumbLabel: 'Social Media',
+    accent: '#EC4899',
+    img: '/social.png',
+    eyebrow: 'Social Media & Omnichannel Growth',
+    titlePrefix: 'Viral content and campaigns that drive',
+    titleHighlight: 'growth.',
+    sub: 'High-impact short-form video strategy, multi-channel distribution, audience retention funnels, and data-driven campaigns that turn viewers into buyers.',
+    cta1: 'Scale Your Reach',
+    cta2: 'Explore Selected Work',
     isDesktop: false,
   },
 ]
@@ -73,18 +96,19 @@ export default function Hero({ ready }) {
   const [hoveredId, setHoveredId] = useState(null)
   const [isPaused, setIsPaused] = useState(false)
 
-  // Auto-cycle items one by one every 3.8s (pauses on hover)
+  // Auto-cycle items one by one every 6.2s (pauses on hover)
   useEffect(() => {
     if (isPaused) return
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % SHOWCASE_ITEMS.length)
-    }, 3800)
+    }, 6200)
     return () => clearInterval(timer)
   }, [isPaused])
 
   const activeItem = SHOWCASE_ITEMS[currentIndex]
   // When hovering over a thumbnail, immediately preview that item bigger and colored at top
   const displayItem = (hoveredId ? SHOWCASE_ITEMS.find((it) => it.id === hoveredId) : null) || activeItem
+  const displayIndex = SHOWCASE_ITEMS.findIndex((it) => it.id === displayItem.id)
   // Bottom row contains the other 4 items side by side in black-and-white
   const bottomItems = SHOWCASE_ITEMS.filter((item) => item.id !== activeItem.id)
 
@@ -106,19 +130,12 @@ export default function Hero({ ready }) {
 
           // Hide intro elements until the loader hands over.
           gsap.set('[data-intro]', { autoAlpha: 0 })
-          const split = splitLines('.hero__title')
-          gsap.set(split.lines, { yPercent: 110 })
-          gsap.set('.hero__title', { autoAlpha: 1 })
 
           const intro = gsap.timeline({ paused: true, defaults: { ease: EASE.out } })
           intro
-            .fromTo('.hero__eyebrow', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: DUR.base }, 0)
-            .to(split.lines, { yPercent: 0, duration: DUR.slow, stagger: STAGGER.lines }, 0.05)
-            .fromTo('.hero__sub', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: DUR.base }, 0.45)
-            .fromTo('.hero__ctas [data-intro]', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: DUR.base, stagger: STAGGER.items }, 0.55)
+            .fromTo('.hero__copy', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: DUR.slow }, 0.05)
             .fromTo('.hero__visual', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.2)
             .from('.hero-stage', { y: 24, scale: 0.96, autoAlpha: 0, duration: 1.1 }, 0.3)
-            .from('.hero-thumb', { y: 16, autoAlpha: 0, duration: 0.8, stagger: 0.08 }, 0.5)
             .fromTo('.hero__meta > *', { autoAlpha: 0 }, { autoAlpha: 1, duration: DUR.base, stagger: 0.1 }, 0.8)
             .from('.hero__bg-n', { autoAlpha: 0, scale: 0.9, duration: 2 }, 0)
 
@@ -149,11 +166,10 @@ export default function Hero({ ready }) {
               window.addEventListener('pointermove', onMove)
               return () => {
                 window.removeEventListener('pointermove', onMove)
-                split.revert()
               }
             }
           }
-          return () => split.revert()
+          return () => { }
         },
       )
       return () => mm.revert()
@@ -177,24 +193,111 @@ export default function Hero({ ready }) {
       <div className="hero__bg-n serif" aria-hidden="true">n</div>
 
       <div className="hero__inner container">
-        <div className="hero__copy">
-          <p className="hero__eyebrow eyebrow" data-intro><span className="dot" /> Digital studio · Brands, websites & apps</p>
-          <h1 className="hero__title display" id="hero-title" data-intro>
-            We craft digital products that feel <em className="serif">nailed.</em>
-          </h1>
-          <p className="hero__sub" data-intro>
-            Nailed It Bro is a high-impact design and engineering studio. We shape ambitious brands, build fast websites, launch addictive apps, and drive viral social media growth.
-          </p>
-          <div className="hero__ctas">
-            <Magnetic>
-              <a href="#contact" className="btn btn--dark" data-intro onClick={(e) => { e.preventDefault(); scrollToTarget('#contact') }}>
-                <span className="btn__label" data-text="Start a Project">Start a Project</span>
-                <span className="btn__icon" aria-hidden="true">→</span>
-              </a>
-            </Magnetic>
-            <a href="#work" className="btn btn--ghost" data-intro onClick={(e) => { e.preventDefault(); scrollToTarget('#work') }}>
-              <span className="btn__label" data-text="Explore Selected Work">Explore Selected Work</span>
-            </a>
+        <div className="hero__copy" data-intro>
+          {/* Ambient atmosphere shifting with current service accent */}
+          <div
+            className="hero__ambient-glow"
+            style={{
+              '--ambient-accent': displayItem.accent,
+            }}
+            aria-hidden="true"
+          />
+
+          <div className="hero__copy-stage" style={{ '--hero-accent': displayItem.accent }}>
+            {SHOWCASE_ITEMS.map((item, index) => {
+              const isActive = index === displayIndex
+              return (
+                <div
+                  key={item.id}
+                  className={`hero__copy-slide ${isActive ? 'is-active' : ''}`}
+                  style={{ '--slide-accent': item.accent }}
+                  aria-hidden={!isActive}
+                >
+                  {/* Modern Eyebrow with Counter Pill & Pulsing Radar */}
+                  <p className="hero__eyebrow eyebrow">
+                    <span className="hero__counter-pill">
+                      <span className="hero__counter-num">0{index + 1}</span>
+                      <span className="hero__counter-slash">/</span>
+                      <span className="hero__counter-total">0{SHOWCASE_ITEMS.length}</span>
+                    </span>
+                    <span
+                      className="hero__radar-dot"
+                      style={{ '--radar-color': item.accent }}
+                    >
+                      <span className="hero__radar-ping" />
+                      <span className="hero__radar-core" />
+                    </span>
+                    <span className="hero__eyebrow-text">{item.eyebrow}</span>
+                  </p>
+
+                  {/* Kinetic Title with Smooth Slower Domino Word Roll */}
+                  <h1 className="hero__title display" id={isActive ? 'hero-title' : undefined}>
+                    {item.titlePrefix.split(' ').map((word, wIdx) => (
+                      <span key={wIdx} className="hero__word-wrap">
+                        <span
+                          className="hero__word"
+                          style={{
+                            transitionDelay: isActive ? `${0.16 + 0.06 * wIdx}s` : '0s',
+                          }}
+                        >
+                          {word}
+                        </span>
+                      </span>
+                    ))}
+                    <span className="hero__word-wrap">
+                      <em
+                        className="serif hero__serif-word"
+                        style={{
+                          transitionDelay: isActive
+                            ? `${0.16 + 0.06 * item.titlePrefix.split(' ').length}s`
+                            : '0s',
+                          '--hero-accent': item.accent,
+                        }}
+                      >
+                        {item.titleHighlight}
+                      </em>
+                    </span>
+                  </h1>
+
+                  {/* Blur-to-focus subtitle description */}
+                  <p className="hero__sub">{item.sub}</p>
+
+                  {/* Magnetic CTA Buttons with Glowing Primary */}
+                  <div className="hero__ctas">
+                    <Magnetic>
+                      <a
+                        href="#contact"
+                        className="btn btn--dark hero__btn-primary"
+                        style={{ '--btn-accent-glow': `${item.accent}44` }}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          scrollToTarget('#contact')
+                        }}
+                        tabIndex={isActive ? 0 : -1}
+                      >
+                        <span className="btn__label" data-text={item.cta1}>
+                          {item.cta1}
+                        </span>
+                        <span className="btn__icon hero__btn-arrow" aria-hidden="true">→</span>
+                      </a>
+                    </Magnetic>
+                    <a
+                      href="#work"
+                      className="btn btn--ghost"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        scrollToTarget('#work')
+                      }}
+                      tabIndex={isActive ? 0 : -1}
+                    >
+                      <span className="btn__label" data-text={item.cta2}>
+                        {item.cta2}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 
@@ -235,50 +338,28 @@ export default function Hero({ ready }) {
                 })}
               </div>
 
-              {/* Top Featured Stage: Rounded Corners, Fixed Size */}
-              <div
-                className={`hero-stage hero-stage--${displayItem.id} ${
-                  displayItem.isDesktop ? 'hero-stage--desktop' : displayItem.id === 'game' ? 'hero-stage--game' : 'hero-stage--image'
-                }`}
-                key={displayItem.id}
-              >
-                {displayItem.isDesktop && (
-                  /* Desktop Browser Bar (ONLY for Website Development) */
-                  <div className="hero-stage__browser-bar">
-                    <div className="hero-stage__dots">
-                      <span className="dot dot--red" />
-                      <span className="dot dot--yellow" />
-                      <span className="dot dot--green" />
+              {/* Top Featured Stage: Smooth Layered Crossfade with 16:10 Rounded Frame */}
+              <div className="hero-stage">
+                {SHOWCASE_ITEMS.map((item) => {
+                  const isActive = item.id === displayItem.id
+                  return (
+                    <div
+                      key={item.id}
+                      className={`hero-stage__slide hero-stage--${item.id} ${
+                        item.isDesktop ? 'hero-stage--desktop' : 'hero-stage--image'
+                      } ${isActive ? 'is-active' : ''}`}
+                    >
+                      <div className="hero-stage__screen">
+                        <img
+                          src={item.img}
+                          alt={item.title}
+                          className="hero-stage__pure-img"
+                          loading="eager"
+                        />
+                      </div>
                     </div>
-                    <div className="hero-stage__url-pill">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
-                      <span>{displayItem.url}</span>
-                    </div>
-                    <div className="hero-stage__status">
-                      <span className="hero-stage__live-pulse" style={{ backgroundColor: displayItem.accent, color: displayItem.accent }} />
-                      <span className="hero-stage__status-text">{displayItem.tag}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Main Stage Screen in Fixed Box */}
-                <div className="hero-stage__screen">
-                  {displayItem.isDesktop ? (
-                    <HeroSite />
-                  ) : displayItem.id === 'game' ? (
-                    <MobileGameDummy img={displayItem.img} />
-                  ) : (
-                    <img
-                      src={displayItem.img}
-                      alt={displayItem.title}
-                      className="hero-stage__pure-img"
-                      loading="eager"
-                    />
-                  )}
-                </div>
+                  )
+                })}
               </div>
             </div>
           </div>
