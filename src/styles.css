@@ -4161,93 +4161,714 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 /* ==========================================================================
-   Our Socials: Interactive Brand Spotlight Cards (Light Theme)
+   Out-of-the-Box Themed Social Cards (LinkedIn, Instagram, Facebook)
    ========================================================================== */
 .about-socials-section {
   padding-block: clamp(60px, 8vw, 100px);
 }
 
-.socials-spotlight-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+.socials-telemetry-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  padding: 10px 22px;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 30px -10px rgba(20, 19, 26, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.95);
 }
 
-.social-spotlight-card {
+.telemetry-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.telemetry-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #065F46;
+  text-transform: uppercase;
+}
+
+.telemetry-radar-dot {
   position: relative;
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+}
+
+.telemetry-radar-dot::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 2px solid #10B981;
+  animation: telemetryPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes telemetryPulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.telemetry-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5C5868;
+}
+
+.telemetry-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.telemetry-meta strong {
+  color: #14131A;
+  font-weight: 700;
+}
+
+.telemetry-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.telemetry-sync-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   background: #FFFFFF;
-  border-radius: 24px;
-  border: 1px solid rgba(20, 19, 26, 0.08);
-  padding: 28px;
+  border: 1px solid rgba(20, 19, 26, 0.1);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #14131A;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.telemetry-sync-btn:hover {
+  background: #14131A;
+  color: #FFFFFF;
+  border-color: #14131A;
+  transform: translateY(-1px);
+}
+
+.telemetry-sync-icon {
+  display: inline-block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.telemetry-sync-btn.is-syncing .telemetry-sync-icon {
+  animation: spinSync 0.8s linear infinite;
+}
+
+@keyframes spinSync {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.telemetry-api-guide-btn {
+  background: transparent;
+  border: 1px dashed rgba(20, 19, 26, 0.25);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #716D7C;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.telemetry-api-guide-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: rgba(255, 94, 20, 0.05);
+}
+
+/* 2. Glassmorphism Socials 3-Column Grid */
+.socials-glass-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .socials-glass-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* 3. The Individual 3D Glass Social Card */
+.glass-social-card {
+  position: relative;
+  perspective: 1200px;
+  height: 100%;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-social-card__inner {
+  position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
-  text-decoration: none;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.025);
+  padding: 34px 30px;
+  border-radius: 28px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.45) 100%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 20px 45px -15px rgba(20, 19, 26, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.95);
   overflow: hidden;
-  transition: transform 0.35s var(--ease-out), border-color 0.35s ease, box-shadow 0.35s ease;
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  will-change: transform;
 }
 
-.social-spotlight-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--soc-accent, var(--orange));
-  box-shadow: 0 20px 40px -15px rgba(20, 19, 26, 0.08), 0 0 25px color-mix(in oklab, var(--soc-accent, var(--orange)) 20%, transparent);
+/* Dynamic Ambient Glow Behind Card (blooms on hover) */
+.glass-social-card__glow {
+  position: absolute;
+  top: -20%;
+  right: -20%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  filter: blur(55px);
+  opacity: 0.45;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.social-spotlight__top {
+.glass-social-card--linkedin .glass-social-card__glow {
+  background: radial-gradient(circle, rgba(10, 102, 194, 0.35) 0%, rgba(0, 119, 181, 0.15) 60%, transparent 80%);
+}
+
+.glass-social-card--instagram .glass-social-card__glow {
+  background: radial-gradient(circle, rgba(225, 48, 108, 0.38) 0%, rgba(245, 96, 64, 0.22) 50%, rgba(131, 58, 180, 0.2) 80%);
+}
+
+.glass-social-card--facebook .glass-social-card__glow {
+  background: radial-gradient(circle, rgba(24, 119, 242, 0.35) 0%, rgba(16, 90, 190, 0.18) 60%, transparent 80%);
+}
+
+.glass-social-card:hover .glass-social-card__glow {
+  opacity: 0.85;
+  transform: scale(1.15) translate(-10px, 10px);
+}
+
+/* React Bits Specular Glare follows cursor */
+.glass-social-card__specular {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle 280px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.glass-social-card:hover .glass-social-card__specular {
+  opacity: 1;
+}
+
+.glass-social-card:hover .glass-social-card__inner {
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 35px 70px -20px rgba(20, 19, 26, 0.12), 0 0 30px rgba(255, 255, 255, 0.7), inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+/* 4. Card Header & Floating 3D Emblem */
+.glass-social-card__top {
+  position: relative;
+  z-index: 2;
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.glass-orb-container {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+}
+
+/* 3D Floating Glass Orb */
+.glass-orb {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08), inset 0 2px 2px rgba(255, 255, 255, 1);
+  display: grid;
+  place-items: center;
+  padding: 11px;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s ease;
+  animation: floatOrb 5s ease-in-out infinite;
+}
+
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(1.5deg); }
+}
+
+.glass-social-card:hover .glass-orb {
+  transform: translateY(-8px) scale(1.06);
+  box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.12), inset 0 2px 2px rgba(255, 255, 255, 1);
+}
+
+/* Animated Ring around Instagram orb */
+.glass-social-card--instagram .glass-orb-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 22px;
+  padding: 2px;
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.glass-social-card--instagram:hover .glass-orb-ring {
+  opacity: 1;
+}
+
+.glass-orb__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+/* Channel Header Info */
+.glass-social-card__badge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.glass-social-category-pill {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(20, 19, 26, 0.05);
+  color: #494554;
+}
+
+.glass-social-card--linkedin .glass-social-category-pill {
+  background: rgba(10, 102, 194, 0.08);
+  color: #0A66C2;
+}
+
+.glass-social-card--instagram .glass-social-category-pill {
+  background: rgba(225, 48, 108, 0.08);
+  color: #C13584;
+}
+
+.glass-social-card--facebook .glass-social-category-pill {
+  background: rgba(24, 119, 242, 0.08);
+  color: #1877F2;
+}
+
+.glass-status-indicator {
+  display: inline-flex;
   align-items: center;
-}
-
-.social-spotlight__platform {
-  font-size: 15px;
-  font-weight: 700;
-  color: #14131A;
-}
-
-.social-spotlight__badge {
+  gap: 5px;
   font-size: 11px;
   font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--soc-accent, var(--orange)) 12%, #FAF7F2);
-  color: var(--soc-accent, var(--orange));
+  color: #059669;
 }
 
-.social-spotlight__handle {
-  font-size: 18px;
-  font-weight: 700;
+.glass-status-indicator__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+}
+
+/* 5. Mid Section: Metrics & Title */
+.glass-social-card__mid {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 24px;
+}
+
+.glass-social-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.glass-social-card__name {
+  font-size: 22px;
+  font-weight: 800;
   color: #14131A;
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.social-spotlight__desc {
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: #636070;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 
-.social-spotlight__footer {
+.glass-verified-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0077B5;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.glass-social-card--instagram .glass-verified-badge {
+  background: #0095F6;
+}
+
+.glass-social-card--facebook .glass-verified-badge {
+  background: #1877F2;
+}
+
+.glass-social-card__handle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #716D7C;
+  margin-bottom: 18px;
+}
+
+/* Big Hero Metric Display */
+.glass-metric-box {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.glass-metric-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.glass-metric-value {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #14131A;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.glass-metric-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #059669;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.glass-metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #716D7C;
+  margin-top: 6px;
+}
+
+.glass-social-card__desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #494554;
+  margin: 0 0 16px 0;
+}
+
+/* Topic tags */
+.glass-social-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.glass-social-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #5C5868;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(20, 19, 26, 0.06);
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.glass-social-card:hover .glass-social-tag {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(20, 19, 26, 0.12);
+}
+
+/* 6. Card Bottom CTA */
+.glass-social-card__bottom {
+  position: relative;
+  z-index: 2;
+  padding-top: 20px;
+  border-top: 1px solid rgba(20, 19, 26, 0.07);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid rgba(20, 19, 26, 0.06);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--soc-accent, var(--orange));
+  gap: 12px;
 }
 
-.social-spotlight__arrow {
+.glass-card-meta-note {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8C8896;
+}
+
+.glass-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  color: #FFFFFF;
+  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.glass-cta-btn-arrow {
+  display: inline-block;
   transition: transform 0.3s var(--ease-out);
 }
 
-.social-spotlight-card:hover .social-spotlight__arrow {
-  transform: translateX(4px);
+.glass-cta-btn:hover .glass-cta-btn-arrow {
+  transform: translate(3px, -3px);
+}
+
+.glass-cta-btn--linkedin {
+  background: linear-gradient(135deg, #0A66C2 0%, #004182 100%);
+  box-shadow: 0 8px 20px -4px rgba(10, 102, 194, 0.4);
+}
+
+.glass-cta-btn--linkedin:hover {
+  box-shadow: 0 12px 26px -4px rgba(10, 102, 194, 0.55);
+  transform: translateY(-2px);
+}
+
+.glass-cta-btn--instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  box-shadow: 0 8px 20px -4px rgba(220, 39, 67, 0.45);
+}
+
+.glass-cta-btn--instagram:hover {
+  box-shadow: 0 12px 26px -4px rgba(220, 39, 67, 0.6);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.glass-cta-btn--facebook {
+  background: linear-gradient(135deg, #1877F2 0%, #0d5bbd 100%);
+  box-shadow: 0 8px 20px -4px rgba(24, 119, 242, 0.4);
+}
+
+.glass-cta-btn--facebook:hover {
+  box-shadow: 0 12px 26px -4px rgba(24, 119, 242, 0.55);
+  transform: translateY(-2px);
+}
+
+/* 7. Live API Connection Information Modal/Drawer */
+.socials-api-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(20, 19, 26, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: fadeInModal 0.25s ease-out;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.socials-api-modal {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 28px;
+  padding: clamp(28px, 4vw, 40px);
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 35px 80px -20px rgba(20, 19, 26, 0.3);
+  box-sizing: border-box;
+  animation: scaleUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleUpModal {
+  from { transform: scale(0.94) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.socials-api-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.socials-api-modal__title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #14131A;
+  margin: 0;
+}
+
+.socials-api-modal__close {
+  background: rgba(20, 19, 26, 0.06);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  color: #14131A;
+  transition: all 0.2s ease;
+}
+
+.socials-api-modal__close:hover {
+  background: #14131A;
+  color: #FFFFFF;
+}
+
+.socials-api-modal p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #494554;
+  margin-bottom: 20px;
+}
+
+.socials-api-steps {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.socials-api-step {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(20, 19, 26, 0.03);
+  border: 1px solid rgba(20, 19, 26, 0.06);
+}
+
+.socials-api-step__no {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.socials-api-step__content strong {
+  display: block;
+  font-size: 13px;
+  color: #14131A;
+  margin-bottom: 4px;
+}
+
+.socials-api-step__content span {
+  font-size: 12px;
+  color: #716D7C;
+  line-height: 1.4;
+}
+
+.socials-api-env-box {
+  background: #14131A;
+  color: #00F5A0;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-family: monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  line-height: 1.6;
 }
 
 /* ==========================================================================
