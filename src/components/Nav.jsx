@@ -8,12 +8,15 @@ import Magnetic from './Magnetic'
 export function Logo() {
   return (
     <span className="logo">
-      Nailed It <em className="serif">Bro</em><span className="logo__dot" />
+      <span className="logo__brand">
+        <span className="logo__text">Nailed<span className="logo__it">It</span>Bro</span>
+        <span className="logo__bar" />
+      </span>
     </span>
   )
 }
 
-export default function Nav() {
+export default function Nav({ onNavigate }) {
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -61,9 +64,18 @@ export default function Nav() {
   const go = (e, href) => {
     e.preventDefault()
     setOpen(false)
-    history.replaceState(null, '', href)
-    // Let the overlay close before scrolling.
-    setTimeout(() => scrollToTarget(href), open ? 350 : 0)
+    if (onNavigate) {
+      onNavigate(href)
+    } else {
+      history.pushState(null, '', href)
+      window.dispatchEvent(new Event('hashchange'))
+      if (href === '#about') {
+        window.scrollTo(0, 0)
+        getLenis()?.scrollTo(0, { immediate: true })
+      } else {
+        setTimeout(() => scrollToTarget(href), open ? 350 : 80)
+      }
+    }
   }
 
   const t = reduced ? { duration: 0 } : { duration: 0.7, ease: MOTION_EASE }
@@ -79,7 +91,7 @@ export default function Nav() {
         </nav>
         <Magnetic className="nav__cta-wrap">
           <a href="#contact" className="btn btn--sm btn--dark nav__cta" onClick={(e) => go(e, '#contact')}>
-            <span className="btn__label" data-text="Start a project">Start a project</span>
+            <span className="btn__label" data-text="Let's Talk">Let's Talk</span>
           </a>
         </Magnetic>
         <button
