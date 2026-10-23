@@ -5,7 +5,7 @@ export const NAV = [
   { href: '#contact', label: 'Contact' },
 ]
 
-export const EMAIL = 'hello@naileditbro.com'
+export const EMAIL = 'contact@naileditbro.com'
 
 export const SERVICES = [
   {
@@ -15,7 +15,7 @@ export const SERVICES = [
     short: 'Strategy, naming, logos and visual systems.',
     body: 'We shape how your business looks, sounds and feels. Positioning workshops, logo design, typography, colour and a brand book your team can actually use.',
     deliverables: ['Brand strategy', 'Logo & identity', 'Guidelines'],
-    tone: '#C9A27E',
+    tone: '#FF5E14',
   },
   {
     id: 'web',
@@ -24,7 +24,7 @@ export const SERVICES = [
     short: 'Editorial, fast, conversion-minded websites.',
     body: 'Custom-designed marketing sites built on modern stacks, with motion that earns its place, a CMS your team can edit and performance budgets we hold ourselves to.',
     deliverables: ['UX & art direction', 'Front-end build', 'CMS'],
-    tone: '#8E9C8A',
+    tone: '#FF7533',
   },
   {
     id: 'apps',
@@ -33,7 +33,7 @@ export const SERVICES = [
     short: 'Native-feeling iOS and Android apps.',
     body: 'From first prototype to store launch. Cross-platform builds with thoughtful interaction design, offline support and analytics baked in from day one.',
     deliverables: ['Prototyping', 'iOS & Android', 'Launch support'],
-    tone: '#9A8FB5',
+    tone: '#FF884D',
   },
   {
     id: 'product',
@@ -42,7 +42,7 @@ export const SERVICES = [
     short: 'Research-led interfaces people enjoy.',
     body: 'User research, flows, wireframes and design systems for SaaS and digital products. We test early so the expensive decisions are the right ones.',
     deliverables: ['Research', 'Design systems', 'Usability testing'],
-    tone: '#C78B6F',
+    tone: '#FF9E66',
   },
   {
     id: 'commerce',
@@ -51,7 +51,7 @@ export const SERVICES = [
     short: 'Storefronts that make buying effortless.',
     body: 'Shopify and headless commerce builds with considered product pages, frictionless checkout and merchandising tools that scale with your catalogue.',
     deliverables: ['Shopify & headless', 'Checkout UX', 'Integrations'],
-    tone: '#B9A16A',
+    tone: '#FF5E14',
   },
   {
     id: 'growth',
@@ -60,7 +60,7 @@ export const SERVICES = [
     short: 'Get found, then keep improving.',
     body: 'Technical SEO, content structure, Core Web Vitals and analytics so every launch keeps compounding after go-live.',
     deliverables: ['Technical SEO', 'Analytics', 'CRO'],
-    tone: '#7F98A6',
+    tone: '#FFAA77',
   },
 ]
 
@@ -119,4 +119,4 @@ export const PROCESS = [
   { no: '04', title: 'Launch & grow', body: 'QA, launch, training and ongoing support. We measure, learn and keep improving.' },
 ]
 
-export const MARQUEE = ['Brand identity', 'Websites', 'Mobile apps', 'Product design', 'E-commerce', 'SEO & growth', 'Motion']
+export const MARQUEE = ['Websites', 'Mobile Apps', 'Social Media', 'QR Solutions', 'Business Automation', 'UI/UX Design', 'Modern Tech']

@@ -1,19 +1,23 @@
-// Small, service-specific illustrations. They animate with CSS when their
-// parent carries .is-active, so they cost nothing while idle.
+// Service-specific minimalist wireframe animations from earlier version
+// Styled according to the new dark obsidian and electric orange color scheme.
 
 export function ServiceIcon({ id }) {
   const common = { viewBox: '0 0 48 48', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, 'aria-hidden': true, className: `s-icon s-icon--${id}` }
   switch (id) {
     case 'brand':
+    case 'social':
       return <svg {...common}><circle cx="24" cy="24" r="16" className="draw" /><path d="M18 32V16M18 22c0-4 3-7 6-7s6 3 6 7v10" className="draw" /></svg>
     case 'web':
       return <svg {...common}><rect x="6" y="10" width="36" height="28" rx="3" className="draw" /><path d="M6 17h36M11 13.5h.01M15 13.5h.01" /><path d="M12 24h14M12 30h9" className="draw" /></svg>
     case 'apps':
       return <svg {...common}><rect x="14" y="5" width="20" height="38" rx="5" className="draw" /><path d="M21 9h6" /><rect x="18" y="16" width="12" height="8" rx="2" className="pop" /></svg>
     case 'product':
+    case 'qr':
       return <svg {...common}><circle cx="11" cy="14" r="5" className="draw" /><circle cx="37" cy="14" r="5" className="draw" /><circle cx="24" cy="36" r="5" className="draw" /><path d="M15 17l6 14M33 17l-6 14M16 14h16" className="draw" /></svg>
     case 'commerce':
       return <svg {...common}><path d="M8 12h5l4 20h20l4-14H15" className="draw" /><circle cx="19" cy="38" r="2.5" /><circle cx="34" cy="38" r="2.5" /><circle cx="38" cy="9" r="4" className="pop" fill="currentColor" stroke="none" /></svg>
+    case 'growth':
+    case 'automation':
     default:
       return <svg {...common}><path d="M6 40h36" /><path d="M8 34l9-9 7 5 15-16" className="draw" /><path d="M32 14h7v7" className="draw" /></svg>
   }
@@ -22,11 +26,16 @@ export function ServiceIcon({ id }) {
 export function ServicePreview({ id }) {
   switch (id) {
     case 'brand':
+    case 'social':
       return (
         <div className="sp sp--brand">
           <div className="sp-brand__grid">{Array.from({ length: 16 }, (_, i) => <i key={i} />)}</div>
           <svg viewBox="0 0 200 200" className="sp-brand__mark"><circle cx="100" cy="100" r="70" /><path d="M76 138V62M76 92c0-18 11-30 25-30s25 12 25 30v46" /></svg>
-          <div className="sp-brand__chips"><span style={{ background: '#141312' }} /><span style={{ background: '#C9A27E' }} /><span style={{ background: '#F2EDE4' }} /></div>
+          <div className="sp-brand__chips">
+            <span style={{ background: '#0A0A0D', border: '1px solid rgba(255,255,255,0.3)' }} />
+            <span style={{ background: '#FF5E14', boxShadow: '0 0 16px rgba(255,94,20,0.5)' }} />
+            <span style={{ background: '#FFFFFF' }} />
+          </div>
         </div>
       )
     case 'web':
@@ -46,6 +55,7 @@ export function ServicePreview({ id }) {
         </div>
       )
     case 'product':
+    case 'qr':
       return (
         <div className="sp sp--product">
           <svg viewBox="0 0 300 200" className="sp-product__links"><path d="M60 50 C 120 50, 120 100, 150 100 S 200 150, 240 150" /><path d="M60 150 C 110 150, 120 100, 150 100 S 210 50, 240 50" /></svg>
@@ -61,6 +71,8 @@ export function ServicePreview({ id }) {
           <div className="sp-com__bag">Bag <em>1</em></div>
         </div>
       )
+    case 'growth':
+    case 'automation':
     default:
       return (
         <div className="sp sp--growth">

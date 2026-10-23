@@ -35,7 +35,7 @@ export default function Footer() {
         {words.map((w, wi) => (
           <span className="footer__word" key={w} aria-hidden="true">
             {[...w].map((c, i) => (
-              <span className="footer__mask" key={i}><span className={`footer__char ${wi === 2 ? 'serif' : ''}`}>{c}</span></span>
+              <span className="footer__mask" key={i}><span className={`footer__char ${wi === 1 ? 'footer__char--accent' : ''}`}>{c}</span></span>
             ))}
           </span>
         ))}

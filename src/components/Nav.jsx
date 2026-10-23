@@ -8,7 +8,10 @@ import Magnetic from './Magnetic'
 export function Logo() {
   return (
     <span className="logo">
-      Nailed It <em className="serif">Bro</em><span className="logo__dot" />
+      <span className="logo__brand">
+        <span className="logo__text">Nailed<span className="logo__it">It</span>Bro</span>
+        <span className="logo__bar" />
+      </span>
     </span>
   )
 }
@@ -79,7 +82,7 @@ export default function Nav() {
         </nav>
         <Magnetic className="nav__cta-wrap">
           <a href="#contact" className="btn btn--sm btn--dark nav__cta" onClick={(e) => go(e, '#contact')}>
-            <span className="btn__label" data-text="Start a project">Start a project</span>
+            <span className="btn__label" data-text="Let's Talk">Let's Talk</span>
           </a>
         </Magnetic>
         <button
