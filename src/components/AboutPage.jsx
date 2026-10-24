@@ -38,6 +38,7 @@ import FAQItem from './FAQItem'
 import CTABand from './CTABand'
 import Reveal from './Reveal'
 import TiltedLogoCard from './TiltedLogoCard'
+import AboutBackgroundCanvas from './AboutBackgroundCanvas'
 
 export default function AboutPage({ onNavigate }) {
   const [heroImgError, setHeroImgError] = useState(false)
@@ -70,6 +71,7 @@ export default function AboutPage({ onNavigate }) {
     e.currentTarget.style.setProperty('--mouse-y', `${y}px`)
   }
 
+  // --- SECTION 4: SERVICES DATA ---
   // --- SECTION 4: SERVICES DATA ---
   const servicesData = [
     {
@@ -320,6 +322,9 @@ export default function AboutPage({ onNavigate }) {
 
   return (
     <div className="about-page-layout">
+      {/* Living Dynamic Background Canvas */}
+      <AboutBackgroundCanvas />
+
       {/* =====================================================================
           SECTION 1: HERO
           ===================================================================== */}
@@ -618,25 +623,6 @@ export default function AboutPage({ onNavigate }) {
             ))}
           </div>
 
-          {/* Interactive Step Switcher & Progress Bar */}
-          <div className="process-step-pills">
-            {processStepsData.map((step, idx) => (
-              <button
-                key={step.number}
-                type="button"
-                className={`process-step-pill ${idx === activeProcessStep ? 'is-active' : ''}`}
-                onClick={() => {
-                  setActiveProcessStep(idx)
-                  setIsProcessPaused(true)
-                }}
-                aria-label={`Jump to Step ${step.number}: ${step.title}`}
-              >
-                <span className="process-step-pill__num">{step.number}</span>
-                <span className="process-step-pill__name">{step.title}</span>
-              </button>
-            ))}
-          </div>
-
           <Reveal delay={250}>
             <div className="process-timeline-note">
               <span className="process-timeline-note__text">
@@ -658,11 +644,19 @@ export default function AboutPage({ onNavigate }) {
             {/* Left Column: Pull Quote */}
             <div className="principles-quote-col">
               <Reveal>
-                <SectionLabel text="WHAT WE BELIEVE" />
-                <blockquote className="principles-pull-quote">
-                  “Good enough is the enemy of greatness. We refine every interaction until it feels purposeful, and undeniably{' '}
-                  <em className="serif principles-pull-quote__accent">nailed.</em>”
-                </blockquote>
+                <div className="principles-quote-box">
+                  <div className="principles-quote-top">
+                    <SectionLabel text="WHAT WE BELIEVE" />
+                    <blockquote className="principles-pull-quote">
+                      “Good enough is the enemy of greatness. We refine every interaction until it feels purposeful, and undeniably{' '}
+                      <em className="serif principles-pull-quote__accent">nailed.</em>”
+                    </blockquote>
+                  </div>
+                  <div className="principles-quote-footer">
+                    <span className="principles-quote-author">— The Nailed It Bro Creed</span>
+                    <span className="principles-quote-sub">How we build every product</span>
+                  </div>
+                </div>
               </Reveal>
             </div>
 

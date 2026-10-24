@@ -4,24 +4,13 @@ import { EMAIL, SERVICES } from '../data'
 import { gsap, useGSAP, revealHeading, MOTION_EASE, useReducedMotion } from '../lib/motion'
 
 
-function Field({ id, label, placeholder, error, as = 'input', ...props }) {
+function Field({ id, label, error, as = 'input', ...props }) {
   const Tag = as
   return (
-    <div className={`contact-field ${error ? 'has-error' : ''}`}>
-      <label className="contact-label" htmlFor={id}>
-        <span>{label}</span>
-      </label>
-      <div className="contact-input-wrap">
-        <Tag
-          id={id}
-          name={id}
-          placeholder={placeholder || ''}
-          aria-invalid={!!error}
-          aria-describedby={error ? `${id}-err` : undefined}
-          className={`contact-input ${as === 'textarea' ? 'contact-textarea' : ''}`}
-          {...props}
-        />
-      </div>
+    <div className={`field ${error ? 'has-error' : ''}`}>
+      <Tag id={id} name={id} placeholder=" " aria-invalid={!!error} aria-describedby={error ? `${id}-err` : undefined} {...props} />
+      <label htmlFor={id}>{label}</label>
+      <span className="field__line" aria-hidden="true" />
       {error && <span className="field__err" id={`${id}-err`}>{error}</span>}
     </div>
   )
@@ -141,30 +130,22 @@ export default function Contact() {
           <div className="contact__head-content">
             <p className="eyebrow">(Contact)</p>
             <h2 className="contact__title display" id="contact-title">
-              <span className="contact__title-line-1">Let's get it</span>
-              <em className="serif contact__title-line-2">nailed.</em>
+              <span>Let's get it</span>
+              <em className="serif">nailed.</em>
             </h2>
             <p className="contact__lead">Tell us what you are building. We reply within one working day with next steps, a rough timeline and honest advice.</p>
           </div>
-          <div className="contact__direct-wrap">
-            <span className="contact__direct-label">Or reach out directly</span>
-            <a
-              className="contact__email u-link"
-              href={`mailto:${EMAIL}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="contact__email-dot" aria-hidden="true" />
-              {EMAIL}
-            </a>
-          </div>
+          <a
+            className="contact__email u-link"
+            href={`mailto:${EMAIL}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {EMAIL}
+          </a>
         </div>
 
           <div className="contact__card">
-            <div className="contact__card-badge">
-              <span className="contact__card-dot" aria-hidden="true" />
-              <span>Available for Q1–Q2 Projects · 24h Response</span>
-            </div>
             <AnimatePresence mode="wait" initial={false}>
               {status === 'sent' ? (
                 <m.div
@@ -253,51 +234,29 @@ export default function Contact() {
               ) : (
                 <m.form key="form" className="contact__form" onSubmit={onSubmit} noValidate
                   exit={reduced ? undefined : { opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
-                  <div className="contact__row contact__row--3">
-                    <Field id="name" label="Your name" placeholder="e.g. Alex Morgan" autoComplete="name" error={errors.name} />
-                    <Field id="email" label="Email" type="email" placeholder="alex@company.com" autoComplete="email" error={errors.email} />
-                    <Field id="company" label="Company (optional)" placeholder="e.g. Studio name" autoComplete="organization" />
+                  <div className="contact__row">
+                    <Field id="name" label="Your name" autoComplete="name" error={errors.name} />
+                    <Field id="email" label="Email" type="email" autoComplete="email" error={errors.email} />
                   </div>
-                  <fieldset className="contact-chips">
-                    <legend className="contact-label">What do you need?</legend>
-                    <div className="contact-chips-wrap">
-                      {SERVICES.map((s) => {
-                        const active = picked.includes(s.title)
-                        return (
-                          <label key={s.id} className={`creative-chip ${active ? 'is-active' : ''}`}>
-                            <input
-                              type="checkbox"
-                              checked={active}
-                              onChange={() => toggle(s.title)}
-                              className="creative-chip-input"
-                            />
-                            <span className="creative-chip-indicator" aria-hidden="true">{active ? '✓' : '+'}</span>
-                            <span className="creative-chip-text">{s.title}</span>
-                          </label>
-                        )
-                      })}
-                    </div>
+                  <Field id="company" label="Company (optional)" autoComplete="organization" />
+                  <fieldset className="chips">
+                    <legend>What do you need?</legend>
+                    {SERVICES.map((s) => (
+                      <label key={s.id} className={`chip ${picked.includes(s.title) ? 'is-on' : ''}`}>
+                        <input type="checkbox" checked={picked.includes(s.title)} onChange={() => toggle(s.title)} />
+                        {s.title}
+                      </label>
+                    ))}
                   </fieldset>
-                  <Field
-                    id="message"
-                    label="Tell us about the project"
-                    placeholder="Tell us what you're building, timeline, or any reference links..."
-                    as="textarea"
-                    rows={2}
-                    error={errors.message}
-                  />
+                  <Field id="message" label="Tell us about the project" as="textarea" rows={5} error={errors.message} />
                   <div className="contact__submit">
-                    <button type="submit" className="creative-submit-btn">
-                      <span className="btn__label">Send enquiry</span>
-                      <span className="btn__arrow" aria-hidden="true">→</span>
+                    <button type="submit" className="btn btn--light btn--sm contact__btn">
+                      <span className="btn__label" data-text="Send enquiry">Send enquiry</span>
+                      <span className="btn__icon" aria-hidden="true">→</span>
                     </button>
-                    <div className="contact__trust-pill">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                      </svg>
-                      <span>Direct dispatch · Pre-fills in your mail app</span>
-                    </div>
+                    <p className="contact__fine" aria-live="polite">
+                      Pre-fills your enquiry directly into Gmail, Outlook or your default mail app.
+                    </p>
                   </div>
                 </m.form>
               )}
