@@ -1,95 +1,68 @@
-import { useEffect, useRef, useState } from 'react'
-import { TEAM_MEMBERS } from '../data'
-import { gsap, useGSAP, revealHeading } from '../lib/motion'
-import Magnetic from './Magnetic'
+import { useState, useEffect } from 'react'
+import {
+  Laptop,
+  Smartphone,
+  Bot,
+  QrCode,
+  Gamepad2,
+  Palette,
+  Users,
+  Target,
+  CheckCircle2,
+  Sparkles,
+  ShieldCheck,
+  Check,
+  ArrowRight,
+  ExternalLink,
+  MessageSquare,
+  FileText,
+  Code2,
+  Rocket,
+  Zap,
+} from 'lucide-react'
+
+import SectionLabel from './SectionLabel'
+import SectionHeading from './SectionHeading'
+import PrimaryButton from './PrimaryButton'
+import SecondaryButton from './SecondaryButton'
+import StatItem from './StatItem'
+import BenefitCard from './BenefitCard'
+import ServiceItem from './ServiceItem'
+import FounderCard from './FounderCard'
+import ProcessStep from './ProcessStep'
+import PrincipleCard from './PrincipleCard'
+import ProjectCard from './ProjectCard'
+import TestimonialCard from './TestimonialCard'
+import TrustStrip from './TrustStrip'
+import FAQItem from './FAQItem'
+import CTABand from './CTABand'
+import Reveal from './Reveal'
+import TiltedLogoCard from './TiltedLogoCard'
 
 export default function AboutPage({ onNavigate }) {
-  const root = useRef(null)
-  const [activeTab, setActiveTab] = useState('all')
-  const [activeMemberTouch, setActiveMemberTouch] = useState(null)
+  const [heroImgError, setHeroImgError] = useState(false)
+  const [activeProcessStep, setActiveProcessStep] = useState(0)
+  const [isProcessPaused, setIsProcessPaused] = useState(false)
 
-  // Real-time telemetry state & metrics
-  const [isSyncing, setIsSyncing] = useState(false)
-  const [ping, setPing] = useState(24)
-  const [lastSync, setLastSync] = useState('Just now')
-  const [showApiModal, setShowApiModal] = useState(false)
-
-  // Real-time live dynamic follower & network counters
-  const [metrics, setMetrics] = useState({
-    linkedin: 15420,
-    instagram: 48290,
-    facebook: 12850,
-  })
-
-  // Periodic subtle live increment to reflect true real-time activity
+  // Auto-advance process step animation every 3 seconds unless hovered
   useEffect(() => {
+    if (isProcessPaused) return
     const timer = setInterval(() => {
-      setMetrics((prev) => ({
-        ...prev,
-        instagram: prev.instagram + (Math.random() > 0.4 ? 1 : 0),
-        linkedin: prev.linkedin + (Math.random() > 0.7 ? 1 : 0),
-      }))
-    }, 12000)
+      setActiveProcessStep((prev) => (prev + 1) % 5)
+    }, 3000)
     return () => clearInterval(timer)
-  }, [])
+  }, [isProcessPaused])
 
-  // Manual Trigger: Simulated WebSocket / Graph API sync handshake
-  const handleSyncFeed = (e) => {
-    if (e) e.preventDefault()
-    if (isSyncing) return
-    setIsSyncing(true)
-    setTimeout(() => {
-      setPing(Math.floor(Math.random() * 12 + 18))
-      setMetrics((prev) => ({
-        linkedin: prev.linkedin + Math.floor(Math.random() * 4 + 1),
-        instagram: prev.instagram + Math.floor(Math.random() * 8 + 3),
-        facebook: prev.facebook + Math.floor(Math.random() * 3 + 1),
-      }))
-      setLastSync('Just now')
-      setIsSyncing(false)
-    }, 750)
-  }
-
-  // Set page theme to light for About Us page
-  useEffect(() => {
-    document.documentElement.dataset.page = 'light'
-    return () => {
-      // Restore when leaving if necessary
-    }
-  }, [])
-
-  // 3D Card Perspective Tilt + React Bits Cursor Specular Spotlight
-  const handleCardMouseMove = (e) => {
-    const card = e.currentTarget
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    const tiltX = (x - centerX) / centerX
-    const tiltY = (y - centerY) / centerY
-
-    // Set specular light coords
-    card.style.setProperty('--mouse-x', `${x}px`)
-    card.style.setProperty('--mouse-y', `${y}px`)
-
-    // Apply smooth 3D rotation transform on inner card
-    const inner = card.querySelector('.glass-social-card__inner')
-    if (inner) {
-      inner.style.transform = `perspective(1000px) rotateX(${-tiltY * 8}deg) rotateY(${tiltX * 8}deg) scale3d(1.02, 1.02, 1.02)`
+  const handleCta = (href) => {
+    if (onNavigate) {
+      onNavigate(href)
+    } else {
+      window.location.hash = href
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
-  const handleCardMouseLeave = (e) => {
-    const card = e.currentTarget
-    const inner = card.querySelector('.glass-social-card__inner')
-    if (inner) {
-      inner.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
-    }
-  }
-
-  // General spotlight tracker for bento & step cards
-  const handleSpotlight = (e) => {
+  const handleSpotlightMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
@@ -97,790 +70,925 @@ export default function AboutPage({ onNavigate }) {
     e.currentTarget.style.setProperty('--mouse-y', `${y}px`)
   }
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia()
-      mm.add(
-        {
-          horizontal: '(min-width: 900px) and (prefers-reduced-motion: no-preference)',
-          vertical: '(max-width: 899px) and (prefers-reduced-motion: no-preference)',
-          reduced: '(prefers-reduced-motion: reduce)',
-        },
-        (ctx) => {
-          revealHeading('.about-l-hero__title')
-          gsap.from('.about-spotlight', {
-            y: 35,
-            opacity: 0,
-            stagger: 0.08,
-            duration: 0.9,
-            ease: 'power3.out',
-            clearProps: 'all',
-            scrollTrigger: { trigger: '.about-bento-grid', start: 'top 85%', once: true },
-          })
-          gsap.from('.step-card', {
-            y: 40,
-            opacity: 0,
-            stagger: 0.08,
-            duration: 0.85,
-            ease: 'power3.out',
-            clearProps: 'all',
-            scrollTrigger: { trigger: '.steps-grid', start: 'top 80%', once: true },
-          })
-          gsap.from('.socials-telemetry-bar', {
-            y: 25,
-            opacity: 0,
-            duration: 0.7,
-            ease: 'power3.out',
-            clearProps: 'all',
-            scrollTrigger: { trigger: '.socials-telemetry-bar', start: 'top 88%', once: true },
-          })
-          gsap.from('.glass-social-card', {
-            y: 40,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 0.9,
-            ease: 'power3.out',
-            clearProps: 'all',
-            scrollTrigger: { trigger: '.socials-glass-grid', start: 'top 85%', once: true },
-          })
-
-          gsap.fromTo(
-            '.chroma-member-card',
-            { y: 24, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              stagger: 0.08,
-              duration: 0.7,
-              ease: 'power2.out',
-              clearProps: 'opacity,transform',
-              scrollTrigger: { trigger: '.chroma-team-grid', start: 'top 95%', once: true },
-            },
-          )
-        },
-      )
-      return () => mm.revert()
+  // --- SECTION 4: SERVICES DATA ---
+  const servicesData = [
+    {
+      icon: Laptop,
+      title: 'Websites and Web Apps',
+      description: 'Fast, mobile-friendly sites built to turn visitors into enquiries.',
     },
-    { scope: root },
-  )
+    {
+      icon: Smartphone,
+      title: 'Mobile Apps',
+      description: 'Android and iOS apps that are simple to use and smooth to run.',
+    },
+    {
+      icon: Bot,
+      title: 'AI Automation',
+      description: 'Chatbots and workflows that save your team hours of repetitive work.',
+    },
+    {
+      icon: QrCode,
+      title: 'QR Systems',
+      description: 'Digital menus, payments, tracking, and customer engagement through QR.',
+    },
+    {
+      icon: Gamepad2,
+      title: '3D and Interactive Games',
+      description: 'Playable experiences for brands that want to stand out.',
+    },
+    {
+      icon: Palette,
+      title: 'Brand Identity and UI/UX',
+      description: 'Logos, design systems, and clean interfaces that look professional everywhere.',
+    },
+  ]
 
-  const handleCta = (href) => {
-    if (onNavigate) {
-      onNavigate(href)
-    } else {
-      window.location.hash = href
-    }
-  }
+  // --- SECTION 5: WHY CLIENTS CHOOSE US DATA ---
+  const benefitsData = [
+    {
+      icon: Users,
+      title: 'You talk to the people doing the work',
+      description: 'Every project is led by a founder. Questions get answered the same day.',
+    },
+    {
+      icon: Target,
+      title: 'Built for business results',
+      description: 'We start by asking what you want: more leads, more orders, less manual work. Then we build toward that.',
+    },
+    {
+      icon: CheckCircle2,
+      title: 'Clear communication',
+      description: 'A defined scope, a timeline, and regular updates. You always know what’s done and what’s next.',
+    },
+    {
+      icon: Sparkles,
+      title: 'Custom, never recycled',
+      description: 'Your product is designed around your brand and your customers, so it doesn’t look like everyone else’s.',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'One team for everything',
+      description: 'Website, app, AI, and branding under one roof.',
+    },
+  ]
+
+  // --- SECTION 6: PROCESS STEPS ---
+  const processStepsData = [
+    {
+      number: '1',
+      title: 'Discuss',
+      duration: 'Day 1',
+      icon: MessageSquare,
+      description: 'We learn your business, goals, and budget on a direct founder call.',
+    },
+    {
+      number: '2',
+      title: 'Plan',
+      duration: 'Days 2–4',
+      icon: FileText,
+      description: 'We send the scope, tech stack, timeline, and cost in writing.',
+    },
+    {
+      number: '3',
+      title: 'Design',
+      duration: 'Week 2',
+      icon: Palette,
+      description: 'You approve the interactive look and flow in Figma before coding starts.',
+    },
+    {
+      number: '4',
+      title: 'Build',
+      duration: 'Weeks 3–5',
+      icon: Code2,
+      description: 'We develop, test on real devices, and share weekly interactive previews.',
+    },
+    {
+      number: '5',
+      title: 'Launch & Support',
+      duration: 'Launch Day',
+      icon: Rocket,
+      description: 'We go live, hand over full ownership, and stay available afterwards.',
+    },
+  ]
+
+  // --- SECTION 7: PRINCIPLES ---
+  const principlesData = [
+    {
+      number: '01',
+      title: 'Ownership',
+      description: 'We treat every project as if our own name is on it. Because it is.',
+    },
+    {
+      number: '02',
+      title: 'Honesty',
+      description: 'We tell you what will and won’t work, even when it’s not what you hoped to hear.',
+    },
+    {
+      number: '03',
+      title: 'Craft',
+      description: 'No generic templates. Every screen is designed and built for your business.',
+    },
+    {
+      number: '04',
+      title: 'Speed with care',
+      description: 'We move fast, but we test on real devices before anything ships.',
+    },
+  ]
+
+  // --- SECTION 8: FOUNDERS ---
+  const foundersData = [
+    {
+      name: 'Atharv Doiphode',
+      role: 'CO-FOUNDER',
+      domain: 'Website and Strategy',
+      bio: 'Plans your product and online presence so it has a clear purpose and a clear audience.',
+      skills: ['Websites', 'Social Media', 'Product Strategy'],
+      photoSrc: '/team/atharv.webp',
+      linkedin: 'https://www.linkedin.com/in/atharv-doiphode-07045125a/',
+      instagram: 'https://instagram.com/itsjustatharv',
+    },
+    {
+      name: 'Aditya Wagh',
+      role: 'CO-FOUNDER',
+      domain: 'QR Systems and AI',
+      bio: 'Builds QR-powered tools and AI automations that cut manual work.',
+      skills: ['QR Systems', 'Artificial Intelligence'],
+      photoSrc: '/team/aditya.webp',
+      linkedin: 'https://www.linkedin.com/in/aditya-wagh25/',
+      instagram: 'https://instagram.com/_adityawagh_7',
+    },
+    {
+      name: 'Mohit Malve',
+      role: 'CO-FOUNDER',
+      domain: 'AI and Game Development',
+      bio: 'Creates intelligent features and interactive 3D experiences.',
+      skills: ['Artificial Intelligence', 'Game Development'],
+      photoSrc: '/team/mohit.webp',
+      linkedin: 'https://www.linkedin.com/in/mohit-malve/',
+      instagram: 'https://instagram.com/mohitmalve7',
+    },
+    {
+      name: 'Avdhoot Pimparkar',
+      role: 'CO-FOUNDER',
+      domain: 'App Development and UI/UX',
+      bio: 'Designs and builds mobile apps that are simple to use and smooth to run.',
+      skills: ['App Development', 'UI/UX Design'],
+      photoSrc: '/team/avdhoot.webp',
+      linkedin: 'https://www.linkedin.com/in/avdhootp144/',
+      instagram: 'https://instagram.com/avdhoot14_4',
+    },
+  ]
+
+  // --- SECTION 9: OUR WORK (PROOF) ---
+  const projectsData = [
+    {
+      name: '[Project name]',
+      clientType: '[Type of client]',
+      result: '[One-line result]',
+      screenshot: '/web.png',
+      techTags: ['Next.js', 'PostgreSQL', 'Tailwind'],
+      link: '#',
+      isOwnProduct: true,
+      isTodo: true,
+    },
+    {
+      name: '[Project name]',
+      clientType: '[Type of client]',
+      result: '[One-line result]',
+      screenshot: '/pet.png',
+      techTags: ['React Native', 'Node.js', 'Stripe'],
+      link: '#',
+      isOwnProduct: true,
+      isTodo: true,
+    },
+    {
+      name: '[Project name]',
+      clientType: '[Type of client]',
+      result: '[One-line result]',
+      screenshot: '/qr.png',
+      techTags: ['QR Engine', 'Cloud Functions', 'Analytics'],
+      link: '#',
+      isOwnProduct: true,
+      isTodo: true,
+    },
+  ]
+
+  // --- SECTION 10: WHO WE HELP PILLS ---
+  const audiencePills = [
+    'Startups',
+    'Local businesses',
+    'Restaurants and cafés',
+    'Schools and coaching classes',
+    'Retail and e-commerce',
+    'Event organizers',
+  ]
+
+  // --- SECTION 11: FAQ DATA ---
+  const faqData = [
+    {
+      id: 'cost',
+      question: 'How much does a project cost?',
+      answer: 'It depends on scope. Websites start from [₹X], apps from [₹X]. We share a written quote after the first call.',
+    },
+    {
+      id: 'timeline',
+      question: 'How long does it take?',
+      answer: '[X-Y] weeks for most websites, [X-Y] weeks for apps.',
+    },
+    {
+      id: 'support',
+      question: 'Do you offer support after launch?',
+      answer: 'Yes. [X] months of free fixes, then optional monthly support.',
+    },
+    {
+      id: 'ownership',
+      question: 'Who owns the code and design?',
+      answer: 'You do. Full handover on final payment.',
+    },
+    {
+      id: 'existing',
+      question: 'Can you work with our existing website or app?',
+      answer: 'Yes. We can redesign, extend, or fix what you already have.',
+    },
+    {
+      id: 'payments',
+      question: 'How do payments work?',
+      answer: '[e.g. 40% to start, 30% at design approval, 30% on launch.]',
+    },
+  ]
 
   return (
-    <div className="about-light-page" ref={root} data-theme="light">
-      {/* Ambient background light glows */}
-      <div className="about-ambient-glow about-ambient-glow--1" aria-hidden="true" />
-      <div className="about-ambient-glow about-ambient-glow--2" aria-hidden="true" />
-      <div className="about-subtle-grid" aria-hidden="true" />
-
-      {/* 1. VISION & HERO SECTION (Light Editorial Mode) */}
-      <section className="about-l-hero section">
+    <div className="about-page-layout">
+      {/* =====================================================================
+          SECTION 1: HERO
+          ===================================================================== */}
+      <section className="about-sec about-sec--hero" aria-labelledby="about-hero-heading">
         <div className="container">
-          <div className="about-l-hero__header">
-            <div className="about-pill-badge">
-              <span className="about-pill-dot" />
-              <span>ABOUT NAILED IT BRO</span>
-              <span className="about-pill-sep">/</span>
-              <span className="about-pill-tag">DIGITAL BENCHMARK STUDIO</span>
+          <div className="about-hero-grid">
+            {/* Left Column: Text (55%) */}
+            <div className="about-hero-content">
+              <Reveal>
+                <SectionLabel text="ABOUT NAILED IT BRO · DIGITAL PRODUCT STUDIO" />
+              </Reveal>
+
+              <Reveal delay={60}>
+                <h1 id="about-hero-heading" className="about-hero-h1">
+                  We build websites, apps, and AI tools that bring you more{' '}
+                  <em className="serif about-hero-h1__accent">customers.</em>
+                </h1>
+              </Reveal>
+
+              <Reveal delay={120}>
+                <p className="about-hero-subtext">
+                  Nailed It Bro is a four-person product studio. You work directly with the founders who design and build your project, not with account managers or outsourced freelancers.
+                </p>
+              </Reveal>
+
+              <Reveal delay={180}>
+                <div className="about-hero-actions">
+                  <PrimaryButton onClick={() => handleCta('#consultation')}>
+                    Start Your Project
+                  </PrimaryButton>
+                  <SecondaryButton onClick={() => handleCta('#work')}>
+                    See Our Work
+                  </SecondaryButton>
+                </div>
+              </Reveal>
+
+              <Reveal delay={240}>
+                <TrustStrip />
+              </Reveal>
             </div>
 
-            <h1 className="about-l-hero__title display-1">
-              Crafted with obsession. <br />
-              Engineered to <em className="serif">dominate.</em>
-            </h1>
-
-            <p className="about-l-hero__sub">
-              Nailed It Bro is a high-velocity design and digital engineering studio. We partner with ambitious founders, breakout startups, and modern brands to build digital platforms, mobile apps, interactive 3D worlds, and growth engines that redefine their categories.
-            </p>
+            {/* Right Column: Studio Mascot & Interactive 3D Tilted Card */}
+            <div className="about-hero-media">
+              <Reveal delay={150}>
+                <TiltedLogoCard
+                  imageSrc="/logo.jpeg"
+                  alt="Nailed It Bro Studio Mascot & Logo"
+                  badgeText="4 founders, 1 team"
+                />
+              </Reveal>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Interactive Bento Vision Grid (React Bits Style) */}
-          <div className="about-bento-grid">
-            {/* Bento Card 1: The Core Philosophy */}
-            <div
-              className="about-spotlight bento-card bento-card--statement"
-              onMouseMove={handleSpotlight}
-            >
-              <div className="bento-card__inner">
-                <span className="bento-badge">OUR MOTTO & CREED</span>
-                <h2 className="bento-statement">
-                  "Good enough is the enemy of greatness. We refine until every single interaction feels tactile, purposeful, and undeniably <em className="serif">nailed.</em>"
+      {/* =====================================================================
+          SECTION 2: NUMBERS STRIP (STUDIO PILLARS)
+          ===================================================================== */}
+      <section className="about-sec about-sec--numbers" aria-label="Studio commitments">
+        <div className="container">
+          <Reveal>
+            <div className="numbers-card numbers-card--3col">
+              <div className="numbers-grid numbers-grid--3col">
+                <StatItem
+                  targetValue={4}
+                  number="4"
+                  label="Founders on every project"
+                  note="Direct communication"
+                />
+                <StatItem
+                  targetValue={24}
+                  prefix="< "
+                  suffix="h"
+                  number="< 24h"
+                  label="First response guaranteed"
+                  note="Fast answers, no waiting"
+                />
+                <StatItem
+                  targetValue={100}
+                  suffix="%"
+                  number="100%"
+                  label="Handcrafted & custom"
+                  note="No generic templates"
+                />
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 3: WHO WE ARE
+          ===================================================================== */}
+      <section className="about-sec about-sec--who" id="story" aria-labelledby="who-we-are-heading">
+        <div className="container">
+          <div className="who-we-are-grid">
+            {/* Left Column: Story Text */}
+            <div className="who-we-are-story">
+              <Reveal>
+                <SectionLabel text="OUR STORY" />
+                <h2 id="who-we-are-heading" className="section-h2">
+                  Built by four founders who got tired of{' '}
+                  <em className="serif section-h2__accent">overpriced</em> digital work.
                 </h2>
-                <div className="bento-tags">
-                  <span className="bento-tag">Zero Generic Templates</span>
-                  <span className="bento-tag">Surgical Precision</span>
-                  <span className="bento-tag">Speed as a Moat</span>
-                  <span className="bento-tag">Founder Equity Mindset</span>
+              </Reveal>
+
+              <Reveal delay={60}>
+                <div className="who-we-are-paras">
+                  <p>
+                    We started Nailed It Bro because small and mid-sized businesses kept paying too much for slow, template-looking websites and apps.
+                  </p>
+                  <p>
+                    So we built a studio where the people you speak to on day one are the same people who design, code, and launch your product. No handoffs, no 'let me check with the team,' no surprises.
+                  </p>
+                  <p>
+                    We are a young, hungry team. That means we care about every project, answer fast, and treat your business like our own.
+                  </p>
                 </div>
-              </div>
+              </Reveal>
             </div>
 
-            {/* Bento Card 2: 100% In-House Metric */}
-            <div
-              className="about-spotlight bento-card bento-card--metric"
-              onMouseMove={handleSpotlight}
-            >
-              <div className="bento-card__inner">
-                <div className="bento-metric-top">
-                  <span className="bento-metric-num">100%</span>
-                  <span className="bento-metric-icon">⚡</span>
+            {/* Right Column: "What we build" Card */}
+            <div className="who-we-are-card-wrap">
+              <Reveal delay={120}>
+                <div className="what-we-build-card">
+                  <h3 className="what-we-build-card__title">What we build</h3>
+                  <ul className="what-we-build-list">
+                    <li>
+                      <Check size={18} className="list-check-icon" aria-hidden="true" />
+                      <span>Websites and web platforms engineered to convert visitors</span>
+                    </li>
+                    <li>
+                      <Check size={18} className="list-check-icon" aria-hidden="true" />
+                      <span>Custom Android & iOS mobile apps that are fast and intuitive</span>
+                    </li>
+                    <li>
+                      <Check size={18} className="list-check-icon" aria-hidden="true" />
+                      <span>AI automations and smart workflows that save valuable hours</span>
+                    </li>
+                    <li>
+                      <Check size={18} className="list-check-icon" aria-hidden="true" />
+                      <span>Dynamic QR systems for payments, ordering, and engagement</span>
+                    </li>
+                    <li>
+                      <Check size={18} className="list-check-icon" aria-hidden="true" />
+                      <span>Clean brand identities, logos, and professional interfaces</span>
+                    </li>
+                  </ul>
                 </div>
-                <h3>In-House Craftsmanship</h3>
-                <p>Zero outsourcing, zero handoffs to junior contractors. Every line of code and keyframe is engineered by our core leadership team.</p>
-              </div>
-            </div>
-
-            {/* Bento Card 3: Performance Standard */}
-            <div
-              className="about-spotlight bento-card bento-card--metric"
-              onMouseMove={handleSpotlight}
-            >
-              <div className="bento-card__inner">
-                <div className="bento-metric-top">
-                  <span className="bento-metric-num">60fps</span>
-                  <span className="bento-metric-icon">✦</span>
-                </div>
-                <h3>Fluid Tactile Motion</h3>
-                <p>Sub-second loads, 100/100 Core Web Vitals, and smooth inertia physics that give digital products an instant sense of luxury.</p>
-              </div>
-            </div>
-
-            {/* Bento Card 4: Disciplines & Reach */}
-            <div
-              className="about-spotlight bento-card bento-card--wide"
-              onMouseMove={handleSpotlight}
-            >
-              <div className="bento-card__inner">
-                <div className="bento-wide-content">
-                  <div>
-                    <span className="bento-badge">MULTIDISCIPLINARY RANGE</span>
-                    <h3>Ten disciplines, one unified obsession.</h3>
-                    <p>From UI/UX, full-stack Next.js web systems, and 120fps native mobile apps to physics-based 3D games, dynamic QR ecosystems, AI workflows, and viral paid acquisition.</p>
-                  </div>
-                  <div className="bento-stat-pills">
-                    <div className="bento-stat-pill">
-                      <b>10+</b>
-                      <span>Disciplines</span>
-                    </div>
-                    <div className="bento-stat-pill">
-                      <b>99.8%</b>
-                      <span>Client Retention</span>
-                    </div>
-                    <div className="bento-stat-pill">
-                      <b>$12M+</b>
-                      <span>Revenue Driven</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. OUR PLANNING & FLOW (Inspired by the User's Screenshot Reference!) */}
-      <section className="about-flow-section section">
+      {/* =====================================================================
+          SECTION 4: WHAT WE DO (SERVICES)
+          ===================================================================== */}
+      <section className="about-sec about-sec--services" id="services" aria-labelledby="services-heading">
         <div className="container">
-          <div className="section-head">
-            <div className="about-pill-badge">
-              <span className="about-pill-dot" />
-              <span>STRATEGIC FLOW & EXECUTION</span>
-            </div>
-            <h2 className="display-2">
-              Our planning. Our flow. <br />
-              <em className="serif">How we deliver results.</em>
-            </h2>
-            <p className="about-l-hero__sub">
-              A transparent, battle-tested 6-step engineering pipeline designed to eliminate technical risk and build market-leading digital products.
-            </p>
-          </div>
+          <Reveal>
+            <SectionLabel text="WHAT WE DO" />
+            <SectionHeading
+              prefix="Everything your business needs to"
+              accent="go digital."
+              subtext="One team for your website, app, automation, and brand. No juggling five vendors."
+            />
+          </Reveal>
 
-          {/* 6-Card Grid Matching the User's Reference Screenshot */}
-          <div className="steps-grid">
-            {/* Step 1 */}
-            <div className="step-card" onMouseMove={handleSpotlight}>
-              <div className="step-card__top">
-                <h3 className="step-card__title">Sign Up & Immersion</h3>
-                <span className="step-card__badge">1</span>
-              </div>
-              <p className="step-card__desc">
-                Conduct <strong>strategic audits</strong> of your market, revenue model, and competitor moats to define clear launch KPIs.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="step-card" onMouseMove={handleSpotlight}>
-              <div className="step-card__top">
-                <h3 className="step-card__title">Architecture Blueprint</h3>
-                <span className="step-card__badge">2</span>
-              </div>
-              <p className="step-card__desc">
-                Architect <strong>custom system schemas</strong>, select scalable tech stacks (Next.js, cloud backends), and de-risk data flows.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="step-card" onMouseMove={handleSpotlight}>
-              <div className="step-card__top">
-                <h3 className="step-card__title">UI/UX & Design System</h3>
-                <span className="step-card__badge">3</span>
-              </div>
-              <p className="step-card__desc">
-                Craft <strong>frictionless interactive flows</strong>, bespoke Figma design tokens, and luxury visual art direction.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="step-card" onMouseMove={handleSpotlight}>
-              <div className="step-card__top">
-                <h3 className="step-card__title">Full-Stack Production</h3>
-                <span className="step-card__badge">4</span>
-              </div>
-              <p className="step-card__desc">
-                Build with <strong>surgical precision</strong>: 60fps kinetic motion, WebGL shaders, API integration, and modular architectures.
-              </p>
-            </div>
-
-            {/* Step 5 */}
-            <div className="step-card" onMouseMove={handleSpotlight}>
-              <div className="step-card__top">
-                <h3 className="step-card__title">QA & Speed Audits</h3>
-                <span className="step-card__badge">5</span>
-              </div>
-              <p className="step-card__desc">
-                Execute <strong>rigorous stress tests</strong> across devices and secure 100/100 Core Web Vitals performance benchmarks.
-              </p>
-            </div>
-
-            {/* Step 6: The Organic Curved Result CTA Card (Exact User Reference Recreation!) */}
-            <div className="step-card step-card--result-cta" onClick={() => handleCta('#contact')}>
-              <div className="result-cta__content">
-                <h3 className="result-cta__title">
-                  I want <span className="result-cta__accent">to get results!</span>
-                </h3>
-                <button
-                  className="result-cta__btn"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleCta('#contact')
-                  }}
-                >
-                  Contact us
-                </button>
-              </div>
-
-              {/* Inverted organic corner notch with sunglasses emoji */}
-              <div className="result-cta__notch">
-                <span className="result-cta__emoji" role="img" aria-label="Cool sunglasses emoji">
-                  😎
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. OUR TEAM (Chroma Grid from React Bits — Static Side-by-Side Cards) */}
-      <section className="about-team-section section" id="team">
-        <div className="container">
-          <div className="section-head">
-            <div className="about-pill-badge">
-              <span className="about-pill-dot" />
-              <span>THE COLLECTIVE</span>
-              <span className="about-pill-sep">/</span>
-              <span className="about-pill-tag">CO-FOUNDERS</span>
-            </div>
-            <h2 className="display-2">
-              The minds behind <br />
-              <em className="serif">Nailed It Bro.</em>
-            </h2>
-            <p className="about-l-hero__sub">
-              Obsessive digital craftsmen, principal engineers, and growth architects.
-            </p>
-          </div>
-
-          {/* Static Side-by-Side Chroma Grid (4 Columns) */}
-          <div className="chroma-team-grid">
-            {TEAM_MEMBERS.map((member) => (
-              <div
-                key={member.name}
-                className="chroma-member-card"
-                onMouseMove={handleSpotlight}
-                style={{ '--member-tone': member.avatarTone }}
-              >
-                {/* Dynamic Spotlight Glare that reveals color */}
-                <div className="chroma-card__spotlight" aria-hidden="true" />
-
-                <div className="chroma-card__inner">
-                  {/* Top Row: Circular Avatar & Status */}
-                  <div className="member-card__top">
-                    <div className="member-card__avatar-wrap">
-                      <div
-                        className="member-card__avatar"
-                        style={{
-                          background: `linear-gradient(135deg, ${member.avatarTone}28 0%, #17161F 100%)`,
-                          borderColor: member.avatarTone,
-                          color: member.avatarTone,
-                        }}
-                      >
-                        <span>{member.initials}</span>
-                      </div>
-                      <span className="member-card__status" title="Active in Studio" />
-                    </div>
-                  </div>
-
-                  {/* Member Identity: Name & Co-Founder role */}
-                  <div className="member-card__body">
-                    <h3 className="member-card__name">{member.name}</h3>
-                    <p className="member-card__role">Co-Founder</p>
-                  </div>
-
-                  {/* Interactive Get in Touch Button that fans out LinkedIn & Instagram like notes from a folder */}
-                  <div
-                    className={`member-card__pop-wrapper ${activeMemberTouch === member.name ? 'is-fanned' : ''}`}
-                    onMouseEnter={() => setActiveMemberTouch(member.name)}
-                    onMouseLeave={() => setActiveMemberTouch(null)}
-                  >
-                    <div className="member-card__fan-bubbles" aria-label="Social connect links">
-                      <a
-                        href={member.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="member-fan-pill member-fan-pill--li"
-                        title={`Connect with ${member.name} on LinkedIn`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                        <span>LinkedIn</span>
-                      </a>
-
-                      <a
-                        href={member.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="member-fan-pill member-fan-pill--ig"
-                        title={`Follow ${member.name} on Instagram`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                        <span>Instagram</span>
-                      </a>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="member-card__touch-btn"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleCta('#contact')
-                      }}
-                      title={`Get in touch with ${member.name}`}
-                    >
-                      <span>Get in touch</span>
-                      <svg
-                        className="member-card__heart"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <div className="services-3x2-grid">
+            {servicesData.map((svc, i) => (
+              <Reveal key={svc.title} delay={i * 50}>
+                <ServiceItem
+                  icon={svc.icon}
+                  title={svc.title}
+                  description={svc.description}
+                />
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. OUR SOCIALS & COMMUNITY (Modern Glassmorphic Telemetry Hub) */}
-      <section className="about-socials-section section">
-        <div className="about-socials-backdrop-glow" aria-hidden="true" />
-        
+      {/* =====================================================================
+          SECTION 5: WHY CLIENTS CHOOSE US
+          ===================================================================== */}
+      <section className="about-sec about-sec--why" aria-labelledby="why-us-heading">
         <div className="container">
-          <div className="section-head">
-            <div className="about-pill-badge">
-              <span className="about-pill-dot" />
-              <span>REAL-TIME TELEMETRY & SOCIALS</span>
-            </div>
-            <h2 className="display-2">
-              Join the inner circle. <br />
-              <em className="serif">Connect across platforms.</em>
-            </h2>
-            <p className="about-l-hero__sub">
-              Live studio metrics, 60fps design drops, open-source architecture teardowns, and direct channel access.
-            </p>
-          </div>
+          <Reveal>
+            <SectionLabel text="WHY US" />
+            <SectionHeading
+              prefix="What you get when you work with"
+              accent="us."
+            />
+          </Reveal>
 
-          {/* Real-Time Live Telemetry Bar */}
-          <div className="socials-telemetry-bar">
-            <div className="telemetry-left">
-              <div className="telemetry-live-pill">
-                <span className="telemetry-radar-dot" />
-                <span>Live Sync Active</span>
-              </div>
-              <div className="telemetry-meta">
-                <span>Latency: <strong>{ping}ms</strong></span>
-                <span>•</span>
-                <span>Handshake: <strong>Meta & LinkedIn Graph API</strong></span>
-                <span>•</span>
-                <span>Verified: <strong>{lastSync}</strong></span>
-              </div>
+          <div className="benefits-stagger-grid">
+            {/* Top row: 3 cards */}
+            <div className="benefits-row-top">
+              {benefitsData.slice(0, 3).map((item, i) => (
+                <Reveal key={item.title} delay={i * 60}>
+                  <BenefitCard
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                  />
+                </Reveal>
+              ))}
             </div>
 
-            <div className="telemetry-right">
-              <button
-                type="button"
-                className={`telemetry-sync-btn ${isSyncing ? 'is-syncing' : ''}`}
-                onClick={handleSyncFeed}
-                title="Trigger simulated live profile refresh"
-              >
-                <span className="telemetry-sync-icon">↻</span>
-                <span>{isSyncing ? 'Syncing...' : 'Sync Feed'}</span>
-              </button>
-              <button
-                type="button"
-                className="telemetry-api-guide-btn"
-                onClick={() => setShowApiModal(true)}
-              >
-                ⚡ Live API Connector
-              </button>
-            </div>
-          </div>
+            {/* Bottom row: 2 benefit cards + 6th Result CTA card with animated smiley */}
+            <div className="benefits-row-bottom">
+              {benefitsData.slice(3, 5).map((item, i) => (
+                <Reveal key={item.title} delay={180 + i * 60}>
+                  <BenefitCard
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                  />
+                </Reveal>
+              ))}
 
-          {/* 3D Glassmorphic Cards Grid */}
-          <div className="socials-glass-grid">
-            {/* 1. LINKEDIN GLASS CARD */}
-            <div
-              className="glass-social-card glass-social-card--linkedin"
-              onMouseMove={handleCardMouseMove}
-              onMouseLeave={handleCardMouseLeave}
-            >
-              <div className="glass-social-card__inner">
-                {/* Ambient dynamic glow & specular highlight */}
-                <div className="glass-social-card__glow" aria-hidden="true" />
-                <div className="glass-social-card__specular" aria-hidden="true" />
-
-                {/* Top: 3D Floating Orb & Status */}
-                <div className="glass-social-card__top">
-                  <div className="glass-orb-container">
-                    <div className="glass-orb">
-                      <img src="/linkedin.png" alt="LinkedIn" className="glass-orb__img" />
-                    </div>
-                  </div>
-                  <div className="glass-social-card__badge-wrap">
-                    <span className="glass-social-category-pill">B2B & Engineering</span>
-                    <span className="glass-status-indicator">
-                      <span className="glass-status-indicator__dot" />
-                      Weekly Teardowns
-                    </span>
-                  </div>
-                </div>
-
-                {/* Mid: Title & Metric Telemetry Box */}
-                <div className="glass-social-card__mid">
-                  <div className="glass-social-card__title-row">
-                    <h3 className="glass-social-card__name">LinkedIn</h3>
-                    <span className="glass-verified-badge" title="Verified Network">✓</span>
-                  </div>
-                  <div className="glass-social-card__handle">Nailed It Bro Studio</div>
-
-                  <div className="glass-metric-box">
-                    <div className="glass-metric-top">
-                      <span className="glass-metric-value">{metrics.linkedin.toLocaleString()}</span>
-                      <span className="glass-metric-trend">↑ +18.4%</span>
-                    </div>
-                    <div className="glass-metric-label">Professional Network & Founders</div>
-                  </div>
-
-                  <p className="glass-social-card__desc">
-                    Deep full-stack engineering teardowns, 60fps web architecture benchmarks, and digital leadership case studies.
-                  </p>
-
-                  <div className="glass-social-tags">
-                    <span className="glass-social-tag">#SystemArchitecture</span>
-                    <span className="glass-social-tag">#TactileWeb</span>
-                    <span className="glass-social-tag">#Leadership</span>
-                  </div>
-                </div>
-
-                {/* Bottom: Channel CTA */}
-                <div className="glass-social-card__bottom">
-                  <span className="glass-card-meta-note">Verified Channel</span>
-                  <a
-                    href="https://linkedin.com/company/naileditbro"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-cta-btn glass-cta-btn--linkedin"
-                  >
-                    <span>Connect on LinkedIn</span>
-                    <span className="glass-cta-btn-arrow">↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. INSTAGRAM GLASS CARD */}
-            <div
-              className="glass-social-card glass-social-card--instagram"
-              onMouseMove={handleCardMouseMove}
-              onMouseLeave={handleCardMouseLeave}
-            >
-              <div className="glass-social-card__inner">
-                {/* Ambient dynamic glow & specular highlight */}
-                <div className="glass-social-card__glow" aria-hidden="true" />
-                <div className="glass-social-card__specular" aria-hidden="true" />
-
-                {/* Top: 3D Floating Orb with animated gradient ring */}
-                <div className="glass-social-card__top">
-                  <div className="glass-orb-container">
-                    <div className="glass-orb-ring" aria-hidden="true" />
-                    <div className="glass-orb">
-                      <img src="/instagram.png" alt="Instagram" className="glass-orb__img" />
-                    </div>
-                  </div>
-                  <div className="glass-social-card__badge-wrap">
-                    <span className="glass-social-category-pill">Visual Drops & Reels</span>
-                    <span className="glass-status-indicator">
-                      <span className="glass-status-indicator__dot" />
-                      60FPS Motion
-                    </span>
-                  </div>
-                </div>
-
-                {/* Mid: Title & Metric Telemetry Box */}
-                <div className="glass-social-card__mid">
-                  <div className="glass-social-card__title-row">
-                    <h3 className="glass-social-card__name">Instagram</h3>
-                    <span className="glass-verified-badge" title="Verified Creator">✓</span>
-                  </div>
-                  <div className="glass-social-card__handle">@naileditbro</div>
-
-                  <div className="glass-metric-box">
-                    <div className="glass-metric-top">
-                      <span className="glass-metric-value">{metrics.instagram.toLocaleString()}</span>
-                      <span className="glass-metric-trend">↑ +32.6%</span>
-                    </div>
-                    <div className="glass-metric-label">Global Interaction & Design Fans</div>
-                  </div>
-
-                  <p className="glass-social-card__desc">
-                    High-velocity UI design drops, interactive Figma design tokens, live 3D WebGL experiments, and studio culture.
-                  </p>
-
-                  <div className="glass-social-tags">
-                    <span className="glass-social-tag">#FigmaTokens</span>
-                    <span className="glass-social-tag">#CreativeDev</span>
-                    <span className="glass-social-tag">#InteractionDesign</span>
-                  </div>
-                </div>
-
-                {/* Bottom: Channel CTA */}
-                <div className="glass-social-card__bottom">
-                  <span className="glass-card-meta-note">Active Daily</span>
-                  <a
-                    href="https://instagram.com/nailedit.bro"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-cta-btn glass-cta-btn--instagram"
-                  >
-                    <span>Follow @nailedit.bro</span>
-                    <span className="glass-cta-btn-arrow">↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. FACEBOOK GLASS CARD */}
-            <div
-              className="glass-social-card glass-social-card--facebook"
-              onMouseMove={handleCardMouseMove}
-              onMouseLeave={handleCardMouseLeave}
-            >
-              <div className="glass-social-card__inner">
-                {/* Ambient dynamic glow & specular highlight */}
-                <div className="glass-social-card__glow" aria-hidden="true" />
-                <div className="glass-social-card__specular" aria-hidden="true" />
-
-                {/* Top: 3D Floating Orb & Status */}
-                <div className="glass-social-card__top">
-                  <div className="glass-orb-container">
-                    <div className="glass-orb">
-                      <img src="/facebook.png" alt="Facebook" className="glass-orb__img" />
-                    </div>
-                  </div>
-                  <div className="glass-social-card__badge-wrap">
-                    <span className="glass-social-category-pill">Client Community</span>
-                    <span className="glass-status-indicator">
-                      <span className="glass-status-indicator__dot" />
-                      ★ 5.0 Rating
-                    </span>
-                  </div>
-                </div>
-
-                {/* Mid: Title & Metric Telemetry Box */}
-                <div className="glass-social-card__mid">
-                  <div className="glass-social-card__title-row">
-                    <h3 className="glass-social-card__name">Facebook</h3>
-                    <span className="glass-verified-badge" title="Verified Page">✓</span>
-                  </div>
-                  <div className="glass-social-card__handle">Nailed It Bro Official</div>
-
-                  <div className="glass-metric-box">
-                    <div className="glass-metric-top">
-                      <span className="glass-metric-value">{metrics.facebook.toLocaleString()}</span>
-                      <span className="glass-metric-trend">↑ +14.2%</span>
-                    </div>
-                    <div className="glass-metric-label">Client Network & Partners</div>
-                  </div>
-
-                  <p className="glass-social-card__desc">
-                    Official announcements, client success stories, interactive digital craft highlights, and enterprise release notes.
-                  </p>
-
-                  <div className="glass-social-tags">
-                    <span className="glass-social-tag">#ClientSuccess</span>
-                    <span className="glass-social-tag">#EnterpriseUI</span>
-                    <span className="glass-social-tag">#ProductReleases</span>
-                  </div>
-                </div>
-
-                {/* Bottom: Channel CTA */}
-                <div className="glass-social-card__bottom">
-                  <span className="glass-card-meta-note">99.8% Recommend</span>
-                  <a
-                    href="https://facebook.com/naileditbro"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-cta-btn glass-cta-btn--facebook"
-                  >
-                    <span>Join Community</span>
-                    <span className="glass-cta-btn-arrow">↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Live Social API Connector Modal */}
-        {showApiModal && (
-          <div
-            className="socials-api-modal-backdrop"
-            onClick={() => setShowApiModal(false)}
-          >
-            <div
-              className="socials-api-modal"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="socials-api-modal__header">
-                <h3 className="socials-api-modal__title">Live Social API Integration</h3>
-                <button
-                  type="button"
-                  className="socials-api-modal__close"
-                  onClick={() => setShowApiModal(false)}
-                >
-                  ✕
-                </button>
-              </div>
-              <p>
-                To stream 100% live follower metrics and latest posts directly from Instagram, Facebook, and LinkedIn, connect your developer credentials below:
-              </p>
-
-              <div className="socials-api-steps">
-                <div className="socials-api-step">
-                  <div className="socials-api-step__no">1</div>
-                  <div className="socials-api-step__content">
-                    <strong>Instagram & Facebook Graph API</strong>
-                    <span>Generate a Long-Lived User Access Token in Meta for Developers with <code>instagram_basic</code> & <code>pages_show_list</code> permissions.</span>
-                  </div>
-                </div>
-                <div className="socials-api-step">
-                  <div className="socials-api-step__no">2</div>
-                  <div className="socials-api-step__content">
-                    <strong>LinkedIn Community Management API</strong>
-                    <span>Create an app in the LinkedIn Developer Portal to access the Organization Followers & Posts endpoint.</span>
-                  </div>
-                </div>
-                <div className="socials-api-step">
-                  <div className="socials-api-step__no">3</div>
-                  <div className="socials-api-step__content">
-                    <strong>Plug into Environment Variables</strong>
-                    <span>Add these keys to your project root <code>.env</code> file:</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="socials-api-env-box">
-                <div>VITE_INSTAGRAM_USER_ID=nailedit.bro</div>
-                <div>VITE_INSTAGRAM_GRAPH_TOKEN=EAA...your_token_here</div>
-                <div>VITE_LINKEDIN_ORG_URN=urn:li:organization:12345678</div>
-                <div>VITE_FACEBOOK_PAGE_ID=naileditbro</div>
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
-
-      {/* 5. GRAND BOTTOM BANNER (Light Cream & Warm Glow) */}
-      <section className="about-bottom-cta section">
-        <div className="container">
-          <div className="about-grand-banner">
-            <div className="about-grand-banner__glow" aria-hidden="true" />
-            <div className="about-pill-badge">
-              <span className="about-pill-dot" />
-              <span>START A COLLABORATION</span>
-            </div>
-            <h2 className="display-2">
-              Ready to nail your next <br />
-              <em className="serif">flagship launch?</em>
-            </h2>
-            <p>
-              Whether you are architecting a new web platform, a viral 3D mobile game, an AI automation pipeline, or an unmistakable brand identity.
-            </p>
-            <div className="about-grand-banner__actions">
-              <Magnetic>
-                <button
-                  className="btn btn--dark hero__btn-primary"
+              {/* Card 6: The Eye-Catching Result CTA Card with Organic Notch & Animated Smiley */}
+              <Reveal delay={300}>
+                <div
+                  className="benefit-card benefit-card--result-cta"
                   onClick={() => handleCta('#contact')}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCta('#contact')}
+                  aria-label="Contact us to get results"
                 >
-                  <span className="btn__label" data-text="Start Your Project">
-                    Start Your Project
-                  </span>
-                  <span className="btn__icon" aria-hidden="true">
-                    →
-                  </span>
-                </button>
-              </Magnetic>
-              <button
-                className="btn btn--ghost"
-                onClick={() => handleCta('#work')}
-              >
-                <span className="btn__label" data-text="Explore Selected Work">
-                  Explore Selected Work
-                </span>
-              </button>
+                  <div className="result-cta__content">
+                    <h3 className="result-cta__title">
+                      Want <span className="result-cta__accent">to get results!</span>
+                    </h3>
+                    <button
+                      type="button"
+                      className="result-cta__btn"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCta('#contact')
+                      }}
+                    >
+                      <span>Contact us</span>
+                      <span className="result-cta__btn-arrow" aria-hidden="true">→</span>
+                    </button>
+                  </div>
+
+                  {/* Organic corner notch with animated smiley emoji */}
+                  <div className="result-cta__notch" title="Let's nail it!">
+                    <span className="result-cta__emoji" role="img" aria-label="Cool smiley emoji">
+                      😎
+                    </span>
+                  </div>
+                </div>
+              </Reveal>
             </div>
           </div>
         </div>
       </section>
+
+      {/* =====================================================================
+          SECTION 6: HOW WE WORK (PROCESS)
+          ===================================================================== */}
+      <section className="about-sec about-sec--process" id="process" aria-labelledby="process-heading">
+        <div className="container">
+          <Reveal>
+            <SectionLabel text="OUR PROCESS" />
+            <SectionHeading
+              prefix="From first call to launch,"
+              accent="simply."
+            />
+          </Reveal>
+
+          <div className="process-timeline-wrap">
+            {processStepsData.map((step, idx) => (
+              <Reveal key={step.number} delay={idx * 60}>
+                <ProcessStep
+                  number={step.number}
+                  title={step.title}
+                  duration={step.duration}
+                  icon={step.icon}
+                  description={step.description}
+                  isActive={idx === activeProcessStep}
+                  isCompleted={idx < activeProcessStep}
+                  isLast={idx === processStepsData.length - 1}
+                  onClick={() => setActiveProcessStep(idx)}
+                  onMouseEnter={() => {
+                    setActiveProcessStep(idx)
+                    setIsProcessPaused(true)
+                  }}
+                  onMouseLeave={() => setIsProcessPaused(false)}
+                />
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Interactive Step Switcher & Progress Bar */}
+          <div className="process-step-pills">
+            {processStepsData.map((step, idx) => (
+              <button
+                key={step.number}
+                type="button"
+                className={`process-step-pill ${idx === activeProcessStep ? 'is-active' : ''}`}
+                onClick={() => {
+                  setActiveProcessStep(idx)
+                  setIsProcessPaused(true)
+                }}
+                aria-label={`Jump to Step ${step.number}: ${step.title}`}
+              >
+                <span className="process-step-pill__num">{step.number}</span>
+                <span className="process-step-pill__name">{step.title}</span>
+              </button>
+            ))}
+          </div>
+
+          <Reveal delay={250}>
+            <div className="process-timeline-note">
+              <span className="process-timeline-note__text">
+                Typical delivery timeline: <strong>2–4 weeks</strong> for business websites,{' '}
+                <strong>6–10 weeks</strong> for custom mobile & web apps.
+              </span>
+              <span className="process-timeline-badge">✦ Fixed-scope guarantee</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 7: OUR PRINCIPLES
+          ===================================================================== */}
+      <section className="about-sec about-sec--principles" aria-labelledby="principles-heading">
+        <div className="container">
+          <div className="principles-layout">
+            {/* Left Column: Pull Quote */}
+            <div className="principles-quote-col">
+              <Reveal>
+                <SectionLabel text="WHAT WE BELIEVE" />
+                <blockquote className="principles-pull-quote">
+                  “Good enough is the enemy of greatness. We refine every interaction until it feels purposeful, and undeniably{' '}
+                  <em className="serif principles-pull-quote__accent">nailed.</em>”
+                </blockquote>
+              </Reveal>
+            </div>
+
+            {/* Right Column: 2x2 Principles Grid */}
+            <div className="principles-cards-col">
+              <div className="principles-2x2-grid">
+                {principlesData.map((pr, i) => (
+                  <Reveal key={pr.number} delay={i * 60}>
+                    <PrincipleCard
+                      number={pr.number}
+                      title={pr.title}
+                      description={pr.description}
+                    />
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 8: MEET THE FOUNDERS
+          ===================================================================== */}
+      <section className="about-sec about-sec--founders" id="team" aria-labelledby="founders-heading">
+        <div className="container">
+          <Reveal>
+            <SectionLabel text="THE FOUNDERS" />
+            <SectionHeading
+              prefix="Meet the people who will build your"
+              accent="project."
+              subtext="Four founders, each leading a different part of your product."
+            />
+          </Reveal>
+
+          <div className="founders-cards-row">
+            {foundersData.map((f, i) => (
+              <Reveal key={f.name} delay={i * 60} className="founder-card-reveal-col">
+                <FounderCard
+                  name={f.name}
+                  role={f.role}
+                  domain={f.domain}
+                  bio={f.bio}
+                  skills={f.skills}
+                  photoSrc={f.photoSrc}
+                  linkedin={f.linkedin}
+                  instagram={f.instagram}
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 9: OUR WORK (PROOF)
+          ===================================================================== */}
+      <section className="about-sec about-sec--work" id="work" aria-labelledby="work-heading">
+        <div className="container">
+          <Reveal>
+            <SectionLabel text="OUR WORK" />
+            <SectionHeading
+              prefix="Things we've"
+              accent="built."
+            />
+          </Reveal>
+
+          <div className="work-cards-grid">
+            {projectsData.map((proj, i) => (
+              <Reveal key={i} delay={i * 60}>
+                <ProjectCard
+                  screenshot={proj.screenshot}
+                  name={proj.name}
+                  clientType={proj.clientType}
+                  result={proj.result}
+                  techTags={proj.techTags}
+                  link={proj.link}
+                  isOwnProduct={proj.isOwnProduct}
+                  isTodo={proj.isTodo}
+                />
+              </Reveal>
+            ))}
+          </div>
+
+          {/* TestimonialCard: Rendered only when real client data exists; currently empty/commented out as per instructions */}
+          {/*
+          <TestimonialCard
+            quote="[REAL CLIENT TESTIMONIAL QUOTE]"
+            name="[CLIENT NAME]"
+            business="[CLIENT BUSINESS]"
+          />
+          */}
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 10: WHO WE HELP
+          ===================================================================== */}
+      <section className="about-sec about-sec--who-help" aria-labelledby="who-help-heading">
+        <div className="container">
+          <Reveal>
+            <div className="who-help-center-header">
+              <SectionLabel text="WHO WE HELP" />
+              <h2 id="who-help-heading" className="section-h2 who-help-title">
+                Built for businesses like <em className="serif section-h2__accent">yours.</em>
+              </h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={60}>
+            <div className="who-help-pills-row" aria-label="Businesses and industries we build for">
+              {audiencePills.map((pill) => (
+                <span key={pill} className="audience-pill-item">
+                  {pill}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 11: FAQ
+          ===================================================================== */}
+      <section className="about-sec about-sec--faq" id="faq" aria-labelledby="faq-heading">
+        <div className="container">
+          <Reveal>
+            <div className="faq-center-header">
+              <SectionLabel text="QUESTIONS" />
+              <h2 id="faq-heading" className="section-h2 faq-title">
+                Before you <em className="serif section-h2__accent">ask.</em>
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="faq-accordion-container">
+            {faqData.map((faq, i) => (
+              <Reveal key={faq.id} delay={i * 40}>
+                <FAQItem
+                  id={faq.id}
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={i === 0}
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 12: FOLLOW US (SOCIALS)
+          ===================================================================== */}
+      <section className="about-sec about-sec--follow" aria-labelledby="follow-studio-heading">
+        <div className="container">
+          {/* Top Scrolling Text Ticker Ribbon */}
+          <Reveal>
+            <div className="follow-ticker-ribbon" aria-hidden="true">
+              <div className="follow-ticker-track">
+                <span>✦ BEHIND THE SCENES</span>
+                <span>✦ UI/UX EXPERIMENTS</span>
+                <span>✦ PRODUCT LAUNCHES</span>
+                <span>✦ CODE BREAKDOWNS</span>
+                <span>✦ STUDIO CULTURE</span>
+                <span>✦ BUILT IN PUBLIC</span>
+                <span>✦ BEHIND THE SCENES</span>
+                <span>✦ UI/UX EXPERIMENTS</span>
+                <span>✦ PRODUCT LAUNCHES</span>
+                <span>✦ CODE BREAKDOWNS</span>
+                <span>✦ STUDIO CULTURE</span>
+                <span>✦ BUILT IN PUBLIC</span>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Section Header */}
+          <Reveal delay={60}>
+            <div className="follow-studio-header">
+              <SectionLabel text="FOLLOW THE STUDIO" />
+              <SectionHeading
+                prefix="Behind the scenes of our"
+                accent="craft."
+                subtext="Live project breakdowns, design drops, and how we turn complex ideas into shipped products. Follow along on our official verified channels."
+              />
+            </div>
+          </Reveal>
+
+          {/* 3 Rich Interactive Studio Cards */}
+          <div className="follow-studio-cards-grid">
+            {/* 1. LinkedIn */}
+            <Reveal delay={100} className="follow-card-col">
+              <a
+                href="https://linkedin.com/company/naileditbro"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="studio-channel-card studio-channel-card--li"
+                aria-label="Follow Nailed It Bro on LinkedIn"
+              >
+                <div className="studio-channel-card__top">
+                  <div className="studio-channel-icon-wrap studio-channel-icon-wrap--li">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.53 1.53 0 0 0 1.53-1.53c0-.85-.68-1.54-1.53-1.54a1.54 1.54 0 0 0-1.54 1.54c0 .85.69 1.53 1.54 1.53m1.4 9.74v-8.37H5.06v8.37h2.8z" />
+                    </svg>
+                  </div>
+                  <div className="studio-channel-card__badges">
+                    <span className="studio-verified-pill">
+                      <span className="verified-dot" aria-hidden="true" />
+                      OFFICIAL
+                    </span>
+                    <div className="studio-arrow-badge" aria-hidden="true">
+                      <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="studio-channel-card__body">
+                  <span className="studio-channel-tag">Engineering & Tech</span>
+                  <h3 className="studio-channel-name">LinkedIn</h3>
+                  <span className="studio-channel-handle">Nailed It Bro · Company</span>
+                  <p className="studio-channel-desc">
+                    Industry insights, architectural benchmarks, client case studies, and engineering updates from the team.
+                  </p>
+                </div>
+
+                <div className="studio-channel-card__footer">
+                  <span className="studio-channel-cta">Follow on LinkedIn</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </div>
+              </a>
+            </Reveal>
+
+            {/* 2. Instagram */}
+            <Reveal delay={160} className="follow-card-col">
+              <a
+                href="https://instagram.com/nailedit.bro"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="studio-channel-card studio-channel-card--ig"
+                aria-label="Follow Nailed It Bro on Instagram"
+              >
+                <div className="studio-channel-card__top">
+                  <div className="studio-channel-icon-wrap studio-channel-icon-wrap--ig">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                    </svg>
+                  </div>
+                  <div className="studio-channel-card__badges">
+                    <span className="studio-verified-pill">
+                      <span className="verified-dot" aria-hidden="true" />
+                      OFFICIAL
+                    </span>
+                    <div className="studio-arrow-badge" aria-hidden="true">
+                      <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="studio-channel-card__body">
+                  <span className="studio-channel-tag">Visuals & Motion</span>
+                  <h3 className="studio-channel-name">Instagram</h3>
+                  <span className="studio-channel-handle">@nailedit.bro</span>
+                  <p className="studio-channel-desc">
+                    Visual design drops, interactive UI showcases, behind-the-scenes stories, and studio culture highlights.
+                  </p>
+                </div>
+
+                <div className="studio-channel-card__footer">
+                  <span className="studio-channel-cta">Follow on Instagram</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </div>
+              </a>
+            </Reveal>
+
+            {/* 3. Facebook */}
+            <Reveal delay={220} className="follow-card-col">
+              <a
+                href="https://www.facebook.com/share/1FFA1GSven/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="studio-channel-card studio-channel-card--fb"
+                aria-label="Connect with Nailed It Bro on Facebook"
+              >
+                <div className="studio-channel-card__top">
+                  <div className="studio-channel-icon-wrap studio-channel-icon-wrap--fb">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                  </div>
+                  <div className="studio-channel-card__badges">
+                    <span className="studio-verified-pill">
+                      <span className="verified-dot" aria-hidden="true" />
+                      OFFICIAL
+                    </span>
+                    <div className="studio-arrow-badge" aria-hidden="true">
+                      <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="studio-channel-card__body">
+                  <span className="studio-channel-tag">Community & Events</span>
+                  <h3 className="studio-channel-name">Facebook</h3>
+                  <span className="studio-channel-handle">Nailed It Bro · Page</span>
+                  <p className="studio-channel-desc">
+                    Company announcements, client success stories, community discussions, and digital innovation updates.
+                  </p>
+                </div>
+
+                <div className="studio-channel-card__footer">
+                  <span className="studio-channel-cta">Follow on Facebook</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </div>
+              </a>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          SECTION 13: FINAL CTA BAND
+          ===================================================================== */}
+      <Reveal>
+        <CTABand onConsultClick={handleCta} />
+      </Reveal>
     </div>
   )
 }

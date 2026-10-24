@@ -38,6 +38,8 @@ export const TEAM_MEMBERS = [
   {
     name: 'Atharv Doiphode',
     role: 'Co-Founder',
+    discipline: 'Website & Strategy',
+    craftTagline: 'Website · Social Media Management · Product Strategy',
     initials: 'AD',
     avatarTone: '#FF5E14',
     linkedin: 'https://www.linkedin.com/in/atharv-doiphode-07045125a/',
@@ -46,6 +48,8 @@ export const TEAM_MEMBERS = [
   {
     name: 'Aditya Wagh',
     role: 'Co-Founder',
+    discipline: 'QR & AI',
+    craftTagline: 'QR Architecture · Artificial Intelligence',
     initials: 'AW',
     avatarTone: '#06B6D4',
     linkedin: 'https://www.linkedin.com/in/aditya-wagh25/',
@@ -54,6 +58,8 @@ export const TEAM_MEMBERS = [
   {
     name: 'Mohit Malve',
     role: 'Co-Founder',
+    discipline: 'AI & Game Dev',
+    craftTagline: 'Artificial Intelligence · Game Development',
     initials: 'MM',
     avatarTone: '#10B981',
     linkedin: 'https://www.linkedin.com/in/mohit-malve/',
@@ -62,6 +68,8 @@ export const TEAM_MEMBERS = [
   {
     name: 'Avdhoot Pimparkar',
     role: 'Co-Founder',
+    discipline: 'App Dev & UI/UX',
+    craftTagline: 'App Development · UI/UX Design',
     initials: 'AP',
     avatarTone: '#8B5CF6',
     linkedin: 'https://www.linkedin.com/in/avdhootp144/',
