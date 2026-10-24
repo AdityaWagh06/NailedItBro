@@ -38,7 +38,7 @@ export default function Services() {
       <div className="container">
         <div className="section-head">
           <p className="eyebrow">(Services)</p>
-          <h2 className="services__title display-2" id="services-title">Six disciplines, <em className="serif">one</em> obsessive team.</h2>
+          <h2 className="services__title display-2" id="services-title">Ten disciplines, <em className="serif">one</em> obsessive team.</h2>
         </div>
 
         <div className="services__layout">
@@ -97,7 +97,7 @@ export default function Services() {
                 </m.div>
               </AnimatePresence>
               <div className="services__preview-cap">
-                <span>{s.no} / 06</span>
+                <span>{s.no} / {String(SERVICES.length).padStart(2, '0')}</span>
                 <AnimatePresence mode="wait" initial={false}>
                   <m.b key={s.id} initial={{ y: '100%' }} animate={{ y: '0%' }} exit={{ y: '-100%' }} transition={{ duration: reduced ? 0 : 0.4, ease: MOTION_EASE }}>
                     {s.title}

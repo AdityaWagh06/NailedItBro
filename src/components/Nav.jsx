@@ -8,12 +8,15 @@ import Magnetic from './Magnetic'
 export function Logo() {
   return (
     <span className="logo">
-      Nailed It <em className="serif">Bro</em><span className="logo__dot" />
+      <span className="logo__brand">
+        <span className="logo__text">Nailed<span className="logo__it">It</span>Bro</span>
+        <span className="logo__bar" />
+      </span>
     </span>
   )
 }
 
-export default function Nav() {
+export default function Nav({ onNavigate }) {
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -61,9 +64,18 @@ export default function Nav() {
   const go = (e, href) => {
     e.preventDefault()
     setOpen(false)
-    history.replaceState(null, '', href)
-    // Let the overlay close before scrolling.
-    setTimeout(() => scrollToTarget(href), open ? 350 : 0)
+    if (onNavigate) {
+      onNavigate(href)
+    } else {
+      history.pushState(null, '', href)
+      window.dispatchEvent(new Event('hashchange'))
+      if (href === '#about') {
+        window.scrollTo(0, 0)
+        getLenis()?.scrollTo(0, { immediate: true })
+      } else {
+        setTimeout(() => scrollToTarget(href), open ? 350 : 80)
+      }
+    }
   }
 
   const t = reduced ? { duration: 0 } : { duration: 0.7, ease: MOTION_EASE }
@@ -77,11 +89,18 @@ export default function Nav() {
             <a key={l.href} href={l.href} className="u-link" onClick={(e) => go(e, l.href)}>{l.label}</a>
           ))}
         </nav>
-        <Magnetic className="nav__cta-wrap">
-          <a href="#contact" className="btn btn--sm btn--dark nav__cta" onClick={(e) => go(e, '#contact')}>
-            <span className="btn__label" data-text="Start a project">Start a project</span>
+        <div className="nav__cta-wrap">
+          <a
+            href="#contact"
+            className="nav-quote-btn"
+            onClick={(e) => go(e, '#contact')}
+          >
+            <span>Get a Quote</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </a>
-        </Magnetic>
+        </div>
         <button
           ref={menuBtn}
           className="nav__burger"
@@ -124,13 +143,25 @@ export default function Nav() {
                 </div>
               ))}
             </nav>
+            <div className="menu__mobile-cta-wrap">
+              <a
+                href="#contact"
+                className="btn-primary-52 btn-primary-52--full"
+                onClick={(e) => go(e, '#contact')}
+              >
+                <span>Get a Quote</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
             <m.div
               className="menu__foot"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0, transition: { ...t, delay: reduced ? 0 : 0.5 } }}
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
             >
-              <a href={`mailto:${EMAIL}`} className="u-link">{EMAIL}</a>
+              <a href={`mailto:${EMAIL}`} target="_blank" rel="noopener noreferrer" className="u-link">{EMAIL}</a>
               <span>Remote-first · Worldwide</span>
             </m.div>
           </m.div>

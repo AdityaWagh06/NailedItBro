@@ -78,6 +78,11 @@ export default function Work() {
                 onUpdate: (self) => {
                   gsap.set('.work__bar-fill', { scaleX: self.progress })
                   setCount(Math.min(PROJECTS.length, Math.max(1, Math.round(self.progress * (PROJECTS.length - 1)) + 1)))
+                  if (self.progress > 0.88) {
+                    gsap.to('.work__progress', { autoAlpha: 0, duration: 0.25, overwrite: 'auto' })
+                  } else {
+                    gsap.to('.work__progress', { autoAlpha: 1, duration: 0.25, overwrite: 'auto' })
+                  }
                 },
               },
             })
@@ -96,9 +101,23 @@ export default function Work() {
                   scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left right', end: 'right left', scrub: true },
                 })
               })
+              // Entrance: metadata reveals when panel slides into view
               gsap.from(panel.querySelectorAll('.proj__meta > *'), {
-                y: 30, autoAlpha: 0, stagger: 0.06, duration: 0.8,
-                scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left 70%', toggleActions: 'play none none reverse' },
+                x: 30, autoAlpha: 0, stagger: 0.06, duration: 0.8,
+                scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left 75%', toggleActions: 'play none none reverse' },
+              })
+              // Exit: smoothly dissolve the entire panel as it leaves the viewport on the left
+              gsap.to(panel, {
+                autoAlpha: 0,
+                xPercent: -8,
+                ease: 'power1.inOut',
+                scrollTrigger: {
+                  trigger: panel,
+                  containerAnimation: scroll,
+                  start: 'right 35%',
+                  end: 'right 0%',
+                  scrub: true,
+                },
               })
             })
           } else {

@@ -1,0 +1,714 @@
+/* ==========================================================================
+   WallTiles.css — Crisp, Pixel-Perfect Mini Dummy UI Cards for DriftWall
+   ========================================================================== */
+
+.wt-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  font-family: var(--f-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  background: #0E0F14;
+  color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   1. Desktop Website Dummy UI Cafe (Brew & Bloom)
+   -------------------------------------------------------------------------- */
+.wt-cafe {
+  background: #181512;
+}
+.wt-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  background: #24201B;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.wt-dots {
+  display: flex;
+  gap: 3.5px;
+}
+.wt-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+.wt-dot--red { background: #FF5F56; }
+.wt-dot--yellow { background: #FFBD2E; }
+.wt-dot--green { background: #27C93F; }
+.wt-url {
+  margin-left: 4px;
+  font-size: 8.5px;
+  color: #A8A29A;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+.wt-cafe-body {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  height: calc(100% - 22px);
+  padding: 8px 10px;
+  gap: 8px;
+  align-items: center;
+  background: linear-gradient(135deg, #1C1814 0%, #14110E 100%);
+}
+.wt-cafe-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.wt-cafe-eyebrow {
+  font-size: 7.5px;
+  font-weight: 700;
+  color: var(--orange, #FF5E14);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wt-cafe-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #F5EFE6;
+  margin: 0;
+}
+.wt-cafe-title em {
+  font-family: var(--f-serif, Georgia, serif);
+  font-style: italic;
+  font-weight: 400;
+  color: #F8D5B0;
+}
+.wt-cafe-desc {
+  font-size: 7px;
+  color: #9E968D;
+  line-height: 1.25;
+  margin: 1px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.wt-cafe-btn {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 3px;
+  margin-top: 4px;
+  padding: 2.5px 7px;
+  background: var(--orange, #FF5E14);
+  color: #FFFFFF;
+  border-radius: 999px;
+  font-size: 7.5px;
+  font-weight: 700;
+}
+.wt-cafe-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.wt-cafe-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   2. Mobile App Dummy UI (Kinetic Habit & Athletic OS)
+   -------------------------------------------------------------------------- */
+.wt-mobile {
+  background: #0B0E14;
+  padding: 7px 10px;
+  gap: 5px;
+}
+.wt-phone-notch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 8px;
+  font-weight: 600;
+  color: #8E94A5;
+}
+.wt-phone-notch {
+  width: 32px;
+  height: 5px;
+  background: #1C2230;
+  border-radius: 999px;
+}
+.wt-mobile-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wt-user-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.wt-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #D7F25C;
+  color: #0E1405;
+  display: grid;
+  place-content: center;
+  font-size: 9px;
+  font-weight: 800;
+}
+.wt-user-name {
+  font-size: 9px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+.wt-user-badge {
+  font-size: 7px;
+  font-weight: 800;
+  background: rgba(215, 242, 92, 0.2);
+  color: #D7F25C;
+  padding: 1.5px 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(215, 242, 92, 0.4);
+}
+.wt-mobile-score-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 9px;
+  background: #131926;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.wt-score-lbl {
+  font-size: 7.5px;
+  color: #8E94A5;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.wt-score-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: #D7F25C;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.wt-score-val small {
+  font-size: 8px;
+  color: #8E94A5;
+  font-weight: 500;
+}
+.wt-mobile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+}
+.wt-mstat {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 6px;
+  background: #131926;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.wt-mstat b {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.wt-mstat span {
+  font-size: 6.5px;
+  color: #8E94A5;
+}
+.wt-mstat--lime b { color: #D7F25C; }
+.wt-mstat--cyan b { color: #5CE1E6; }
+.wt-mstat--peach b { color: #FF9B71; }
+
+/* --------------------------------------------------------------------------
+   3. Social Media Management: INSTAGRAM Tile
+   -------------------------------------------------------------------------- */
+.wt-instagram {
+  background: radial-gradient(circle at 100% 0%, #3B1B54 0%, #150E24 55%, #0B0814 100%);
+  padding: 8px 10px;
+  gap: 6px;
+}
+.wt-smm-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wt-smm-brand {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.wt-platform-icon {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  object-fit: contain;
+}
+.wt-smm-handle {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.wt-smm-verified {
+  width: 8px;
+  height: 8px;
+  background: #E1306C;
+  color: #FFF;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  font-size: 6px;
+  font-weight: 900;
+}
+.wt-smm-pill {
+  font-size: 7px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(225, 48, 108, 0.2);
+  color: #FF659A;
+  border: 1px solid rgba(225, 48, 108, 0.35);
+}
+.wt-ig-reel-card {
+  position: relative;
+  flex: 1;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #1B132C;
+  border: 1px solid rgba(225, 48, 108, 0.25);
+  display: flex;
+  align-items: flex-end;
+  padding: 6px 8px;
+}
+.wt-ig-reel-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.65;
+}
+.wt-ig-reel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(12, 8, 20, 0.95) 15%, transparent 80%);
+}
+.wt-ig-reel-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+.wt-ig-reel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 6.5px;
+  font-weight: 800;
+  color: #FF659A;
+  text-transform: uppercase;
+}
+.wt-ig-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 8px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+.wt-ig-reach {
+  font-size: 7px;
+  color: #27C93F;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   4. Social Media Management: LINKEDIN Tile
+   -------------------------------------------------------------------------- */
+.wt-linkedin {
+  background: radial-gradient(circle at 100% 0%, #0A2540 0%, #081729 60%, #050E1A 100%);
+  padding: 8px 10px;
+  gap: 6px;
+}
+.wt-li-pill {
+  font-size: 7px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(10, 102, 194, 0.25);
+  color: #58A6FF;
+  border: 1px solid rgba(10, 102, 194, 0.4);
+}
+.wt-li-post {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px;
+  background: #0D1E33;
+  border-radius: 7px;
+  border: 1px solid rgba(10, 102, 194, 0.25);
+  gap: 4px;
+  flex: 1;
+}
+.wt-li-post-text {
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #E6EDF3;
+}
+.wt-li-chart-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: auto;
+  gap: 6px;
+}
+.wt-li-stat-col {
+  display: flex;
+  flex-direction: column;
+}
+.wt-li-impressions {
+  font-size: 11px;
+  font-weight: 800;
+  color: #58A6FF;
+}
+.wt-li-stat-lbl {
+  font-size: 6.5px;
+  color: #8B949E;
+  text-transform: uppercase;
+}
+.wt-li-growth-badge {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #3FB950;
+  background: rgba(63, 185, 80, 0.15);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Social Media Management: FACEBOOK Tile
+   -------------------------------------------------------------------------- */
+.wt-facebook {
+  background: radial-gradient(circle at 100% 0%, #08285C 0%, #061838 60%, #030D1E 100%);
+  padding: 8px 10px;
+  gap: 6px;
+}
+.wt-fb-pill {
+  font-size: 7px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(24, 119, 242, 0.25);
+  color: #70B4FF;
+  border: 1px solid rgba(24, 119, 242, 0.4);
+}
+.wt-fb-card {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px;
+  background: #0B2144;
+  border-radius: 7px;
+  border: 1px solid rgba(24, 119, 242, 0.25);
+  gap: 5px;
+  flex: 1;
+}
+.wt-fb-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wt-fb-active-pip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 7px;
+  color: #4ADE80;
+  font-weight: 700;
+}
+.wt-fb-dot {
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background: #4ADE80;
+  box-shadow: 0 0 6px #4ADE80;
+}
+.wt-fb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.wt-fb-metric {
+  display: flex;
+  flex-direction: column;
+  padding: 3px 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.wt-fb-metric b {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.wt-fb-metric span {
+  font-size: 6px;
+  color: #8E9BAE;
+  text-transform: uppercase;
+}
+.wt-fb-roas {
+  color: #4ADE80 !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. Orbit Money / Smart Savings Mobile App Dummy UI
+   -------------------------------------------------------------------------- */
+.wt-orbit {
+  background: #0B0D14;
+  padding: 6px 9px;
+  gap: 4px;
+}
+.wt-savings-card {
+  background: linear-gradient(135deg, #2D1854 0%, #17112C 100%);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 9px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.wt-savings-user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wt-savings-user {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.wt-savings-avatar {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #A78BFA;
+  display: grid;
+  place-content: center;
+  font-size: 8px;
+}
+.wt-savings-greeting {
+  font-size: 7px;
+  color: #DDD6FE;
+  line-height: 1.1;
+}
+.wt-savings-greeting b {
+  display: block;
+  font-size: 8px;
+  color: #FFFFFF;
+}
+.wt-savings-bell {
+  font-size: 8px;
+  color: #A78BFA;
+}
+.wt-savings-total-box {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1px;
+}
+.wt-savings-lbl {
+  font-size: 6.5px;
+  color: #A78BFA;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.wt-savings-val {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.wt-savings-split-pill {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(12, 10, 22, 0.7);
+  border-radius: 6px;
+  padding: 2.5px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 2px;
+}
+.wt-savings-split-col {
+  display: flex;
+  flex-direction: column;
+}
+.wt-savings-split-col span {
+  font-size: 5.5px;
+  color: #8E8AAB;
+  text-transform: uppercase;
+}
+.wt-savings-split-col b {
+  font-size: 7.5px;
+  font-weight: 700;
+}
+.wt-savings-split-col--income b { color: #34D399; }
+.wt-savings-split-col--spend b { color: #F87171; }
+
+.wt-savings-tri-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3.5px;
+}
+.wt-tri-card {
+  padding: 3px 4px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.wt-tri-card b {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.wt-tri-card span {
+  font-size: 5.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.wt-tri-card--emerald {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.15) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6EE7B7;
+}
+.wt-tri-card--purple {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(99, 102, 241, 0.15) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #C4B5FD;
+}
+.wt-tri-card--cyan {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(14, 165, 233, 0.15) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  color: #67E8F9;
+}
+.wt-orbit-bal-col b {
+  font-size: 11.5px;
+  color: #FFFFFF;
+  font-weight: 800;
+}
+.wt-orbit-ring {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2.5px solid #6E5BD8;
+  border-top-color: #A797FF;
+  display: grid;
+  place-content: center;
+  font-size: 6.5px;
+  font-weight: 800;
+  color: #A797FF;
+}
+
+/* --------------------------------------------------------------------------
+   7. SaaS Analytics Dashboard (Nexus)
+   -------------------------------------------------------------------------- */
+.wt-saas {
+  background: #0D0F14;
+  padding: 8px 10px;
+  gap: 5px;
+}
+.wt-saas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wt-saas-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--orange, #FF5E14);
+}
+.wt-saas-rev-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: #141720;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 94, 20, 0.2);
+}
+.wt-saas-mrr b {
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.wt-saas-mrr span {
+  font-size: 6.5px;
+  color: #7E869B;
+  display: block;
+}
+.wt-saas-spark {
+  width: 50px;
+  height: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   8. Halden Coffee E-Commerce
+   -------------------------------------------------------------------------- */
+.wt-halden {
+  background: #201813;
+  padding: 8px 10px;
+  gap: 5px;
+}
+.wt-halden-split {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+.wt-halden-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.wt-halden-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #F2E6D6;
+}
+.wt-halden-notes {
+  font-size: 7px;
+  color: #C9844E;
+}
+.wt-halden-price {
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-top: 3px;
+}
+.wt-halden-btn {
+  font-size: 7px;
+  font-weight: 700;
+  background: #C9844E;
+  color: #1A120D;
+  padding: 3px 8px;
+  border-radius: 999px;
+  align-self: flex-start;
+  margin-top: 2px;
+}
