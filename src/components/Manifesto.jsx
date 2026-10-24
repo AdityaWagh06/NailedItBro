@@ -39,7 +39,7 @@ export default function Manifesto() {
         <h2 className="manifesto__label eyebrow" id="manifesto-label">(Our approach)</h2>
         <p className="manifesto__text">{TEXT}</p>
         <ul className="manifesto__stats" aria-label="How we work">
-          <li className="manifesto__stat"><b>6</b><span>Disciplines under one roof</span></li>
+          <li className="manifesto__stat"><b>10</b><span>Disciplines under one roof</span></li>
           <li className="manifesto__stat"><b>1</b><span>Team from strategy to launch</span></li>
           <li className="manifesto__stat"><b>90+</b><span>Lighthouse score target on every build</span></li>
         </ul>

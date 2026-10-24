@@ -4,6 +4,7 @@ export default function ProcessStep({
   description,
   duration,
   icon: Icon,
+  color = '#FF5E14',
   isActive = false,
   isCompleted = false,
   isLast = false,
@@ -14,6 +15,7 @@ export default function ProcessStep({
   return (
     <div
       className={`process-step-item ${isActive ? 'is-active' : ''} ${isCompleted ? 'is-completed' : ''} ${isLast ? 'process-step-item--last' : ''}`}
+      style={{ '--step-color': color }}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -39,6 +41,7 @@ export default function ProcessStep({
       </div>
 
       <div className="process-step__card">
+        <div className="process-step__accent-bar" aria-hidden="true" />
         <div className="process-step__card-top">
           {Icon && (
             <div className="process-step__icon-badge">

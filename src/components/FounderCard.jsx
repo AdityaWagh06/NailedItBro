@@ -48,7 +48,9 @@ export default function FounderCard({
           />
         ) : (
           <div className="founder-card__placeholder" aria-label={`Photo of ${name} coming soon`}>
-            <User size={36} className="founder-card__placeholder-icon" aria-hidden="true" />
+            <div className="founder-card__placeholder-avatar">
+              <User size={34} className="founder-card__placeholder-icon" aria-hidden="true" />
+            </div>
             <span className="founder-card__placeholder-text">Photo coming soon</span>
           </div>
         )}
