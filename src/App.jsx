@@ -14,6 +14,7 @@ import Contact from './components/Contact'
 import AboutPage from './components/AboutPage'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
+import StickyWhatsApp from './components/StickyWhatsApp'
 import { useThemeSections } from './lib/useThemeSections'
 
 function getRoute() {
@@ -30,7 +31,7 @@ export default function App() {
   const [route, setRoute] = useState(getRoute)
 
   useSmoothScroll()
-  useThemeSections()
+  useThemeSections(route)
 
   useEffect(() => {
     const handleRoute = () => {
@@ -58,7 +59,15 @@ export default function App() {
       window.scrollTo(0, 0)
       getLenis()?.scrollTo(0, { immediate: true })
     } else {
-      setTimeout(() => scrollToTarget(href), 120)
+      setTimeout(() => {
+        scrollToTarget(href)
+        setTimeout(() => {
+          const targetEl = document.querySelector(href)
+          if (targetEl && Math.abs(targetEl.getBoundingClientRect().top) > 100) {
+            scrollToTarget(href)
+          }
+        }, 180)
+      }, 120)
     }
     setTimeout(() => ScrollTrigger.refresh(), 140)
   }

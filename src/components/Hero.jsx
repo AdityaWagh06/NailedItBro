@@ -11,9 +11,9 @@ const SHOWCASE_ITEMS = [
     accent: '#FF5E14',
     img: '/naileditbro.png',
     eyebrow: 'Digital studio · Brands, websites & apps',
-    titlePrefix: 'We craft digital products that feel',
-    titleHighlight: 'nailed.',
-    sub: 'Nailed It Bro is a high-impact design and engineering studio. We shape ambitious brands, build fast websites, launch addictive apps, and drive viral social media growth.',
+    titlePrefix: 'We craft digital products that get you',
+    titleHighlight: 'customers.',
+    sub: 'Nailed It Bro is a design and engineering studio. We build fast websites, mobile apps and booking automation, and run social media campaigns that turn attention into enquiries.',
     cta1: 'Start a Project',
     cta2: 'Explore Selected Work',
     isDesktop: false,
@@ -25,12 +25,26 @@ const SHOWCASE_ITEMS = [
     accent: '#FF5E14',
     img: '/web.png',
     eyebrow: 'Website Design & Development',
-    titlePrefix: 'Artisan web experiences built to',
-    titleHighlight: 'convert.',
-    sub: 'Custom-designed marketing websites and web apps built on modern tech stacks, with smooth purposeful motion, easy CMS management, and uncompromising performance.',
+    titlePrefix: 'Websites built to turn visitors into',
+    titleHighlight: 'customers.',
+    sub: 'Custom-designed business websites and web apps that load fast, work on every device and rank on Google. Easy to update, secure, and built to bring you enquiries.',
     cta1: 'Build Your Website',
     cta2: 'Explore Selected Work',
     isDesktop: true,
+  },
+  {
+    id: 'app',
+    title: 'Mobile App Development',
+    thumbLabel: 'Mobile App',
+    accent: '#10B981',
+    img: '/pet.png',
+    eyebrow: 'Android App Engineering',
+    titlePrefix: 'Mobile apps your users open',
+    titleHighlight: 'daily.',
+    sub: 'Smooth Android apps from a single codebase, with offline support, push notifications and a scalable cloud backend. We take you from idea to Play Store launch.',
+    cta1: 'Launch an App',
+    cta2: 'Explore Selected Work',
+    isDesktop: false,
   },
   {
     id: 'ai',
@@ -39,27 +53,14 @@ const SHOWCASE_ITEMS = [
     accent: '#D97706',
     img: '/qr.png',
     eyebrow: 'QR Solutions & Booking Automation',
-    titlePrefix: 'Smart automated booking that fills your',
-    titleHighlight: 'schedule.',
-    sub: 'Scan-to-book QR table stands, instant WhatsApp appointment reminders, AI chat assistants, and automated client retention funnels that multiply your revenue.',
-    cta1: 'Automate Your Bookings',
+    titlePrefix: 'QR and AI automation that saves you',
+    titleHighlight: 'hours.',
+    sub: 'From digital menus, bookings and payments to catalogues, feedback forms and lead capture, we build QR and AI tools that handle repetitive work for you. Customers get instant answers, and you stop answering the same questions all day.',
+    cta1: 'Automate Your Business',
     cta2: 'Explore Selected Work',
     isDesktop: false,
   },
-  {
-    id: 'app',
-    title: 'Mobile App Development',
-    thumbLabel: 'Mobile App',
-    accent: '#10B981',
-    img: '/pet.png',
-    eyebrow: 'iOS & Android App Engineering',
-    titlePrefix: 'Addictive mobile apps users love',
-    titleHighlight: 'daily.',
-    sub: 'Native-feeling iOS and Android apps with fluid gestures, instant offline sync, scalable cloud infrastructure, and habit-forming product design.',
-    cta1: 'Launch an App',
-    cta2: 'Explore Selected Work',
-    isDesktop: false,
-  },
+
   {
     id: 'game',
     title: 'Mobile Game Development',
@@ -67,9 +68,9 @@ const SHOWCASE_ITEMS = [
     accent: '#06B6D4',
     img: '/game.png',
     eyebrow: '3D Mobile Game Development',
-    titlePrefix: 'High-speed games that keep players',
-    titleHighlight: 'hooked.',
-    sub: 'Custom 3D game mechanics, responsive physics engines, real-time multiplayer networking, and smooth mobile touchscreen controls built for viral engagement.',
+    titlePrefix: 'Mobile games players keep',
+    titleHighlight: 'replaying.',
+    sub: 'Custom 3D gameplay, realistic physics, real-time multiplayer and responsive touch controls, optimised to run smoothly on mid-range phones, not just flagships.',
     cta1: 'Develop a Game',
     cta2: 'Explore Selected Work',
     isDesktop: false,
@@ -81,9 +82,9 @@ const SHOWCASE_ITEMS = [
     accent: '#EC4899',
     img: '/social.png',
     eyebrow: 'Social Media & Omnichannel Growth',
-    titlePrefix: 'Viral content and campaigns that drive',
-    titleHighlight: 'growth.',
-    sub: 'High-impact short-form video strategy, multi-channel distribution, audience retention funnels, and data-driven campaigns that turn viewers into buyers.',
+    titlePrefix: 'Content and campaigns that bring in',
+    titleHighlight: 'buyers.',
+    sub: 'Short-form video, multi-platform distribution and tracked campaigns that turn viewers into enquiries and enquiries into sales. You get clear reports on reach, leads and conversions.',
     cta1: 'Scale Your Reach',
     cta2: 'Explore Selected Work',
     isDesktop: false,
@@ -95,6 +96,14 @@ export default function Hero({ ready }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [hoveredId, setHoveredId] = useState(null)
   const [isPaused, setIsPaused] = useState(false)
+
+  // Preload all showcase images into browser cache immediately for instant display
+  useEffect(() => {
+    SHOWCASE_ITEMS.forEach((item) => {
+      const img = new Image()
+      img.src = item.img
+    })
+  }, [])
 
   // Auto-cycle items one by one every 6.2s (pauses on hover)
   useEffect(() => {
@@ -109,8 +118,6 @@ export default function Hero({ ready }) {
   // When hovering over a thumbnail, immediately preview that item bigger and colored at top
   const displayItem = (hoveredId ? SHOWCASE_ITEMS.find((it) => it.id === hoveredId) : null) || activeItem
   const displayIndex = SHOWCASE_ITEMS.findIndex((it) => it.id === displayItem.id)
-  // Bottom row contains the other 4 items side by side in black-and-white
-  const bottomItems = SHOWCASE_ITEMS.filter((item) => item.id !== activeItem.id)
 
   useGSAP(
     () => {
@@ -128,16 +135,14 @@ export default function Hero({ ready }) {
             return
           }
 
-          // Hide intro elements until the loader hands over.
-          gsap.set('[data-intro]', { autoAlpha: 0 })
+          // Animate hero copy on intro without hiding the showcase visual
+          gsap.set('.hero__copy', { autoAlpha: 0 })
 
           const intro = gsap.timeline({ paused: true, defaults: { ease: EASE.out } })
           intro
-            .fromTo('.hero__copy', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: DUR.slow }, 0.05)
-            .fromTo('.hero__visual', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.2)
-            .from('.hero-stage', { y: 24, scale: 0.96, autoAlpha: 0, duration: 1.1 }, 0.3)
-            .fromTo('.hero__meta > *', { autoAlpha: 0 }, { autoAlpha: 1, duration: DUR.base, stagger: 0.1 }, 0.8)
-            .from('.hero__bg-n', { autoAlpha: 0, scale: 0.9, duration: 2 }, 0)
+            .fromTo('.hero__copy', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: DUR.slow }, 0.05)
+            .fromTo('.hero__meta > *', { autoAlpha: 0 }, { autoAlpha: 1, duration: DUR.base, stagger: 0.1 }, 0.4)
+            .from('.hero__bg-n', { autoAlpha: 0, scale: 0.9, duration: 1.6 }, 0)
 
           root.current._intro = intro
           if (ready) intro.play()
@@ -237,7 +242,7 @@ export default function Hero({ ready }) {
                         <span
                           className="hero__word"
                           style={{
-                            transitionDelay: isActive ? `${0.16 + 0.06 * wIdx}s` : '0s',
+                            transitionDelay: isActive ? `${0.04 + 0.03 * wIdx}s` : '0s',
                           }}
                         >
                           {word}
@@ -249,7 +254,7 @@ export default function Hero({ ready }) {
                         className="serif hero__serif-word"
                         style={{
                           transitionDelay: isActive
-                            ? `${0.16 + 0.06 * item.titlePrefix.split(' ').length}s`
+                            ? `${0.04 + 0.03 * item.titlePrefix.split(' ').length}s`
                             : '0s',
                           '--hero-accent': item.accent,
                         }}
@@ -301,7 +306,7 @@ export default function Hero({ ready }) {
           </div>
         </div>
 
-        <div className="hero__visual" data-intro>
+        <div className="hero__visual">
           <div
             className="hero__showcase-wrapper"
             onMouseEnter={() => setIsPaused(true)}
@@ -345,9 +350,8 @@ export default function Hero({ ready }) {
                   return (
                     <div
                       key={item.id}
-                      className={`hero-stage__slide hero-stage--${item.id} ${
-                        item.isDesktop ? 'hero-stage--desktop' : 'hero-stage--image'
-                      } ${isActive ? 'is-active' : ''}`}
+                      className={`hero-stage__slide hero-stage--${item.id} ${item.isDesktop ? 'hero-stage--desktop' : 'hero-stage--image'
+                        } ${isActive ? 'is-active' : ''}`}
                     >
                       <div className="hero-stage__screen">
                         <img
@@ -355,6 +359,8 @@ export default function Hero({ ready }) {
                           alt={item.title}
                           className="hero-stage__pure-img"
                           loading="eager"
+                          fetchPriority={item.id === 'studio' ? 'high' : 'auto'}
+                          decoding="async"
                         />
                       </div>
                     </div>
