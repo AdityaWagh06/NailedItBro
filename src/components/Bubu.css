@@ -1,0 +1,170 @@
+/* ==========================================================================
+   Bubu — roaming mascot and FAQ chat
+   ========================================================================== */
+.bubu {
+  --bubu-size: 104px; --bubu-pad: 18px;
+  position: fixed; left: 0; bottom: calc(var(--bubu-pad) + env(safe-area-inset-bottom, 0px)); z-index: 90;
+  width: var(--bubu-size); height: calc(var(--bubu-size) * 1.12);
+  will-change: transform; touch-action: none;
+}
+@media (max-width: 640px) { .bubu { --bubu-size: 80px; --bubu-pad: 12px; } }
+.bubu__lean, .bubu__bob { width: 100%; height: 100%; transform-origin: 50% 100%; }
+.bubu__flip { width: 100%; height: 100%; transition: transform 0.25s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
+.bubu__flip.is-left { transform: scaleX(-1); }
+.bubu__body {
+  display: block; width: 100%; height: 100%; cursor: grab; touch-action: none;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  background: transparent; border: none; padding: 0;
+}
+.bubu.is-dragging .bubu__body { cursor: grabbing; }
+.bubu__body:focus-visible { outline: 3px solid var(--tan, #FF5E14); outline-offset: 6px; border-radius: 50%; }
+.bubu__body svg { width: 100%; height: 100%; max-width: none; overflow: visible; pointer-events: none; filter: drop-shadow(0 6px 10px rgb(20 19 18 / 0.18)); }
+
+.bubu__hint {
+  position: absolute; bottom: calc(100% + 6px); right: 30%; white-space: nowrap; pointer-events: none;
+  padding: 7px 11px; border-radius: 14px 14px 4px 14px; font-size: 13px; font-weight: 500;
+  background: var(--cream, #F2EDE4); color: var(--char, #141312); box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.35), inset 0 0 0 1px rgb(20 19 18 / 0.08);
+  transition: opacity 0.3s, transform 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.bubu__hint.is-gone { opacity: 0; transform: translateY(6px); }
+
+/* idle breathing, walking waddle */
+.bubu:not(.is-walking):not(.is-air) .bubu__bob { animation: bubu-breathe 2.6s ease-in-out infinite; }
+@keyframes bubu-breathe { 50% { transform: scale(1.025, 0.975); } }
+.bubu.is-walking .bubu__bob { animation: bubu-waddle 0.42s ease-in-out infinite alternate; }
+.bubu.is-running .bubu__bob { animation-duration: 0.22s; }
+@keyframes bubu-waddle { from { transform: rotate(-4deg); } 50% { transform: translateY(-4%); } to { transform: rotate(4deg); } }
+
+.bubu svg .foot, .bubu svg .arm, .bubu svg .ear, .bubu svg .brow, .bubu svg .blush, .bubu svg .part, .bubu svg .fx { transform-box: fill-box; transform-origin: center; }
+.bubu svg .arm { transition: transform 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
+.bubu svg .arm-l { transform-origin: 80% 15%; }
+.bubu svg .arm-r { transform-origin: 20% 15%; }
+.bubu.is-walking svg .foot-l { animation: bubu-step 0.42s ease-in-out infinite alternate; }
+.bubu.is-walking svg .foot-r { animation: bubu-step 0.42s ease-in-out infinite alternate-reverse; }
+.bubu.is-running svg .foot { animation-duration: 0.22s; }
+@keyframes bubu-step { to { transform: translateY(-7px); } }
+.bubu.is-walking svg .arm-l { animation: bubu-swing-l 0.42s ease-in-out infinite alternate; }
+.bubu.is-walking svg .arm-r { animation: bubu-swing-r 0.42s ease-in-out infinite alternate; }
+@keyframes bubu-swing-l { from { transform: rotate(-14deg); } to { transform: rotate(18deg); } }
+@keyframes bubu-swing-r { from { transform: rotate(-18deg); } to { transform: rotate(14deg); } }
+.bubu.is-air svg .foot-l { transform: translate(-3px, 4px) rotate(-15deg); }
+.bubu.is-air svg .foot-r { transform: translate(3px, 4px) rotate(15deg); }
+.bubu.is-air svg .arm-l { transform: rotate(60deg); }
+.bubu.is-air svg .arm-r { transform: rotate(-60deg); }
+.bubu.is-dragging svg .foot-l { animation: bubu-kick 0.25s ease-in-out infinite alternate; }
+.bubu.is-dragging svg .foot-r { animation: bubu-kick 0.25s ease-in-out infinite alternate-reverse; }
+@keyframes bubu-kick { from { transform: translateY(2px) rotate(-12deg); } to { transform: translateY(8px) rotate(12deg); } }
+
+/* blink */
+.bubu svg .eye-normal, .bubu svg .eye-wow { transition: transform 0.07s, opacity 0.12s; }
+.bubu .is-blink svg .eye-normal, .bubu .is-blink svg .eye-wow { transform: scaleY(0.08); }
+.bubu svg .pupils { transition: transform 0.25s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
+
+/* moods: each face part shows only for the moods that use it */
+.bubu .part, .bubu .fx { opacity: 0; transition: opacity 0.12s; }
+.bubu .brow { opacity: 0; transition: transform 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), opacity 0.2s; }
+.bubu .blush { opacity: 0.85; transition: transform 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), opacity 0.3s; }
+.bubu svg .ear { transition: transform 0.25s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
+[data-mood='normal'] .eye-normal, [data-mood='normal'] .m-idle,
+[data-mood='curious'] .eye-normal, [data-mood='curious'] .m-o,
+[data-mood='happy'] .eye-happy, [data-mood='happy'] .m-open, [data-mood='happy'] .fx-spark,
+[data-mood='surprised'] .eye-wow, [data-mood='surprised'] .m-o, [data-mood='surprised'] .fx-sweat,
+[data-mood='excited'] .eye-wow, [data-mood='excited'] .m-open,
+[data-mood='sleepy'] .eye-sleep, [data-mood='sleepy'] .m-sleep, [data-mood='sleepy'] .fx-zzz,
+[data-mood='dizzy'] .eye-dizzy, [data-mood='dizzy'] .m-wavy, [data-mood='dizzy'] .fx-stars,
+[data-mood='pout'] .eye-normal, [data-mood='pout'] .m-flat, [data-mood='pout'] .fx-anger,
+[data-mood='shy'] .eye-happy, [data-mood='shy'] .m-idle, [data-mood='shy'] .fx-shy { opacity: 1; }
+[data-mood='curious'] .brow-r { opacity: 1; transform: translateY(-6px) rotate(14deg); }
+[data-mood='happy'] .brow, [data-mood='excited'] .brow { opacity: 1; transform: translateY(-8px); }
+[data-mood='surprised'] .brow { opacity: 1; transform: translateY(-13px); }
+[data-mood='surprised'] .ear { transform: translateY(-5px); }
+[data-mood='pout'] .brow-l { opacity: 1; transform: translateY(2px) rotate(20deg); }
+[data-mood='pout'] .brow-r { opacity: 1; transform: translateY(2px) rotate(-20deg); }
+[data-mood='pout'] .blush, [data-mood='shy'] .blush { opacity: 1; transform: scale(1.25); }
+[data-mood='happy'] .arm-l, [data-mood='excited'] .arm-l { transform: rotate(40deg); }
+[data-mood='happy'] .arm-r, [data-mood='excited'] .arm-r { transform: rotate(-40deg); }
+[data-mood='shy'] .arm-l { transform: rotate(-35deg) translate(6px, -4px); }
+[data-mood='shy'] .arm-r { transform: rotate(35deg) translate(-6px, -4px); }
+
+/* mood effects */
+[data-mood='dizzy'] .eye-dizzy path { animation: bubu-spin 0.8s linear infinite; transform-box: fill-box; transform-origin: center; }
+[data-mood='dizzy'] .fx-stars { animation: bubu-spin 1.4s linear infinite; transform-box: view-box; transform-origin: 100px 40px; }
+@keyframes bubu-spin { to { transform: rotate(360deg); } }
+[data-mood='sleepy'] .fx-zzz text { opacity: 0; animation: bubu-zz 2.4s ease-out infinite; }
+[data-mood='sleepy'] .fx-zzz text:nth-child(2) { animation-delay: 0.8s; }
+[data-mood='sleepy'] .fx-zzz text:nth-child(3) { animation-delay: 1.6s; }
+@keyframes bubu-zz { 20% { opacity: 1; } 100% { transform: translate(18px, -40px); opacity: 0; } }
+.bubu [data-mood='sleepy'] .bubu__bob { animation-duration: 3.6s !important; }
+[data-mood='surprised'] .fx-sweat { animation: bubu-drip 0.9s ease-in infinite; }
+@keyframes bubu-drip { from { transform: translateY(-3px); } to { transform: translateY(5px); } }
+[data-mood='pout'] .fx-anger { animation: bubu-throb 0.5s ease-in-out infinite alternate; }
+@keyframes bubu-throb { to { transform: scale(1.25); } }
+.bubu [data-mood='pout'] .bubu__bob { animation: bubu-huff 0.5s ease-in-out infinite alternate !important; }
+@keyframes bubu-huff { to { transform: scale(1.05, 0.96); } }
+.bubu [data-mood='excited'] .bubu__bob { animation: bubu-jitter 0.12s linear infinite alternate !important; }
+@keyframes bubu-jitter { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+
+/* one-off actions */
+.bubu.bubu--dance .bubu__bob { animation: bubu-dance 1.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) !important; }
+.bubu.bubu--dance svg .arm-l { animation: bubu-wave-l 0.32s ease-in-out 4 alternate; }
+.bubu.bubu--dance svg .arm-r { animation: bubu-wave-r 0.32s ease-in-out 4 alternate; }
+@keyframes bubu-dance {
+  15% { transform: translateY(-14%) rotate(-14deg); }
+  30% { transform: scale(1.07, 0.93); }
+  45% { transform: translateY(-14%) rotate(14deg); }
+  60% { transform: scale(1.07, 0.93); }
+  80% { transform: translateY(-24%) rotate(360deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes bubu-wave-l { from { transform: rotate(10deg); } to { transform: rotate(80deg); } }
+@keyframes bubu-wave-r { from { transform: rotate(-10deg); } to { transform: rotate(-80deg); } }
+.bubu.bubu--wave svg .arm-r { animation: bubu-hello 0.28s ease-in-out 6 alternate; }
+@keyframes bubu-hello { from { transform: rotate(-110deg); } to { transform: rotate(-150deg); } }
+.bubu.bubu--spin .bubu__bob { transform-origin: 50% 55%; animation: bubu-flip 0.9s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) !important; }
+@keyframes bubu-flip { to { transform: rotate(-720deg); } }
+
+/* chat */
+.bubu-chat {
+  position: fixed; z-index: 95;
+  right: calc(18px + env(safe-area-inset-right, 0px));
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px) + 104px * 1.12 + 14px);
+  width: min(360px, calc(100vw - 32px)); max-height: min(480px, calc(100svh - 104px * 1.12 - 70px));
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--cream, #F2EDE4); color: var(--char, #141312); border-radius: 22px;
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.45), inset 0 0 0 1px rgb(20 19 18 / 0.08);
+  font-size: 15px; line-height: 1.45;
+  transform-origin: 85% 100%; transition: transform 0.45s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), opacity 0.25s, visibility 0.45s;
+}
+@media (max-width: 640px) {
+  .bubu-chat { right: 16px; bottom: calc(12px + env(safe-area-inset-bottom, 0px) + 80px * 1.12 + 12px); max-height: min(480px, calc(100svh - 80px * 1.12 - 60px)); }
+}
+.bubu-chat.is-closed { transform: scale(0.6) translateY(30px); opacity: 0; visibility: hidden; pointer-events: none; }
+.bubu-chat__head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid rgb(20 19 18 / 0.1); }
+.bubu-chat__head b { font-size: 15px; color: var(--char, #141312); }
+.bubu-chat__head small { display: block; font-size: 12px; line-height: 1.2; color: rgb(20 19 18 / 0.6); }
+.bubu-chat__dot { width: 9px; height: 9px; border-radius: 50%; background: #3fb96a; box-shadow: 0 0 0 4px rgb(63 185 106 / 0.22); }
+.bubu-chat__close { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; background: rgb(20 19 18 / 0.06); border: none; font-size: 18px; line-height: 1; cursor: pointer; color: var(--char, #141312); display: flex; align-items: center; justify-content: center; }
+.bubu-chat__close:hover, .bubu-chat__close:focus-visible { background: rgb(20 19 18 / 0.12); }
+.bubu-chat__msgs { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; }
+.bubu-msg { max-width: 88%; padding: 9px 13px; border-radius: 16px; animation: bubu-pop 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)); font-size: 14px; line-height: 1.45; }
+.bubu-msg--bot { align-self: flex-start; background: #fff; color: var(--char, #141312); border-bottom-left-radius: 4px; box-shadow: inset 0 0 0 1px rgb(20 19 18 / 0.07); }
+.bubu-msg--me { align-self: flex-end; background: var(--char, #141312); color: var(--cream, #F2EDE4); border-bottom-right-radius: 4px; }
+.bubu-msg__link { display: flex; width: fit-content; gap: 6px; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--tan, #FF5E14); text-decoration: none; }
+.bubu-msg__link:hover { text-decoration: underline; }
+@keyframes bubu-pop { from { transform: translateY(6px) scale(0.96); opacity: 0; } }
+.bubu-typing { display: inline-flex; gap: 4px; padding-block: 4px; }
+.bubu-typing i { width: 6px; height: 6px; border-radius: 50%; background: rgb(20 19 18 / 0.45); display: inline-block; animation: bubu-dots 1s infinite; }
+.bubu-typing i:nth-child(2) { animation-delay: 0.15s; }
+.bubu-typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bubu-dots { 50% { transform: translateY(-4px); opacity: 0.4; } }
+.bubu-chat__chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 10px; }
+.bubu-chat__chips button { padding: 6px 11px; border-radius: 999px; font-size: 13px; background: transparent; border: none; cursor: pointer; color: var(--char, #141312); box-shadow: inset 0 0 0 1px rgb(20 19 18 / 0.16); transition: background-color 0.2s, box-shadow 0.2s; }
+.bubu-chat__chips button:hover, .bubu-chat__chips button:focus-visible { background: #fff; box-shadow: inset 0 0 0 1px var(--tan, #FF5E14); outline: none; }
+.bubu-chat__send { display: flex; gap: 8px; padding: 10px 12px 12px; border-top: 1px solid rgb(20 19 18 / 0.1); }
+.bubu-chat__send input { flex: 1; min-width: 0; padding: 10px 14px; border-radius: 999px; border: 1px solid rgb(20 19 18 / 0.16); background: #fff; color: var(--char, #141312); font: inherit; font-size: 15px; }
+.bubu-chat__send input:focus-visible { outline: 2px solid var(--tan, #FF5E14); outline-offset: 1px; }
+.bubu-chat__send button { padding: 0 16px; border-radius: 999px; background: var(--char, #141312); color: var(--cream, #F2EDE4); border: none; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bubu .bubu__bob, .bubu svg .foot, .bubu svg .arm, .bubu svg .fx, .bubu svg .fx * { animation: none !important; }
+}
