@@ -57,17 +57,17 @@ export default function AboutBackgroundCanvas() {
 
     window.addEventListener('resize', handleResize, { passive: true })
 
-    // 4 Dynamic Luminous Ambient Nodes (Living Studio Mesh)
+    // 4 Dynamic Luminous Ambient Nodes (Living Studio Mesh) — slow, serene drift
     const orbs = [
       {
         baseX: 0.18,
         baseY: 0.16,
         radius: 460,
         color: 'rgba(255, 94, 20, 0.22)', // Brand Studio Orange
-        speedX: 0.0052,
-        speedY: 0.0042,
-        ampX: 180,
-        ampY: 130,
+        speedX: 0.0022,
+        speedY: 0.0018,
+        ampX: 160,
+        ampY: 120,
         phase: 0,
       },
       {
@@ -75,10 +75,10 @@ export default function AboutBackgroundCanvas() {
         baseY: 0.32,
         radius: 480,
         color: 'rgba(255, 145, 77, 0.20)', // Soft Apricot
-        speedX: 0.0044,
-        speedY: 0.0058,
-        ampX: 190,
-        ampY: 140,
+        speedX: 0.0019,
+        speedY: 0.0024,
+        ampX: 170,
+        ampY: 130,
         phase: Math.PI * 0.5,
       },
       {
@@ -86,10 +86,10 @@ export default function AboutBackgroundCanvas() {
         baseY: 0.74,
         radius: 500,
         color: 'rgba(251, 191, 36, 0.18)', // Warm Golden Amber
-        speedX: 0.0058,
-        speedY: 0.0046,
-        ampX: 160,
-        ampY: 130,
+        speedX: 0.0024,
+        speedY: 0.0019,
+        ampX: 150,
+        ampY: 120,
         phase: Math.PI,
       },
       {
@@ -97,28 +97,30 @@ export default function AboutBackgroundCanvas() {
         baseY: 0.82,
         radius: 460,
         color: 'rgba(255, 120, 50, 0.19)', // Vibrant Peach Ember
-        speedX: 0.0048,
-        speedY: 0.0062,
-        ampX: 170,
-        ampY: 150,
+        speedX: 0.0020,
+        speedY: 0.0026,
+        ampX: 160,
+        ampY: 130,
         phase: Math.PI * 1.5,
       },
     ]
 
-    // 42 Floating Studio Micro-Particles (Warm atmospheric dust/sparks)
+    // 42 Floating Studio Micro-Particles (Warm atmospheric dust/sparks) — slow, gentle drift
     const particleCount = prefersReducedMotion ? 0 : 42
     const particles = []
     for (let i = 0; i < particleCount; i++) {
+      const x = Math.random() * width
       particles.push({
-        x: Math.random() * width,
+        baseX: x,
+        x: x,
         y: Math.random() * height,
         size: Math.random() * 2.8 + 1.4,
-        baseSpeedY: -(Math.random() * 0.7 + 0.4),
-        swaySpeed: Math.random() * 0.015 + 0.008,
-        swayAmp: Math.random() * 2.0 + 0.8,
+        baseSpeedY: -(Math.random() * 0.16 + 0.08), // Very slow, calm vertical drift (was 0.4-1.1)
+        swaySpeed: Math.random() * 0.008 + 0.004,   // Smooth, slow sway rhythm
+        swayAmp: Math.random() * 16 + 6,            // Gentle wave amplitude in px
         phase: Math.random() * Math.PI * 2,
         alpha: Math.random() * 0.45 + 0.25,
-        pulseSpeed: Math.random() * 0.03 + 0.015,
+        pulseSpeed: Math.random() * 0.012 + 0.006,  // Subtle, calm twinkling shimmer
         // Brand orange or golden amber
         color: Math.random() > 0.4 ? '255, 94, 20' : '245, 158, 11',
       })
@@ -135,7 +137,7 @@ export default function AboutBackgroundCanvas() {
 
       ctx.clearRect(0, 0, width, height)
 
-      // 1. Draw Living Ambient Radiant Nodes
+      // 1. Draw Living Ambient Radiant Nodes (Slow, elegant breathing motion)
       for (let i = 0; i < orbs.length; i++) {
         const orb = orbs[i]
         // Calculate dynamic drifting position
@@ -151,13 +153,13 @@ export default function AboutBackgroundCanvas() {
         const dx = mouse.x - ox
         const dy = mouse.y - oy
         const dist = Math.sqrt(dx * dx + dy * dy)
-        const pull = mouse.active ? Math.max(0, 1 - dist / 800) * 35 : 0
+        const pull = mouse.active ? Math.max(0, 1 - dist / 800) * 25 : 0
 
         const finalX = ox + (dist > 0 ? (dx / dist) * pull : 0)
         const finalY = oy + (dist > 0 ? (dy / dist) * pull : 0)
 
-        // Pulsing radius
-        const r = orb.radius + Math.sin(time * 0.015 + orb.phase) * 25
+        // Pulsing radius - slow and soothing
+        const r = orb.radius + Math.sin(time * 0.006 + orb.phase) * 20
 
         const gradient = ctx.createRadialGradient(finalX, finalY, 0, finalX, finalY, r)
         gradient.addColorStop(0, orb.color)
@@ -190,35 +192,39 @@ export default function AboutBackgroundCanvas() {
         ctx.fill()
       }
 
-      // 3. Floating Studio Ambient Particles
+      // 3. Floating Studio Ambient Particles (Slow, graceful upward drift)
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i]
 
-        // Drift upwards
+        // Drift upwards very slowly
         p.y += p.baseSpeedY
-        p.x += Math.sin(time * p.swaySpeed + p.phase) * p.swayAmp
+        p.x = p.baseX + Math.sin(time * p.swaySpeed + p.phase) * p.swayAmp
 
-        // Mouse deflection
+        // Soft, gentle mouse deflection
         const pdx = p.x - mouse.x
         const pdy = p.y - mouse.y
         const pdist = Math.sqrt(pdx * pdx + pdy * pdy)
         if (pdist < 140 && mouse.active) {
-          const force = (1 - pdist / 140) * 2.2
-          p.x += (pdx / pdist) * force
+          const force = (1 - pdist / 140) * 1.2
+          p.baseX += (pdx / pdist) * force
           p.y += (pdy / pdist) * force
         }
 
-        // Wrap around screen
+        // Wrap around screen seamlessly
         if (p.y < -20) {
           p.y = height + 20
-          p.x = Math.random() * width
+          p.baseX = Math.random() * width
+          p.x = p.baseX
         } else if (p.y > height + 20) {
           p.y = -20
         }
-        if (p.x < -20) p.x = width + 20
-        else if (p.x > width + 20) p.x = -20
+        if (p.baseX < -30) {
+          p.baseX = width + 30
+        } else if (p.baseX > width + 30) {
+          p.baseX = -30
+        }
 
-        // Pulsing alpha
+        // Gentle, calm pulsing alpha
         const currentAlpha = p.alpha + Math.sin(time * p.pulseSpeed + p.phase) * 0.12
 
         ctx.fillStyle = `rgba(${p.color}, ${Math.max(0.08, currentAlpha)})`
