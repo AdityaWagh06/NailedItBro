@@ -7,7 +7,7 @@ const rand = (a, b) => a + Math.random() * (b - a)
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 
 export function createBubu({ pet, lean, flip, mascot, pupils, hint }, { onTap, reduced }) {
-  let W = 104, H = 116, pad = 18
+  let W = 104, H = 116, pad = 18, lift = 0
   let x = 0, y = 0, vx = 0, vy = 0 // y is height above the ground
   let mode = 'ground' // ground | air | drag
   let target = null, speed = 1.5, facing = -1
@@ -22,11 +22,13 @@ export function createBubu({ pet, lean, flip, mascot, pupils, hint }, { onTap, r
   function measure() {
     const r = pet.getBoundingClientRect()
     W = r.width; H = r.height
-    pad = parseFloat(getComputedStyle(pet).getPropertyValue('--bubu-pad')) || 18
+    const css = getComputedStyle(pet)
+    pad = parseFloat(css.getPropertyValue('--bubu-pad')) || 18
+    lift = parseFloat(css.getPropertyValue('--bubu-lift')) || 0
   }
   const vw = () => document.documentElement.clientWidth
   const maxX = () => vw() - W - pad
-  const maxY = () => window.innerHeight - H - pad * 2
+  const maxY = () => window.innerHeight - H - pad * 2 - lift
 
   // ---------- moods & one-off actions ----------
   let moodTimer
@@ -132,7 +134,7 @@ export function createBubu({ pet, lean, flip, mascot, pupils, hint }, { onTap, r
     }
     if (!dragged) return
     const nx = clamp(e.clientX - down.ox, 0, vw() - W)
-    const ny = clamp(window.innerHeight - pad - (e.clientY - down.oy + H), 0, window.innerHeight - H - pad)
+    const ny = clamp(window.innerHeight - pad - lift - (e.clientY - down.oy + H), 0, window.innerHeight - H - pad - lift)
     const t = performance.now()
     hist.push({ x: nx, y: ny, t }); hist = hist.filter((h) => t - h.t < 90)
     dragTilt = clamp((nx - x) * 1.4, -30, 30)
