@@ -49,7 +49,7 @@ export const TEAM_MEMBERS = [
     name: 'Aditya Wagh',
     role: 'Co-Founder',
     discipline: 'QR & AI',
-    craftTagline: 'QR Architecture · Artificial Intelligence',
+    craftTagline: 'Artificial Intelligence · QR Architecture · Website Development ',
     initials: 'AW',
     avatarTone: '#06B6D4',
     linkedin: 'https://www.linkedin.com/in/aditya-wagh25/',
