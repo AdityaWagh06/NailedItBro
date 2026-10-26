@@ -7,76 +7,103 @@ export default function StatItem({
   suffix = '',
   label,
   note,
-  isPlaceholder = false,
 }) {
   const ref = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
+  const [isFinished, setIsFinished] = useState(false)
+
+  // Parse numeric target from props or string
+  const numericTarget =
+    targetValue !== undefined
+      ? targetValue
+      : parseInt(String(number).replace(/[^0-9]/g, ''), 10) || 0
+
+  // Extract prefix and suffix if not explicitly given
+  let finalPrefix = prefix
+  let finalSuffix = suffix
+  if (number && !prefix && !suffix) {
+    const match = String(number).match(/^([^0-9]*)([0-9]+)([^0-9]*)$/)
+    if (match) {
+      finalPrefix = match[1]
+      finalSuffix = match[3]
+    }
+  }
+
   const [count, setCount] = useState(0)
 
-  // Determine target number to count to
-  const numericTarget = targetValue !== undefined
-    ? targetValue
-    : parseInt(String(number).replace(/[^0-9]/g, ''), 10) || 0
-
-  // Scroll trigger with IntersectionObserver
+  // IntersectionObserver to trigger animation when scrolled into view
   useEffect(() => {
     const el = ref.current
     if (!el) return
 
+    // If reduced motion is preferred, show target immediately
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(numericTarget)
+      setIsFinished(true)
+      return
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
+          setHasStarted(true)
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     )
 
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [numericTarget])
 
-  // Silky smooth rolling count-up
+  // Snappy, fluid rolling count-up with zero sticking at the end
   useEffect(() => {
-    if (!isVisible || !numericTarget) return
+    if (!hasStarted || !numericTarget || isFinished) return
 
     let startTime = null
     let animationFrameId
-    const duration = 1500 // 1.5 seconds smooth roll
+    const duration = 850 // 850ms snappy animation
 
     const step = (timestamp) => {
       if (!startTime) startTime = timestamp
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
 
-      // Natural ease-out exponential deceleration
-      const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
-      const currentVal = Math.floor(easeOut * numericTarget)
+      // Cubic Ease-Out: starts briskly and decelerates naturally
+      const easeOut = 1 - Math.pow(1 - progress, 3)
+
+      // Snap straight to final target at 88% progress to guarantee zero hanging on 3, 23, or 99
+      if (progress >= 0.88) {
+        setCount(numericTarget)
+        setIsFinished(true)
+        return
+      }
+
+      const currentVal = Math.round(easeOut * numericTarget)
+      if (currentVal >= numericTarget) {
+        setCount(numericTarget)
+        setIsFinished(true)
+        return
+      }
 
       setCount(currentVal)
-
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(step)
-      } else {
-        setCount(numericTarget)
-      }
+      animationFrameId = requestAnimationFrame(step)
     }
 
     animationFrameId = requestAnimationFrame(step)
     return () => cancelAnimationFrame(animationFrameId)
-  }, [isVisible, numericTarget])
+  }, [hasStarted, numericTarget, isFinished])
 
-  const formattedDisplay = isVisible
-    ? `${prefix}${count}${suffix}`
-    : `${prefix}0${suffix}`
-
-  const finalNumberString = numericTarget > 0 ? formattedDisplay : number
+  // Display value formatting
+  const displayNum = isFinished
+    ? (number || `${finalPrefix}${numericTarget}${finalSuffix}`)
+    : `${finalPrefix}${count}${finalSuffix}`
 
   return (
     <div className="stat-item" ref={ref}>
       <div className="stat-item__num-wrap">
-        <span className="stat-item__num">{finalNumberString}</span>
+        <span className="stat-item__num">{displayNum}</span>
       </div>
 
       <p className="stat-item__label">{label}</p>

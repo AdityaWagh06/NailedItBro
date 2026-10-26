@@ -14,7 +14,6 @@ import Contact from './components/Contact'
 import AboutPage from './components/AboutPage'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
-import StickyWhatsApp from './components/StickyWhatsApp'
 import { useThemeSections } from './lib/useThemeSections'
 
 function getRoute() {

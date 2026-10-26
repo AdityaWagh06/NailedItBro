@@ -48,7 +48,9 @@ export default function FounderCard({
           />
         ) : (
           <div className="founder-card__placeholder" aria-label={`Photo of ${name} coming soon`}>
-            <User size={36} className="founder-card__placeholder-icon" aria-hidden="true" />
+            <div className="founder-card__placeholder-avatar">
+              <User size={34} className="founder-card__placeholder-icon" aria-hidden="true" />
+            </div>
             <span className="founder-card__placeholder-text">Photo coming soon</span>
           </div>
         )}
@@ -59,16 +61,6 @@ export default function FounderCard({
         <h3 className="founder-card__name">{name}</h3>
         {domain && <p className="founder-card__domain">{domain}</p>}
         <p className="founder-card__bio">{bio}</p>
-
-        {skills.length > 0 && (
-          <div className="founder-card__skills">
-            {skills.map((skill) => (
-              <span key={skill} className="founder-skill-tag">
-                {skill}
-              </span>
-            ))}
-          </div>
-        )}
 
         <div className="founder-card__socials" aria-label={`Connect with ${name}`}>
           {linkedin && (

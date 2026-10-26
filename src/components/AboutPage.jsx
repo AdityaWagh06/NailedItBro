@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Check,
   ArrowRight,
+  ArrowDown,
   ExternalLink,
   MessageSquare,
   FileText,
@@ -20,6 +21,8 @@ import {
   Rocket,
   Zap,
 } from 'lucide-react'
+
+import { scrollToTarget } from '../lib/useSmoothScroll'
 
 import SectionLabel from './SectionLabel'
 import SectionHeading from './SectionHeading'
@@ -38,6 +41,7 @@ import FAQItem from './FAQItem'
 import CTABand from './CTABand'
 import Reveal from './Reveal'
 import TiltedLogoCard from './TiltedLogoCard'
+import AboutBackgroundCanvas from './AboutBackgroundCanvas'
 
 export default function AboutPage({ onNavigate }) {
   const [heroImgError, setHeroImgError] = useState(false)
@@ -70,6 +74,7 @@ export default function AboutPage({ onNavigate }) {
     e.currentTarget.style.setProperty('--mouse-y', `${y}px`)
   }
 
+  // --- SECTION 4: SERVICES DATA ---
   // --- SECTION 4: SERVICES DATA ---
   const servicesData = [
     {
@@ -320,56 +325,70 @@ export default function AboutPage({ onNavigate }) {
 
   return (
     <div className="about-page-layout">
+      {/* Living Dynamic Background Canvas */}
+      <AboutBackgroundCanvas />
+
       {/* =====================================================================
-          SECTION 1: HERO
+          SECTION 1: HERO (EDITORIAL STORY WITH FLOATING MASCOT & WRAPAROUND PARAGRAPHS)
           ===================================================================== */}
       <section className="about-sec about-sec--hero" aria-labelledby="about-hero-heading">
         <div className="container">
-          <div className="about-hero-grid">
-            {/* Left Column: Text (55%) */}
-            <div className="about-hero-content">
-              <Reveal>
-                <SectionLabel text="ABOUT NAILED IT BRO · DIGITAL PRODUCT STUDIO" />
-              </Reveal>
+          <div className="about-editorial-story">
+            <Reveal>
+              <SectionLabel text="OUR STORY" />
+            </Reveal>
 
-              <Reveal delay={60}>
-                <h1 id="about-hero-heading" className="about-hero-h1">
-                  We build websites, apps, and AI tools that bring you more{' '}
-                  <em className="serif about-hero-h1__accent">customers.</em>
-                </h1>
-              </Reveal>
+            <Reveal delay={60}>
+              <h1 id="about-hero-heading" className="about-hero-h1">
+                <span className="about-hero-h1__highlight">About Us —</span>
+                Four founders. One team. Zero{' '}
+                <em className="serif about-hero-h1__accent">middlemen.</em>
+              </h1>
+            </Reveal>
 
-              <Reveal delay={120}>
-                <p className="about-hero-subtext">
-                  Nailed It Bro is a four-person product studio. You work directly with the founders who design and build your project, not with account managers or outsourced freelancers.
+            <div className="about-editorial-flow">
+              {/* Studio Mascot floated on right so paragraphs wrap around and below it */}
+              <div className="about-editorial-aside">
+                <Reveal delay={150}>
+                  <TiltedLogoCard
+                    imageSrc="/mascot_head_nohammer.png"
+                    alt="Nailed It Bro Studio Mascot & Logo"
+                    badgeText="4 founders, 1 team"
+                  />
+                </Reveal>
+              </div>
+
+              {/* Narrative paragraphs flowing beside and all around below the image */}
+              <div className="about-editorial-text">
+                <p className="about-lead-p">
+                  Nailed It Bro was started by four founders who were tired of watching ambitious businesses get trapped in overpriced agency bureaucracy. We cut out the account executives, middle managers, and vanishing freelance subcontractors to build the kind of dedicated digital studio we always wanted to work with as clients ourselves.
                 </p>
-              </Reveal>
+                <p>
+                  Most traditional agencies operate like sales conveyor belts: a polished pitch team closes the contract, makes grand promises about innovation, and promptly hands the work off to junior associates or outsourced overseas teams you never get to speak with. By the time your feedback trickles through multiple layers of account coordinators and email threads, weeks have passed, nuance is lost, and the invoice has quietly doubled.
+                </p>
+                <p>
+                  We built our studio on the exact opposite principle. At Nailed It Bro, every project is planned, architected, and built directly by the four core founders across user experience design, frontend development, backend engineering, and digital growth. When you join a kickoff call or drop a question in our project channel, the person replying is the exact craftsman writing your React components, animating your micro-interactions, or configuring your cloud database.
+                </p>
+                <p>
+                  Because we keep our overhead lean and our core team tight, we don't need to juggle dozens of generic projects to pay for fancy downtown offices or layers of middle management. We take on a select roster of clients at a time, treating every single product as a flagship benchmark. That means uncomfortably high technical standards, sub-second load times, bespoke codebases crafted from scratch, and zero template shortcuts.
+                </p>
+                <p>
+                  Whether you are an early-stage founder bringing an MVP to life, or an established company replacing a sluggish legacy platform with a high-converting web presence, you work directly with people who care about your launch as much as you do. Four founders. One unified team. Zero middlemen.
+                </p>
+              </div>
 
-              <Reveal delay={180}>
-                <div className="about-hero-actions">
-                  <PrimaryButton onClick={() => handleCta('#consultation')}>
-                    Start Your Project
-                  </PrimaryButton>
-                  <SecondaryButton onClick={() => handleCta('#work')}>
-                    See Our Work
-                  </SecondaryButton>
-                </div>
-              </Reveal>
-
-              <Reveal delay={240}>
-                <TrustStrip />
-              </Reveal>
-            </div>
-
-            {/* Right Column: Studio Mascot & Interactive 3D Tilted Card */}
-            <div className="about-hero-media">
-              <Reveal delay={150}>
-                <TiltedLogoCard
-                  imageSrc="/logo.jpeg"
-                  alt="Nailed It Bro Studio Mascot & Logo"
-                  badgeText="4 founders, 1 team"
-                />
-              </Reveal>
+              <div className="about-editorial-footer">
+                <Reveal delay={200}>
+                  <TrustStrip
+                    items={[
+                      '4 founders, 1 team',
+                      'Zero outsourcing',
+                      '100% custom builds',
+                      'Open for new projects',
+                    ]}
+                  />
+                </Reveal>
+              </div>
             </div>
           </div>
         </div>
@@ -618,25 +637,6 @@ export default function AboutPage({ onNavigate }) {
             ))}
           </div>
 
-          {/* Interactive Step Switcher & Progress Bar */}
-          <div className="process-step-pills">
-            {processStepsData.map((step, idx) => (
-              <button
-                key={step.number}
-                type="button"
-                className={`process-step-pill ${idx === activeProcessStep ? 'is-active' : ''}`}
-                onClick={() => {
-                  setActiveProcessStep(idx)
-                  setIsProcessPaused(true)
-                }}
-                aria-label={`Jump to Step ${step.number}: ${step.title}`}
-              >
-                <span className="process-step-pill__num">{step.number}</span>
-                <span className="process-step-pill__name">{step.title}</span>
-              </button>
-            ))}
-          </div>
-
           <Reveal delay={250}>
             <div className="process-timeline-note">
               <span className="process-timeline-note__text">
@@ -658,11 +658,19 @@ export default function AboutPage({ onNavigate }) {
             {/* Left Column: Pull Quote */}
             <div className="principles-quote-col">
               <Reveal>
-                <SectionLabel text="WHAT WE BELIEVE" />
-                <blockquote className="principles-pull-quote">
-                  “Good enough is the enemy of greatness. We refine every interaction until it feels purposeful, and undeniably{' '}
-                  <em className="serif principles-pull-quote__accent">nailed.</em>”
-                </blockquote>
+                <div className="principles-quote-box">
+                  <div className="principles-quote-top">
+                    <SectionLabel text="WHAT WE BELIEVE" />
+                    <blockquote className="principles-pull-quote">
+                      “Good enough is the enemy of greatness. We refine every interaction until it feels purposeful, and undeniably{' '}
+                      <em className="serif principles-pull-quote__accent">nailed.</em>”
+                    </blockquote>
+                  </div>
+                  <div className="principles-quote-footer">
+                    <span className="principles-quote-author">— The Nailed It Bro Creed</span>
+                    <span className="principles-quote-sub">How we build every product</span>
+                  </div>
+                </div>
               </Reveal>
             </div>
 
