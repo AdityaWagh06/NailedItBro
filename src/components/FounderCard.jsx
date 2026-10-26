@@ -62,16 +62,6 @@ export default function FounderCard({
         {domain && <p className="founder-card__domain">{domain}</p>}
         <p className="founder-card__bio">{bio}</p>
 
-        {skills.length > 0 && (
-          <div className="founder-card__skills">
-            {skills.map((skill) => (
-              <span key={skill} className="founder-skill-tag">
-                {skill}
-              </span>
-            ))}
-          </div>
-        )}
-
         <div className="founder-card__socials" aria-label={`Connect with ${name}`}>
           {linkedin && (
             <a
