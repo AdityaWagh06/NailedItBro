@@ -216,8 +216,8 @@ export default function AboutPage({ onNavigate }) {
     {
       name: 'Aditya Wagh',
       role: 'CO-FOUNDER',
-      domain: 'QR Systems and AI',
-      bio: 'Builds QR-powered tools and AI automations that cut manual work.',
+      domain: 'AI, Wbsite and QR Systems  ',
+      bio: 'Builds Websites, QR-powered tools and AI automations that cut manual work.',
       skills: ['QR Systems', 'Artificial Intelligence'],
       photoSrc: '/team/aditya.webp',
       linkedin: 'https://www.linkedin.com/in/aditya-wagh25/',
