@@ -171,7 +171,57 @@ export const SERVICES = [
 ]
 
 // Concept projects: studio explorations, not client work.
+// Entries with `live` are full website templates in public/templates/<slug>/,
+// shown via their screenshots instead of the drawn mockups.
 export const PROJECTS = [
+  {
+    slug: 'ember-leaf',
+    name: 'Ember & Leaf',
+    kind: 'Restaurant Website · Template',
+    year: 'Template',
+    blurb: 'A dark, warm site for a modern Indian restaurant, with a tabbed menu and a table-booking form above the fold.',
+    palette: { bg: '#15100C', ink: '#F3E7D6', accent: '#E3A33B', soft: '#261D16' },
+    layout: 'shop',
+    live: '/templates/ember-leaf/index.html',
+    challenge: 'Most restaurant sites hide the menu in a PDF and the booking behind a phone number. Guests decide in seconds, so both had to be one tap away.',
+    approach: ['Booking CTA in the nav and hero', 'Tabbed menu with prices, no PDF', 'Hours, address and group bookings in one block'],
+  },
+  {
+    slug: 'lumen-dental',
+    name: 'Lumen Dental',
+    kind: 'Clinic Website · Template',
+    year: 'Template',
+    blurb: 'A calm clinic site where the booking widget is the hero, with clear treatment prices to ease nervous patients.',
+    palette: { bg: '#E3EEEC', ink: '#0E2A2E', accent: '#14857E', soft: '#C7E2DD' },
+    layout: 'dashboard',
+    live: '/templates/lumen-dental/index.html',
+    challenge: 'People put off the dentist because of cost and fear. The site had to answer "how much?" and "what happens?" before they ever call.',
+    approach: ['Interactive slot picker as the first thing you see', 'Transparent prices on every treatment', 'A "first visit" walkthrough and FAQ'],
+  },
+  {
+    slug: 'velvet-vine',
+    name: 'Velvet & Vine',
+    kind: 'Salon Website · Template',
+    year: 'Template',
+    blurb: 'An editorial hair and beauty studio site with a full price list, stylist profiles and a recent-work gallery.',
+    palette: { bg: '#F7EFEA', ink: '#2B1A1F', accent: '#B4566B', soft: '#EFE2DA' },
+    layout: 'editorial',
+    live: '/templates/velvet-vine/index.html',
+    challenge: 'Salon clients choose a stylist, not a building. The site needed to sell the people and the vibe, then make booking effortless.',
+    approach: ['Readable price list grouped by service', 'Stylist profiles with specialities', 'Live "open today" status and hours'],
+  },
+  {
+    slug: 'northline-realty',
+    name: 'Northline Realty',
+    kind: 'Real Estate Website · Template',
+    year: 'Template',
+    blurb: 'A local estate agency site with property search, listing cards and a seller section built around a free valuation.',
+    palette: { bg: '#142230', ink: '#F4F2ED', accent: '#C4673A', soft: '#1F3346' },
+    layout: 'app',
+    live: '/templates/northline-realty/index.html',
+    challenge: 'Agencies need two funnels at once: buyers browsing homes and sellers deciding who to trust. Both had to work from the homepage.',
+    approach: ['Search bar overlapping the hero', 'Listing cards with price and specs at a glance', 'Proof numbers and a valuation CTA for sellers'],
+  },
   {
     slug: 'halden',
     name: 'Halden Coffee',
@@ -275,7 +325,7 @@ export const BUBU = {
     },
     {
       keys: /\b(work|portfolio|projects?|examples?|case stud(y|ies)|clients?|previous)\b/,
-      text: `Our Work section shows four studio explorations: ${joinList(PROJECTS.map((p) => p.name))}. They are concept projects that show how we approach brand, web and product.`,
+      text: `Our Work section shows ${PROJECTS.length} studio explorations: ${joinList(PROJECTS.map((p) => p.name))}. They are concept projects and live website templates that show how we approach brand, web and product.`,
       link: { href: '#work', label: 'See the work' },
     },
     {
