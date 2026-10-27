@@ -14,9 +14,15 @@ function ProjectVisual({ p }) {
   return (
     <div className={`proj__stage proj__stage--${p.layout}`} style={{ '--p-bg': p.palette.bg, '--p-ink': p.palette.ink, '--p-accent': p.palette.accent, '--p-soft': p.palette.soft }}>
       <div className="proj__backdrop" />
-      <div className="proj__browser" data-speed="0.6"><Browser url={`${p.slug}.concept`}><ProjectScreen layout={p.layout} /></Browser></div>
-      <div className="proj__phone" data-speed="1.4"><Phone><ProjectPhone layout={p.layout} /></Phone></div>
-      <span className="proj__badge">Concept</span>
+      <div className="proj__browser" data-speed="0.6">
+        <Browser url={p.live ? `naileditbro.com/templates/${p.slug}` : `${p.slug}.concept`}>
+          {p.live ? <img className="proj__shot" src={p.live.replace('index.html', 'desktop.jpg')} alt="" loading="lazy" /> : <ProjectScreen layout={p.layout} />}
+        </Browser>
+      </div>
+      <div className="proj__phone" data-speed="1.4">
+        <Phone>{p.live ? <img className="proj__shot" src={p.live.replace('index.html', 'mobile.jpg')} alt="" loading="lazy" /> : <ProjectPhone layout={p.layout} />}</Phone>
+      </div>
+      <span className="proj__badge">{p.live ? 'Live template' : 'Concept'}</span>
     </div>
   )
 }
@@ -158,7 +164,7 @@ export default function Work() {
           <div className="work__intro">
             <p className="eyebrow">(Selected work)</p>
             <h2 className="work__title display-2" id="work-title">Studio <em className="serif">explorations</em> in brand, web & product.</h2>
-            <p className="work__note">These are self-initiated concept projects that show how we think and build. Client case studies are shared on request.</p>
+            <p className="work__note">Self-initiated concepts and ready-to-launch website templates for local businesses. Open any template to click through the live site. Client case studies are shared on request.</p>
           </div>
 
           {PROJECTS.map((p, i) => (
@@ -171,7 +177,10 @@ export default function Work() {
                 <h3 className="proj__name" id={`proj-${p.slug}`}>{p.name}</h3>
                 <p className="proj__kind">{p.kind} · <span>{p.year}</span></p>
                 <p className="proj__blurb">{p.blurb}</p>
-                <button className="u-link proj__link" onClick={() => openProject(p.slug)}>View case study <span aria-hidden="true">→</span></button>
+                <div className="proj__links">
+                  <button className="u-link proj__link" onClick={() => openProject(p.slug)}>View case study <span aria-hidden="true">→</span></button>
+                  {p.live && <a className="u-link proj__link" href={p.live} target="_blank" rel="noopener">Open live site <span aria-hidden="true">↗</span></a>}
+                </div>
               </div>
             </article>
           ))}
