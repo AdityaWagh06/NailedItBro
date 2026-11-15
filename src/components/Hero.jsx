@@ -1,385 +1,377 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap, useGSAP, splitLines, EASE, DUR, STAGGER } from '../lib/motion'
+import { useState, useEffect, useRef } from 'react'
+import { m } from 'motion/react'
+import HeroParticles from './HeroParticles'
 import { scrollToTarget } from '../lib/useSmoothScroll'
-import Magnetic from './Magnetic'
-
-const SHOWCASE_ITEMS = [
-  {
-    id: 'studio',
-    title: 'Nailed It Bro Studio',
-    thumbLabel: 'Overview',
-    accent: '#FF5E14',
-    img: '/naileditbro.png',
-    eyebrow: 'Digital studio · Brands, websites & apps',
-    titlePrefix: 'We craft digital products that get you',
-    titleHighlight: 'customers.',
-    sub: 'Nailed It Bro is a design and engineering studio. We build fast websites, mobile apps and booking automation, and run social media campaigns that turn attention into enquiries.',
-    cta1: 'Start a Project',
-    cta2: 'Explore Selected Work',
-    isDesktop: false,
-  },
-  {
-    id: 'desktop',
-    title: 'Website Development',
-    thumbLabel: 'Website Dev',
-    accent: '#FF5E14',
-    img: '/web.png',
-    eyebrow: 'Website Design & Development',
-    titlePrefix: 'Websites built to turn visitors into',
-    titleHighlight: 'customers.',
-    sub: 'Custom-designed business websites and web apps that load fast, work on every device and rank on Google. Easy to update, secure, and built to bring you enquiries.',
-    cta1: 'Build Your Website',
-    cta2: 'Explore Selected Work',
-    isDesktop: true,
-  },
-  {
-    id: 'app',
-    title: 'Mobile App Development',
-    thumbLabel: 'Mobile App',
-    accent: '#10B981',
-    img: '/pet.png',
-    eyebrow: 'Android App Engineering',
-    titlePrefix: 'Mobile apps your users open',
-    titleHighlight: 'daily.',
-    sub: 'Smooth Android apps from a single codebase, with offline support, push notifications and a scalable cloud backend. We take you from idea to Play Store launch.',
-    cta1: 'Launch an App',
-    cta2: 'Explore Selected Work',
-    isDesktop: false,
-  },
-  {
-    id: 'ai',
-    title: 'QR Solutions & AI Automation',
-    thumbLabel: 'AI Automation',
-    accent: '#D97706',
-    img: '/qr.png',
-    eyebrow: 'QR Solutions & Booking Automation',
-    titlePrefix: 'QR and AI automation that saves you',
-    titleHighlight: 'hours.',
-    sub: 'From digital menus, bookings and payments to catalogues, feedback forms and lead capture, we build QR and AI tools that handle repetitive work for you. Customers get instant answers, and you stop answering the same questions all day.',
-    cta1: 'Automate Your Business',
-    cta2: 'Explore Selected Work',
-    isDesktop: false,
-  },
-
-  {
-    id: 'game',
-    title: 'Mobile Game Development',
-    thumbLabel: 'Mobile Game',
-    accent: '#06B6D4',
-    img: '/game.png',
-    eyebrow: '3D Mobile Game Development',
-    titlePrefix: 'Mobile games players keep',
-    titleHighlight: 'replaying.',
-    sub: 'Custom 3D gameplay, realistic physics, real-time multiplayer and responsive touch controls, optimised to run smoothly on mid-range phones, not just flagships.',
-    cta1: 'Develop a Game',
-    cta2: 'Explore Selected Work',
-    isDesktop: false,
-  },
-  {
-    id: 'social',
-    title: 'Social Media Management & Marketing',
-    thumbLabel: 'Social Media',
-    accent: '#EC4899',
-    img: '/social.png',
-    eyebrow: 'Social Media & Omnichannel Growth',
-    titlePrefix: 'Content and campaigns that bring in',
-    titleHighlight: 'buyers.',
-    sub: 'Short-form video, multi-platform distribution and tracked campaigns that turn viewers into enquiries and enquiries into sales. You get clear reports on reach, leads and conversions.',
-    cta1: 'Scale Your Reach',
-    cta2: 'Explore Selected Work',
-    isDesktop: false,
-  },
-]
+import './GrowthHero.css'
 
 export default function Hero({ ready }) {
-  const root = useRef(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [hoveredId, setHoveredId] = useState(null)
-  const [isPaused, setIsPaused] = useState(false)
+  const modelViewerRef = useRef(null)
+  const boxRef = useRef(null)
 
-  // Preload all showcase images into browser cache immediately for instant display
+  // Interactive 3D Mascot pointer tracking (horizontal only) with slight upward face tilt
   useEffect(() => {
-    SHOWCASE_ITEMS.forEach((item) => {
-      const img = new Image()
-      img.src = item.img
-    })
+    let animId
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024
+    const BASE_PHI = 97 // Tilted slightly back, looking upward
+    const BASE_Y = 0.28 // Perfectly centered face & upper torso in the studio box
+
+    let targetTheta = 0
+    let currentTheta = 0
+    let currentPhi = BASE_PHI
+    let targetX = 0
+    let currentX = 0
+    let currentY = BASE_Y
+
+    const updateFromPointer = (clientX) => {
+      const box = boxRef.current
+      const rect = box
+        ? box.getBoundingClientRect()
+        : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight }
+
+      // Reference horizontal center of the mascot inside the studio box
+      const centerX = rect.left + rect.width * 0.5
+      const dx = clientX - centerX
+
+      // Normalized relative to half-viewport (-1.5 to 1.5 bounds)
+      const normX = Math.max(-1.5, Math.min(1.5, dx / (window.innerWidth * 0.45)))
+
+      // Horizontal tracking ONLY (left-right):
+      // Negative theta rotates camera left, angling the front of the mascot towards the right (+X)
+      targetTheta = -normX * 28
+
+      // Subtle horizontal lean toward pointer
+      targetX = normX * 0.025
+    }
+
+    const onMouseMove = (e) => {
+      updateFromPointer(e.clientX)
+    }
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        updateFromPointer(e.touches[0].clientX)
+      }
+    }
+
+    const onMouseLeave = () => {
+      targetTheta = 0
+      targetX = 0
+    }
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    document.addEventListener('mouseleave', onMouseLeave, { passive: true })
+
+    // 60-120fps animation loop with smooth spring damping and subtle breathing
+    const animate = (time) => {
+      // Subtle organic breathing oscillation on theta and phi
+      const breathTheta = Math.sin(time * 0.0016) * 1.5
+      const breathPhi = Math.cos(time * 0.0012) * 0.6
+
+      const effectiveTargetTheta = targetTheta + breathTheta
+      const effectiveTargetPhi = BASE_PHI + breathPhi
+
+      // Organic lerp damping (0.075 provides a natural weighted feel without lag)
+      currentTheta += (effectiveTargetTheta - currentTheta) * 0.075
+      currentPhi += (effectiveTargetPhi - currentPhi) * 0.075
+      currentX += (targetX - currentX) * 0.075
+
+      const el = modelViewerRef.current
+      if (el) {
+        el.setAttribute(
+          'camera-orbit',
+          `${currentTheta.toFixed(2)}deg ${currentPhi.toFixed(2)}deg 1.06m`
+        )
+        el.setAttribute(
+          'camera-target',
+          `${currentX.toFixed(3)}m ${BASE_Y.toFixed(3)}m 0m`
+        )
+      }
+
+      if (isVisible) {
+        animId = requestAnimationFrame(animate)
+      }
+    }
+
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible
+        isVisible = entry.isIntersecting
+        if (isVisible && !wasVisible) {
+          animId = requestAnimationFrame(animate)
+        }
+      },
+      { threshold: 0.05 }
+    )
+
+    if (boxRef.current) observer.observe(boxRef.current)
+
+    animId = requestAnimationFrame(animate)
+
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(animId)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('touchmove', onTouchMove)
+      document.removeEventListener('mouseleave', onMouseLeave)
+    }
   }, [])
 
-  // Auto-cycle items one by one every 6.2s (pauses on hover)
+  // Typing effect for the tagline
+  const fullTagline = "Make it live. Make it loud."
+  const [typedTagline, setTypedTagline] = useState("")
+
   useEffect(() => {
-    if (isPaused) return
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % SHOWCASE_ITEMS.length)
-    }, 6200)
-    return () => clearInterval(timer)
-  }, [isPaused])
+    let charIndex = 0
+    let intervalId
 
-  const activeItem = SHOWCASE_ITEMS[currentIndex]
-  // When hovering over a thumbnail, immediately preview that item bigger and colored at top
-  const displayItem = (hoveredId ? SHOWCASE_ITEMS.find((it) => it.id === hoveredId) : null) || activeItem
-  const displayIndex = SHOWCASE_ITEMS.findIndex((it) => it.id === displayItem.id)
+    const startDelay = setTimeout(() => {
+      intervalId = setInterval(() => {
+        charIndex++
+        setTypedTagline(fullTagline.slice(0, charIndex))
+        if (charIndex >= fullTagline.length) {
+          clearInterval(intervalId)
+        }
+      }, 55)
+    }, 500)
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia()
-
-      mm.add(
-        {
-          motion: '(prefers-reduced-motion: no-preference)',
-          desktop: '(min-width: 900px) and (pointer: fine)',
-        },
-        (ctx) => {
-          const { motion, desktop } = ctx.conditions
-          if (!motion) {
-            gsap.set('.hero [data-intro]', { autoAlpha: 1 })
-            return
-          }
-
-          // Animate hero copy on intro without hiding the showcase visual
-          gsap.set('.hero__copy', { autoAlpha: 0 })
-
-          const intro = gsap.timeline({ paused: true, defaults: { ease: EASE.out } })
-          intro
-            .fromTo('.hero__copy', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: DUR.slow }, 0.05)
-            .fromTo('.hero__meta > *', { autoAlpha: 0 }, { autoAlpha: 1, duration: DUR.base, stagger: 0.1 }, 0.4)
-            .from('.hero__bg-n', { autoAlpha: 0, scale: 0.9, duration: 1.6 }, 0)
-
-          root.current._intro = intro
-          if (ready) intro.play()
-
-          // Scroll out: the composition sinks back while the title drifts up.
-          gsap.timeline({
-            scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
-          })
-            .to('.hero__showcase-wrapper', { yPercent: 12, scale: 0.95, ease: 'none' }, 0)
-            .to('.hero__copy', { yPercent: -10, ease: 'none' }, 0)
-            .to('.hero__bg-n', { rotate: 18, yPercent: 20, ease: 'none' }, 0)
-            .to('.hero__grid', { yPercent: 15, ease: 'none' }, 0)
-
-          // Smooth pointer parallax on the unified showcase
-          if (desktop) {
-            const showcase = root.current.querySelector('.hero__showcase-wrapper')
-            if (showcase) {
-              const toX = gsap.quickTo(showcase, 'x', { duration: 1.2, ease: 'power3.out' })
-              const toY = gsap.quickTo(showcase, 'y', { duration: 1.2, ease: 'power3.out' })
-              const onMove = (e) => {
-                const nx = e.clientX / window.innerWidth - 0.5
-                const ny = e.clientY / window.innerHeight - 0.5
-                toX(nx * 14)
-                toY(ny * 10)
-              }
-              window.addEventListener('pointermove', onMove)
-              return () => {
-                window.removeEventListener('pointermove', onMove)
-              }
-            }
-          }
-          return () => { }
-        },
-      )
-      return () => mm.revert()
-    },
-    { dependencies: [ready], scope: root },
-  )
-
-  // Play the intro once the loader hands over (or straight away if skipped).
-  useGSAP(
-    () => {
-      if (ready && root.current?._intro) {
-        root.current._intro.play()
-      }
-    },
-    { dependencies: [ready], scope: root },
-  )
+    return () => {
+      clearTimeout(startDelay)
+      if (intervalId) clearInterval(intervalId)
+    }
+  }, [])
 
   return (
-    <section className="hero" id="top" ref={root} data-theme="light" aria-labelledby="hero-title">
-      <div className="hero__grid" aria-hidden="true" />
-      <div className="hero__bg-n serif" aria-hidden="true">n</div>
+    <section className="growth-hero" id="top" aria-label="Nailed It Bro Digital Studio">
+      {/* 1. Motion Grid Background */}
+      <HeroParticles scrollProgress={0} />
+      <div className="growth-hero__canvas-glow" aria-hidden="true" />
 
-      <div className="hero__inner container">
-        <div className="hero__copy" data-intro>
-          {/* Ambient atmosphere shifting with current service accent */}
-          <div
-            className="hero__ambient-glow"
-            style={{
-              '--ambient-accent': displayItem.accent,
-            }}
-            aria-hidden="true"
-          />
-
-          <div className="hero__copy-stage" style={{ '--hero-accent': displayItem.accent }}>
-            {SHOWCASE_ITEMS.map((item, index) => {
-              const isActive = index === displayIndex
-              return (
-                <div
-                  key={item.id}
-                  className={`hero__copy-slide ${isActive ? 'is-active' : ''}`}
-                  style={{ '--slide-accent': item.accent }}
-                  aria-hidden={!isActive}
-                >
-                  {/* Modern Eyebrow with Counter Pill & Pulsing Radar */}
-                  <p className="hero__eyebrow eyebrow">
-                    <span className="hero__counter-pill">
-                      <span className="hero__counter-num">0{index + 1}</span>
-                      <span className="hero__counter-slash">/</span>
-                      <span className="hero__counter-total">0{SHOWCASE_ITEMS.length}</span>
-                    </span>
-                    <span
-                      className="hero__radar-dot"
-                      style={{ '--radar-color': item.accent }}
-                    >
-                      <span className="hero__radar-ping" />
-                      <span className="hero__radar-core" />
-                    </span>
-                    <span className="hero__eyebrow-text">{item.eyebrow}</span>
-                  </p>
-
-                  {/* Kinetic Title with Smooth Slower Domino Word Roll */}
-                  <h1 className="hero__title display" id={isActive ? 'hero-title' : undefined}>
-                    {item.titlePrefix.split(' ').map((word, wIdx) => (
-                      <span key={wIdx} className="hero__word-wrap">
-                        <span
-                          className="hero__word"
-                          style={{
-                            transitionDelay: isActive ? `${0.04 + 0.03 * wIdx}s` : '0s',
-                          }}
-                        >
-                          {word}
-                        </span>
-                      </span>
-                    ))}
-                    <span className="hero__word-wrap">
-                      <em
-                        className="serif hero__serif-word"
-                        style={{
-                          transitionDelay: isActive
-                            ? `${0.04 + 0.03 * item.titlePrefix.split(' ').length}s`
-                            : '0s',
-                          '--hero-accent': item.accent,
-                        }}
-                      >
-                        {item.titleHighlight}
-                      </em>
-                    </span>
-                  </h1>
-
-                  {/* Blur-to-focus subtitle description */}
-                  <p className="hero__sub">{item.sub}</p>
-
-                  {/* Magnetic CTA Buttons with Glowing Primary */}
-                  <div className="hero__ctas">
-                    <Magnetic>
-                      <a
-                        href="#contact"
-                        className="btn btn--dark hero__btn-primary"
-                        style={{ '--btn-accent-glow': `${item.accent}44` }}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          scrollToTarget('#contact')
-                        }}
-                        tabIndex={isActive ? 0 : -1}
-                      >
-                        <span className="btn__label" data-text={item.cta1}>
-                          {item.cta1}
-                        </span>
-                        <span className="btn__icon hero__btn-arrow" aria-hidden="true">→</span>
-                      </a>
-                    </Magnetic>
-                    <a
-                      href="#work"
-                      className="btn btn--ghost"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        scrollToTarget('#work')
-                      }}
-                      tabIndex={isActive ? 0 : -1}
-                    >
-                      <span className="btn__label" data-text={item.cta2}>
-                        {item.cta2}
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        <div className="hero__visual">
-          <div
-            className="hero__showcase-wrapper"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => {
-              setIsPaused(false)
-              setHoveredId(null)
-            }}
+      {/* 2. SOBER MODERN HEADLINE */}
+      <div className="growth-hero__title-wrap">
+        <h1 className="growth-hero__title" aria-label="Nailed It Bro">
+          <m.span
+            className="growth-hero__word growth-hero__word--dark"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="hero-showcase-row">
-              {/* Vertical Segment Indicator (as shown in user reference) */}
-              <div className="hero-v-nav" aria-label="Showcase slider navigation">
-                {SHOWCASE_ITEMS.map((item, idx) => {
-                  const isActive = displayItem.id === item.id
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`hero-v-nav__seg ${isActive ? 'is-active' : ''}`}
-                      onClick={() => {
-                        setCurrentIndex(idx)
-                        setHoveredId(null)
-                      }}
-                      onMouseEnter={() => setHoveredId(item.id)}
-                      onMouseLeave={() => setHoveredId(null)}
-                      aria-label={item.title}
-                      style={{ '--seg-accent': item.accent }}
-                    >
-                      <span className="hero-v-nav__track">
-                        <span className="hero-v-nav__fill" />
-                      </span>
-                      <span className="hero-v-nav__tooltip">{item.thumbLabel}</span>
-                    </button>
-                  )
-                })}
-              </div>
+            NAILED
+          </m.span>
 
-              {/* Top Featured Stage: Smooth Layered Crossfade with 16:10 Rounded Frame */}
-              <div className="hero-stage">
-                {SHOWCASE_ITEMS.map((item) => {
-                  const isActive = item.id === displayItem.id
-                  return (
-                    <div
-                      key={item.id}
-                      className={`hero-stage__slide hero-stage--${item.id} ${item.isDesktop ? 'hero-stage--desktop' : 'hero-stage--image'
-                        } ${isActive ? 'is-active' : ''}`}
-                    >
-                      <div className="hero-stage__screen">
-                        <img
-                          src={item.img}
-                          alt={item.title}
-                          className="hero-stage__pure-img"
-                          loading="eager"
-                          fetchPriority={item.id === 'studio' ? 'high' : 'auto'}
-                          decoding="async"
-                        />
-                      </div>
-                    </div>
-                  )
-                })}
+          <m.span
+            className="growth-hero__word growth-hero__word--orange"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.8, delay: 0.23, ease: [0.16, 1, 0.3, 1] }}
+          >
+            IT
+          </m.span>
+
+          <m.span
+            className="growth-hero__word growth-hero__word--dark"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.8, delay: 0.31, ease: [0.16, 1, 0.3, 1] }}
+          >
+            BRO
+          </m.span>
+        </h1>
+
+        <p className="growth-hero__tagline" aria-label={fullTagline}>
+          <span>{typedTagline}</span>
+          <span className="growth-hero__tagline-cursor" aria-hidden="true">|</span>
+        </p>
+      </div>
+
+      {/* 3. MONUMENTAL RECTANGLE BOX WITH GLOWING STUDIO LIGHTING & OVERLAY UI */}
+      <m.div
+        ref={boxRef}
+        className="growth-hero__mascot-box"
+        initial={{ opacity: 0, y: 24, scale: 0.99 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {/* Multi-tone ambient shine & studio vignette glow */}
+        <div className="growth-hero__mascot-box-motion-bg" aria-hidden="true" />
+        <div className="growth-hero__mascot-box-texture" aria-hidden="true" />
+        <div className="growth-hero__mascot-box-glow" aria-hidden="true" />
+
+        {/* Center 3D Mascot with Left-Right Tracking & Upward Tilt */}
+        <model-viewer
+          ref={modelViewerRef}
+          src="/mascot.glb"
+          poster="/avatar_front_clean.webp"
+          alt="Nailed It Bro 3D Studio Mascot"
+          camera-orbit="0deg 97deg 1.06m"
+          camera-target="0m 0.28m 0m"
+          field-of-view="28deg"
+          min-camera-orbit="auto auto 0m"
+          min-field-of-view="5deg"
+          interaction-prompt="none"
+          interpolation-decay="0"
+          shadow-intensity="0"
+          exposure="1.08"
+          environment-image="neutral"
+          loading="eager"
+          reveal="auto"
+          className="growth-hero__mascot-box-model"
+        />
+
+        {/* UI Overlay */}
+        <div className="growth-hero__box-overlay">
+          {/* Top Spacer to preserve vertical layout rhythm */}
+          <div className="growth-hero__box-top-spacer" aria-hidden="true" />
+
+          {/* Middle Row: Left Vibe + Right Quote (Brought down, aligned together) */}
+          <div className="growth-hero__box-middle-row">
+            {/* Left: Vibe statement (Exact same position, does not move) */}
+            <m.div
+              className="growth-hero__box-vibe"
+              initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h2 className="growth-hero__box-vibe-line1">
+                We don't do<br />boring.
+              </h2>
+              <p className="growth-hero__box-vibe-line2">4 founders · All builders · Zero fluff</p>
+            </m.div>
+
+            {/* Right: Quote brought down to align horizontally with the left text */}
+            <m.div
+              className="growth-hero__box-right-quote-wrap"
+              initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <p className="growth-hero__box-vibe-quote">
+                “Code like artists.<br />
+                Design like engineers.”
+              </p>
+            </m.div>
+          </div>
+
+          {/* Bottom Row: Pitch + Actions & Capability Pills */}
+          <div className="growth-hero__box-bottom">
+            {/* Left Column: Pitch & Actions */}
+            <div className="growth-hero__box-pitch-col">
+              <p className="growth-hero__box-pitch-text">
+                Full-stack web engineering, fluid mobile apps &amp; autonomous AI systems — crafted to get you real customers.
+              </p>
+
+              <div className="growth-hero__box-actions">
+                {/* Button 1: Vertical Rolling Text & Orange Morph */}
+                <a
+                  href="#contact"
+                  className="growth-hero__box-btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToTarget('#contact')
+                  }}
+                  aria-label="Start your project"
+                >
+                  <span className="growth-hero__btn-primary-roll">
+                    <span className="growth-hero__btn-primary-roll-inner">
+                      <span className="growth-hero__btn-primary-line growth-hero__btn-primary-line--top">
+                        <span>Start your project</span>
+                        <span className="growth-hero__btn-primary-arrow">↗</span>
+                      </span>
+                      <span className="growth-hero__btn-primary-line growth-hero__btn-primary-line--bottom" aria-hidden="true">
+                        <span>Start your project</span>
+                        <span className="growth-hero__btn-primary-arrow">↗</span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+
+                {/* Button 2: Horizontal Left-to-Right Glass Fill & Morphing Arrow Badge */}
+                <a
+                  href="#work"
+                  className="growth-hero__box-btn-secondary"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToTarget('#work')
+                  }}
+                  aria-label="Explore our work"
+                >
+                  <span className="growth-hero__btn-secondary-bg" aria-hidden="true" />
+                  <span className="growth-hero__btn-secondary-label">Explore our work</span>
+                  <span className="growth-hero__btn-secondary-badge" aria-hidden="true">
+                    <span className="growth-hero__btn-secondary-arrow">↗</span>
+                  </span>
+                </a>
               </div>
+            </div>
+
+            {/* Right Column: Stacked Capability Pill Tags */}
+            <div className="growth-hero__box-tags-col">
+              <div className="growth-hero__box-tags-row">
+                <span className="growth-hero__box-tag-pill">Websites</span>
+                <span className="growth-hero__box-tag-pill">Games</span>
+              </div>
+              <span className="growth-hero__box-tag-pill">Mobile Apps</span>
+              <span className="growth-hero__box-tag-pill">AI &amp; QR Automation</span>
+              <span className="growth-hero__box-tag-pill">Social Media</span>
+              <span className="growth-hero__box-tag-pill">CRM Dashboards</span>
             </div>
           </div>
         </div>
-      </div>
+      </m.div>
 
-      <div className="hero__meta container">
-        <span>Websites · Apps · UI/UX · Social Media · Automation · Growth</span>
-        <button className="hero__scroll" onClick={() => scrollToTarget('#manifesto')}>
-          <span className="hero__scroll-line" aria-hidden="true" /> Scroll to explore
-        </button>
-        <span className="hide-sm">Design · Engineering · Growth</span>
+      {/* 4. DEDICATED MOBILE & TABLET STORY + CTA FLOW (< 1024px) */}
+      <div className="growth-hero__mobile-content">
+        <div className="growth-hero__mobile-vibe">
+          <h2 className="growth-hero__mobile-vibe-title">We don't do boring.</h2>
+          <p className="growth-hero__mobile-vibe-sub">4 founders · All builders · Zero fluff</p>
+          <p className="growth-hero__mobile-vibe-quote">“Code like artists. Design like engineers.”</p>
+        </div>
+
+        <p className="growth-hero__mobile-pitch">
+          Full-stack web engineering, fluid mobile apps &amp; autonomous AI systems — crafted to get you real customers.
+        </p>
+
+        <div className="growth-hero__mobile-actions">
+          <a
+            href="#contact"
+            className="growth-hero__mobile-btn-primary"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToTarget('#contact')
+            }}
+            aria-label="Start your project"
+          >
+            <span>Start your project</span>
+            <span className="growth-hero__mobile-btn-arrow">↗</span>
+          </a>
+
+          <a
+            href="#work"
+            className="growth-hero__mobile-btn-secondary"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToTarget('#work')
+            }}
+            aria-label="Explore our work"
+          >
+            <span>Explore our work</span>
+            <span className="growth-hero__mobile-btn-arrow">↗</span>
+          </a>
+        </div>
+
+        <div className="growth-hero__mobile-tags">
+          <span className="growth-hero__mobile-tag">Websites</span>
+          <span className="growth-hero__mobile-tag">Games</span>
+          <span className="growth-hero__mobile-tag">Mobile Apps</span>
+          <span className="growth-hero__mobile-tag">AI &amp; QR Automation</span>
+          <span className="growth-hero__mobile-tag">Social Media</span>
+          <span className="growth-hero__mobile-tag">CRM Dashboards</span>
+        </div>
       </div>
     </section>
   )
 }
-

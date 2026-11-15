@@ -1,0 +1,1034 @@
+/* ==========================================================================
+   Nailed It Bro — Creative Director Studio Hero
+   - Font: 'Outfit' (850 weight) for crisp, architectural, geometric typography
+   - Left Flank: Interactive Service Index (01 to 05) with auto-cycle progress indicator
+   - Center Stage: Monumental Title + Tactile 3D Draggable Stickers + Signature Cursive Script + CTAs
+   - Right Flank: Dynamic Live Service Dossier with animated arrivals, controls, and scope inspector
+   - Out-of-the-Box Feature: Interactive Glassmorphic Service Blueprint Modal
+   - Brand Palette: Electric Orange (#FF5E14), Deep Obsidian (#09090C), Warm Beige (#F2EDE4)
+   - 100vh viewport fit with responsive adaptations
+   ========================================================================== */
+
+.nuria-viewport-hero {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  max-height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: clamp(74px, 10.5vh, 92px);
+  padding-bottom: 0;
+  padding-inline: clamp(16px, 2.5vw, 40px);
+  background: #09090C;
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+/* Atmospheric Ambient Lighting — Warm Electric Orange Glow */
+.nuria-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 36%, rgba(255, 94, 20, 0.14) 0%, rgba(242, 237, 228, 0.03) 40%, transparent 70%),
+    radial-gradient(circle at 50% 100%, rgba(18, 17, 24, 0.95) 0%, #09090C 100%);
+  z-index: 0;
+}
+
+.nuria-ambient-spot {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  width: min(850px, 90vw);
+  height: min(450px, 50vh);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 94, 20, 0.16) 0%, rgba(242, 237, 228, 0.02) 45%, transparent 70%);
+  filter: blur(80px);
+  opacity: 0.85;
+  transition: opacity 0.6s ease;
+  z-index: 0;
+}
+
+.nuria-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.88);
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Horizontal 3-Module Grid: Left Deck + Center Lockup + Right Dossier
+   ========================================================================== */
+.nuria-studio-grid {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1460px;
+  margin: auto 0;
+  gap: clamp(16px, 2.2vw, 36px);
+}
+
+/* --------------------------------------------------------------------------
+   LEFT FLANK: Interactive Service Index (01 to 05)
+   -------------------------------------------------------------------------- */
+.nuria-side-deck {
+  width: clamp(195px, 16vw, 235px);
+  display: flex;
+  flex-direction: column;
+  background: rgba(18, 18, 24, 0.62);
+  border: 1px solid rgba(242, 237, 228, 0.1);
+  border-radius: 18px;
+  padding: 14px 12px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+  flex-shrink: 0;
+}
+
+.nuria-side-deck__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.48);
+  padding: 0 8px 8px 8px;
+  border-bottom: 1px solid rgba(242, 237, 228, 0.08);
+  margin-bottom: 6px;
+}
+
+.nuria-side-deck__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nuria-side-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  color: rgba(242, 237, 228, 0.68);
+  font-size: 13px;
+  font-weight: 550;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  width: 100%;
+  overflow: hidden;
+}
+
+.nuria-side-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+  transform: translateX(2px);
+}
+
+.nuria-side-item.is-active {
+  background: rgba(255, 255, 255, 0.09);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.nuria-side-item__num {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(242, 237, 228, 0.4);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.22s ease;
+}
+
+.nuria-side-item.is-active .nuria-side-item__num {
+  color: var(--orange, #FF5E14);
+}
+
+.nuria-side-item__name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.nuria-side-item__beacon {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange, #FF5E14);
+  box-shadow: 0 0 8px var(--orange, #FF5E14);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.22s ease;
+}
+
+.nuria-side-item.is-active .nuria-side-item__beacon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hairline cycle timer on active item */
+.nuria-side-item__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange, #FF5E14), #FFA372);
+  border-radius: 2px;
+  animation: sideItemCycle 5.5s linear infinite;
+}
+
+@keyframes sideItemCycle {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.nuria-side-deck__footer {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(242, 237, 228, 0.08);
+}
+
+.nuria-side-deck__specs-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgba(255, 94, 20, 0.08);
+  border: 1px solid rgba(255, 94, 20, 0.22);
+  border-radius: 8px;
+  color: #F2EDE4;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.nuria-side-deck__specs-btn:hover {
+  background: rgba(255, 94, 20, 0.18);
+  border-color: rgba(255, 94, 20, 0.45);
+  color: #FFFFFF;
+}
+
+.nuria-deck-icon {
+  font-size: 12px;
+  color: var(--orange, #FF5E14);
+}
+
+/* --------------------------------------------------------------------------
+   CENTER STAGE: Architectural Outfit Typography + 3D Stickers + CTAs
+   -------------------------------------------------------------------------- */
+.nuria-center-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 660px;
+  gap: clamp(18px, 3vh, 32px);
+  margin: 0 auto;
+}
+
+.nuria-hero-canvas {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 640px;
+  user-select: none;
+}
+
+/* Monumental Typography with crisp geometric Outfit proportions */
+.nuria-giant-type {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(3.2rem, 6.2vw, 5.8rem);
+  font-weight: 850;
+  line-height: 0.93;
+  letter-spacing: -0.04em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  gap: clamp(2px, 0.5vh, 6px);
+  text-shadow: 0 8px 45px rgba(0, 0, 0, 0.8);
+}
+
+.nuria-type-line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Signature Cursive Italic Script with generous breathing space */
+.nuria-script-line {
+  font-family: var(--f-serif, 'Instrument Serif', Georgia, serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.3vw, 2.2rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: #F2EDE4;
+  margin-top: clamp(12px, 1.8vh, 18px);
+  text-align: center;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Tactile 3D Stickers (Framer Motion drag)
+   -------------------------------------------------------------------------- */
+.nuria-sticker {
+  position: absolute;
+  pointer-events: auto;
+  cursor: grab;
+  z-index: 10;
+  will-change: transform;
+  touch-action: none;
+}
+
+.nuria-sticker:active {
+  cursor: grabbing;
+}
+
+.sticker-avatar {
+  left: 14%;
+  top: -15%;
+  --rot: -4.5deg;
+}
+
+.sticker-avatar__circle {
+  width: clamp(58px, 5.5vw, 76px);
+  height: clamp(58px, 5.5vw, 76px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #FF7533 0%, #D94806 100%);
+  padding: 3px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(242, 237, 228, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.sticker-avatar:hover .sticker-avatar__circle {
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 94, 20, 0.6);
+}
+
+.sticker-avatar__circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.sticker-available {
+  left: 50%;
+  top: -7%;
+  --rot: 0deg;
+}
+
+.sticker-available__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(18, 18, 24, 0.88);
+  border: 1px solid rgba(242, 237, 228, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
+  font-size: clamp(10px, 0.8vw, 11px);
+  font-weight: 600;
+  color: #F2EDE4;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.sticker-available__dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 10px #10B981;
+  position: relative;
+}
+
+.sticker-available__dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid #10B981;
+  animation: dotPulse 2s ease-out infinite;
+}
+
+@keyframes dotPulse {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.sticker-web {
+  left: 74%;
+  top: -13%;
+  --rot: 6deg;
+}
+
+.nuria-squircle-badge {
+  width: clamp(56px, 5.2vw, 70px);
+  height: clamp(56px, 5.2vw, 70px);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.squircle-web {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.squircle-app {
+  background: linear-gradient(135deg, #1C1C24 0%, #111116 100%);
+  border: 1px solid rgba(255, 94, 20, 0.25);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 18px rgba(255, 94, 20, 0.2);
+}
+
+.sticker-cursor {
+  left: 8%;
+  top: 36%;
+  --rot: 0deg;
+}
+
+.sticker-cursor__svg {
+  width: clamp(44px, 4.2vw, 58px);
+  height: auto;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85));
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sticker-cursor:hover .sticker-cursor__svg {
+  transform: rotate(-8deg) scale(1.1);
+}
+
+.sticker-app {
+  left: 80%;
+  top: 38%;
+  --rot: -4.5deg;
+}
+
+/* Tooltip for Stickers */
+.nuria-sticker__tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(14, 14, 18, 0.94);
+  color: #F2EDE4;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(242, 237, 228, 0.15);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+
+.nuria-sticker:hover .nuria-sticker__tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   Center CTAs: Dual Magnetic Buttons
+   -------------------------------------------------------------------------- */
+.nuria-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 2px;
+}
+
+.nuria-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: var(--orange, #FF5E14);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: clamp(13px, 0.95vw, 14px);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 10px 28px rgba(255, 94, 20, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nuria-primary-btn:hover {
+  background: #FF7533;
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 36px rgba(255, 94, 20, 0.55),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nuria-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.nuria-primary-btn:hover .nuria-arrow {
+  transform: translateX(3px);
+}
+
+.nuria-ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: rgba(18, 18, 24, 0.45);
+  border: 1px solid rgba(242, 237, 228, 0.16);
+  color: #F2EDE4;
+  font-family: inherit;
+  font-size: clamp(13px, 0.95vw, 14px);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nuria-ghost-btn:hover {
+  background: rgba(242, 237, 228, 0.08);
+  border-color: rgba(242, 237, 228, 0.35);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT FLANK: Dynamic Live Service Dossier Card
+   -------------------------------------------------------------------------- */
+.nuria-side-dossier {
+  width: clamp(275px, 22vw, 325px);
+  display: flex;
+  flex-direction: column;
+  background: rgba(18, 18, 24, 0.65);
+  border: 1px solid rgba(242, 237, 228, 0.1);
+  border-radius: 18px;
+  padding: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+  flex-shrink: 0;
+}
+
+.nuria-dossier-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(242, 237, 228, 0.08);
+}
+
+.nuria-dossier-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #F2EDE4;
+}
+
+.nuria-dossier-tag__dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: var(--orange, #FF5E14);
+  box-shadow: 0 0 8px var(--orange, #FF5E14);
+}
+
+.nuria-dossier-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nuria-dossier-ctrl-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(242, 237, 228, 0.12);
+  color: rgba(242, 237, 228, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nuria-dossier-ctrl-btn:hover {
+  background: rgba(255, 94, 20, 0.2);
+  border-color: rgba(255, 94, 20, 0.4);
+  color: #FFFFFF;
+}
+
+.nuria-dossier-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.nuria-dossier-title {
+  font-size: clamp(14px, 1.1vw, 15.5px);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.nuria-dossier-desc {
+  font-size: clamp(11.5px, 0.85vw, 12.5px);
+  line-height: 1.48;
+  color: rgba(242, 237, 228, 0.7);
+  margin: 0 0 12px 0;
+}
+
+.nuria-dossier-deliverables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.nuria-deliverable-chip {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #F2EDE4;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(242, 237, 228, 0.12);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.nuria-dossier-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(242, 237, 228, 0.08);
+}
+
+.nuria-dossier-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 9px;
+  background: rgba(255, 94, 20, 0.12);
+  border: 1px solid rgba(255, 94, 20, 0.28);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.nuria-dossier-action:hover {
+  background: var(--orange, #FF5E14);
+  border-color: var(--orange, #FF5E14);
+  box-shadow: 0 6px 18px rgba(255, 94, 20, 0.35);
+}
+
+.nuria-dossier-inspect-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(242, 237, 228, 0.14);
+  color: #F2EDE4;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+}
+
+.nuria-dossier-inspect-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(242, 237, 228, 0.3);
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   OUT-OF-THE-BOX SERVICE BLUEPRINT MODAL
+   ========================================================================== */
+.nuria-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.nuria-blueprint-card {
+  width: 100%;
+  max-width: 620px;
+  background: #111116;
+  border: 1px solid rgba(255, 94, 20, 0.35);
+  border-radius: 24px;
+  padding: clamp(22px, 3.5vw, 32px);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(255, 94, 20, 0.2);
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+.nuria-blueprint-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.nuria-blueprint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange, #FF5E14);
+}
+
+.nuria-blueprint-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(242, 237, 228, 0.15);
+  color: #F2EDE4;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.nuria-blueprint-close:hover {
+  background: rgba(255, 94, 20, 0.2);
+  color: #FFFFFF;
+}
+
+.nuria-blueprint-title {
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px 0;
+  color: #FFFFFF;
+}
+
+.nuria-blueprint-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(242, 237, 228, 0.75);
+  margin: 0 0 20px 0;
+}
+
+.nuria-blueprint-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(242, 237, 228, 0.08);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+
+.nuria-blueprint-col__title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.5);
+  margin: 0 0 10px 0;
+}
+
+.nuria-blueprint-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nuria-blueprint-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #F2EDE4;
+  font-weight: 550;
+}
+
+.nuria-check {
+  color: var(--orange, #FF5E14);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.nuria-blueprint-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.nuria-tech-chip {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 94, 20, 0.1);
+  border: 1px solid rgba(255, 94, 20, 0.25);
+  color: #F2EDE4;
+}
+
+.nuria-blueprint-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.nuria-meta-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.45);
+}
+
+.nuria-meta-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.nuria-blueprint-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 580px) {
+  .nuria-blueprint-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .nuria-blueprint-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .nuria-blueprint-actions .nuria-primary-btn,
+  .nuria-blueprint-actions .nuria-ghost-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   Refined Studio Meta Bar at Bottom Edge
+   ========================================================================== */
+.nuria-bottom-bar {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px 12px;
+  border-top: 1px solid rgba(242, 237, 228, 0.08);
+  font-size: clamp(11.5px, 0.85vw, 12.5px);
+  color: rgba(242, 237, 228, 0.55);
+}
+
+.nuria-bottom-bar__services {
+  display: none;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 900px) {
+  .nuria-bottom-bar__services {
+    display: inline;
+  }
+}
+
+.nuria-bottom-bar__scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(242, 237, 228, 0.85);
+  font-size: clamp(11.5px, 0.85vw, 12.5px);
+  font-weight: 550;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.nuria-bottom-bar__scroll:hover {
+  color: var(--orange, #FF5E14);
+}
+
+.nuria-bottom-bar__scroll-line {
+  position: relative;
+  width: 1px;
+  height: 18px;
+  background: rgba(242, 237, 228, 0.25);
+  overflow: hidden;
+}
+
+.nuria-bottom-bar__scroll-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--orange, #FF5E14);
+  transform: translateY(-100%);
+  animation: scrollCueLine 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes scrollCueLine {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(0%); }
+  100% { transform: translateY(100%); }
+}
+
+.nuria-bottom-bar__loc {
+  font-weight: 500;
+  opacity: 0.65;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .nuria-side-deck {
+    display: none;
+  }
+  .nuria-side-dossier {
+    width: 290px;
+  }
+}
+
+@media (max-width: 960px) {
+  .nuria-side-dossier {
+    display: none;
+  }
+  .nuria-studio-grid {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .nuria-viewport-hero {
+    height: 100svh;
+    padding-top: 74px;
+  }
+  .nuria-giant-type {
+    font-size: clamp(2.8rem, 13vw, 4.2rem);
+    line-height: 0.94;
+  }
+  .nuria-script-line {
+    font-size: clamp(1.3rem, 4.8vw, 1.9rem);
+    margin-top: 10px;
+  }
+  .sticker-avatar { left: 14%; top: -10%; }
+  .sticker-avatar__circle { width: 54px; height: 54px; }
+  .sticker-available { left: 52%; top: -4%; }
+  .sticker-available__pill { font-size: 10px; padding: 3px 10px; }
+  .nuria-squircle-badge { width: 48px; height: 48px; border-radius: 16px; }
+  .sticker-web { left: 70%; top: -6%; }
+  .sticker-cursor { left: 6%; top: 38%; }
+  .sticker-cursor__svg { width: 42px; }
+  .sticker-app { left: 74%; top: 40%; }
+  .nuria-cta-row {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 290px;
+  }
+  .nuria-primary-btn, .nuria-ghost-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

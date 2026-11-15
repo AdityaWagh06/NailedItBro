@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 30px;
+    background: #e9eef2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    font-family: sans-serif;
+  }
+  .row { display: flex; align-items: center; justify-content: center; }
+  .ref-img { width: 420px; object-fit: contain; border: 2px dashed #999; }
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .card1 {
+    width: 250px;
+    height: 220px;
+    background: linear-gradient(155deg, #597355 0%, #3a4f36 100%);
+    border-radius: 32px;
+    transform: perspective(600px) rotateY(42deg) rotateX(-8deg) rotateZ(-3deg);
+    box-shadow: 0 35px 70px -15px rgba(20, 30, 20, 0.4);
+  }
+  .card2 {
+    width: 215px;
+    height: 195px;
+    background: #ffffff;
+    border-radius: 28px;
+    transform: perspective(700px) rotateY(20deg) rotateX(-4deg) rotateZ(-1.5deg);
+    box-shadow: 0 25px 50px -12px rgba(20, 30, 40, 0.25);
+  }
+</style>
+</head>
+<body>
+  <div class="row">
+    <img class="ref-img" src="C:/Users/avdp1/.gemini/antigravity/brain/c7df19d8-966e-4cbc-91d1-26d55021bd65/.user_uploaded/media_1793272062564_333f1809.png" />
+  </div>
+  <div class="row">
+    <div class="stage">
+      <div class="card1"></div>
+      <div class="card2"></div>
+    </div>
+  </div>
+</body>
+</html>

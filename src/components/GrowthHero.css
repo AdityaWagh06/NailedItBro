@@ -1,0 +1,910 @@
+/* ==========================================================================
+   NAILEDITBRO LUXURY EDITORIAL HERO SECTION
+   Modern spaced typography (Nailed & Bro in Dark Grey gradient, It in Orange gradient)
+   + Monumental Mascot Studio Box with Glowing Multi-Tone Lighting & Overlay UI
+   ========================================================================== */
+
+.growth-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FAF6F1;
+  color: #161412;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding-top: clamp(120px, 16vh, 160px);
+  padding-bottom: clamp(32px, 4vh, 60px);
+}
+
+/* 1. Motion Grid Canvas & Ambient Studio Glow */
+.hero-motion-particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.growth-hero__canvas-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 94, 20, 0.05), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 65%, rgba(255, 94, 20, 0.04), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(240, 230, 218, 0.6), transparent 70%);
+  z-index: 1;
+}
+
+/* 2. THE MONUMENTAL HEADLINE: NAILED IT BRO (Clean Spaces + Modern Gradients) */
+.growth-hero__title-wrap {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(16px, 3.5vw, 54px);
+  box-sizing: border-box;
+  margin: clamp(8px, 1.4vh, 20px) auto 0;
+  gap: clamp(10px, 1.5vh, 18px);
+}
+
+.growth-hero__title {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: 'Clash Display', 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(44px, 9.5vw, 150px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2.2vw, 36px);
+}
+
+.growth-hero__word {
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), filter 0.28s ease;
+  will-change: transform;
+}
+
+.growth-hero__word:hover {
+  transform: translateY(-3px);
+}
+
+/* NAILED & BRO in Dark Grey Gradient (NOT pure black) */
+.growth-hero__word--dark {
+  background: linear-gradient(180deg, #4A433D 0%, #342E28 50%, #201D1A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(32, 29, 26, 0.08));
+}
+
+.growth-hero__word--dark:hover {
+  filter: drop-shadow(0 3px 10px rgba(32, 29, 26, 0.12));
+}
+
+/* IT in Brand Orange Gradient */
+.growth-hero__word--orange {
+  background: linear-gradient(180deg, #FF7B28 0%, #FF5E14 55%, #E54904 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 16px rgba(255, 94, 20, 0.24));
+}
+
+.growth-hero__word--orange:hover {
+  filter: drop-shadow(0 4px 16px rgba(255, 94, 20, 0.28));
+}
+
+.growth-hero__tagline {
+  margin: 0;
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-size: clamp(21px, 1.85vw, 28px);
+  font-weight: 500;
+  color: #38312B;
+  letter-spacing: -0.01em;
+  text-align: center;
+  max-width: 740px;
+  line-height: 1.35;
+  min-height: 1.35em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.growth-hero__tagline-cursor {
+  display: inline-block;
+  margin-left: 3px;
+  font-weight: 300;
+  color: #FF5E14;
+  animation: taglineCursorBlink 0.9s ease-in-out infinite;
+  user-select: none;
+}
+
+@keyframes taglineCursorBlink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* 3. MONUMENTAL RECTANGLE BOX: Glowing Multi-Tone Studio Lighting */
+.growth-hero__mascot-box {
+  position: relative;
+  z-index: 3;
+  width: min(100% - clamp(24px, 4.5vw, 72px), 1480px);
+  height: clamp(500px, 60vh, 620px);
+  margin: clamp(40px, 5.5vh, 64px) auto clamp(40px, 6vh, 72px);
+  border-radius: clamp(20px, 2.5vw, 36px);
+  overflow: hidden;
+  box-sizing: border-box;
+
+  /* Radiant, non-monotonous studio lighting:
+     Deep burnt terracotta vignette edges + luminous brand orange core + warm golden shine */
+  background:
+    radial-gradient(ellipse 65% 55% at 50% 28%, #FF7824 0%, #FF5E14 42%, #C43802 80%, #681802 100%);
+  box-shadow:
+    0 28px 70px -15px rgba(255, 94, 20, 0.42),
+    0 12px 28px -6px rgba(20, 18, 16, 0.16),
+    inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Luminous Golden / Champagne Spotlight Shine */
+/* Ambient Motion Gradient inside Mascot Box */
+.growth-hero__mascot-box-motion-bg {
+  position: absolute;
+  inset: -15%;
+  width: 130%;
+  height: 130%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 25% 30%, rgba(255, 145, 60, 0.4), transparent 50%),
+    radial-gradient(circle at 75% 65%, rgba(255, 95, 20, 0.35), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(160, 40, 0, 0.45), transparent 55%);
+  filter: blur(35px);
+  animation: boxMeshDrift 14s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes boxMeshDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-2.5%, 2%) scale(1.04); }
+  100% { transform: translate(2%, -2.5%) scale(0.98); }
+}
+
+/* Subtle Film Grain / Noise Texture */
+.growth-hero__mascot-box-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+  opacity: 0.65;
+  z-index: 1;
+}
+
+.growth-hero__mascot-box-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 25%, rgba(255, 225, 175, 0.38), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% 95%, rgba(18, 8, 4, 0.65), transparent 75%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 40%, rgba(0, 0, 0, 0.3) 100%);
+  z-index: 1;
+}
+
+/* Center 3D Mascot positioned in the middle behind the overlay text */
+.growth-hero__mascot-box-model {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  --poster-color: transparent;
+  --progress-bar-color: transparent;
+  --progress-bar-height: 0px;
+  outline: none;
+  border: none;
+  background: transparent;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.growth-hero__mascot-box-model::part(default-progress-bar),
+.growth-hero__mascot-box-model::part(default-ar-button) {
+  display: none;
+}
+
+/* UI Overlay Layer (Z-Index 4) */
+.growth-hero__box-overlay {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+/* Top Row: Follow Us Socials */
+.growth-hero__box-socials {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  pointer-events: auto;
+}
+
+.growth-hero__box-socials-label {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.growth-hero__box-socials-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.growth-hero__box-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.growth-hero__box-social-link:hover {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+
+/* Top Row: Full-width bar with socials left + badge right */
+.growth-hero__box-top-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: clamp(28px, 4vh, 44px) clamp(36px, 4.5vw, 64px) 0;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+/* Top Spacer to preserve vertical flex rhythm */
+.growth-hero__box-top-spacer {
+  height: clamp(24px, 3.5vh, 40px);
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Middle Row: Left Vibe + Right Quote aligned horizontally */
+.growth-hero__box-middle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 clamp(36px, 4.5vw, 64px);
+  width: 100%;
+  box-sizing: border-box;
+  pointer-events: none;
+  margin-top: clamp(-24px, -3vh, 0px);
+}
+
+/* Left Vibe Statement (Exact same position, does not move) */
+.growth-hero__box-vibe {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  max-width: 560px;
+  pointer-events: none;
+}
+
+/* Right Quote Wrap (Brought down to align with left text) */
+.growth-hero__box-right-quote-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  max-width: 360px;
+  pointer-events: none;
+  margin-top: clamp(6px, 0.8vh, 12px);
+}
+
+/* Quote Text: Modern Italic Curve Regular (Not Bold) */
+.growth-hero__box-vibe-quote {
+  margin: 0;
+  padding: 0;
+  font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(24px, 2.4vw, 36px);
+  line-height: 1.25;
+  color: #FFFFFF;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.32);
+  letter-spacing: 0.015em;
+  text-align: right;
+  user-select: none;
+  max-width: 340px;
+}
+
+.growth-hero__box-vibe-line1 {
+  margin: 0;
+  font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(42px, 4.6vw, 68px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: #FFFFFF;
+  text-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    0 0 60px rgba(255, 255, 255, 0.08);
+  user-select: none;
+}
+
+.growth-hero__box-vibe-line2 {
+  margin: 0;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(13px, 1.05vw, 16px);
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.84);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  user-select: none;
+  letter-spacing: 0.03em;
+}
+
+/* Top Stats Row */
+.growth-hero__box-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: clamp(24px, 3.5vh, 40px) clamp(28px, 4vw, 56px) 0;
+  box-sizing: border-box;
+}
+
+.growth-hero__box-stat {
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+  user-select: none;
+}
+
+.growth-hero__box-stat--center {
+  align-items: center;
+  text-align: center;
+}
+
+.growth-hero__box-stat--right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.growth-hero__box-stat-num {
+  font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(24px, 2.2vw, 36px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.growth-hero__box-stat-label {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(12px, 0.95vw, 14px);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 4px;
+}
+
+/* Bottom Bar: Left Pitch + Buttons, Right Stacked Capability Tags */
+.growth-hero__box-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: clamp(24px, 3.5vw, 48px);
+  padding: 0 clamp(36px, 4.5vw, 64px) clamp(32px, 4.5vh, 46px);
+  box-sizing: border-box;
+}
+
+/* Lower Left Pitch Column */
+.growth-hero__box-pitch-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 460px;
+  pointer-events: auto;
+}
+
+.growth-hero__box-pitch-text {
+  margin: 0;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.growth-hero__box-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* =========================================================================
+   Primary Button: Crisp White Pill with Brand-Orange Typographic Roll
+   ========================================================================= */
+.growth-hero__box-btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  color: #141210;
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  box-sizing: border-box;
+  user-select: none;
+  cursor: pointer;
+  transition:
+    border-color 0.35s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s ease;
+}
+
+.growth-hero__box-btn-primary:hover {
+  background: #FFFFFF;
+  border-color: rgba(255, 94, 20, 0.42);
+  transform: translateY(-2.5px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22), 0 2px 14px rgba(255, 94, 20, 0.22);
+}
+
+.growth-hero__box-btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.growth-hero__btn-primary-roll {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+}
+
+.growth-hero__btn-primary-roll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.46s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.growth-hero__btn-primary-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+/* Resting line in dark charcoal */
+.growth-hero__btn-primary-line--top {
+  color: #141210;
+}
+
+/* Rolling clone line in vibrant brand orange */
+.growth-hero__btn-primary-line--bottom {
+  color: #FF5E14;
+}
+
+.growth-hero__btn-primary-arrow {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-0.5px);
+}
+
+/* On hover: Primary line rolls up out of view, brand-orange clone rises into place */
+.growth-hero__box-btn-primary:hover .growth-hero__btn-primary-roll-inner {
+  transform: translateY(-50%);
+}
+
+/* =========================================================================
+   Secondary Button: Luminous Frosted Glass Swipe & Morphing Circular Arrow
+   ========================================================================= */
+.growth-hero__box-btn-secondary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 8px 0 20px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  text-decoration: none;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  overflow: hidden;
+  box-sizing: border-box;
+  user-select: none;
+  cursor: pointer;
+  transition:
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s ease;
+}
+
+/* Horizontal sliding frosted glass shimmer from LEFT to RIGHT */
+.growth-hero__btn-secondary-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.22));
+  transform: translateX(-101%);
+  transition: transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  z-index: 1;
+}
+
+.growth-hero__box-btn-secondary:hover .growth-hero__btn-secondary-bg {
+  transform: translateX(0);
+}
+
+.growth-hero__box-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.65);
+  transform: translateY(-2.5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), 0 0 16px rgba(255, 255, 255, 0.1);
+}
+
+.growth-hero__box-btn-secondary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.growth-hero__btn-secondary-label {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  line-height: 1;
+  color: #FFFFFF;
+}
+
+.growth-hero__box-btn-secondary:hover .growth-hero__btn-secondary-label {
+  transform: translateX(2px);
+}
+
+/* Circular Arrow Badge */
+.growth-hero__btn-secondary-badge {
+  position: relative;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  transition:
+    background-color 0.35s ease,
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.growth-hero__btn-secondary-arrow {
+  display: inline-block;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* On hover: badge brightens, expands slightly, and arrow rotates 45deg to point straight forward (→) */
+.growth-hero__box-btn-secondary:hover .growth-hero__btn-secondary-badge {
+  background: rgba(255, 255, 255, 0.32);
+  transform: scale(1.08) translateX(1px);
+}
+
+.growth-hero__box-btn-secondary:hover .growth-hero__btn-secondary-arrow {
+  transform: rotate(45deg);
+}
+
+/* Lower Right Stacked Capability Pills */
+.growth-hero__box-tags-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.growth-hero__box-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.growth-hero__box-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 9999px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #FFFFFF;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.growth-hero__box-tag-pill:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+}
+
+/* =========================================================================
+   Mobile & Tablet Responsive System (< 1024px)
+   Keeps the 3D mascot box 100% clean and unobstructed, with copy & CTAs
+   flowing gracefully below on the luxury cream page background.
+   ========================================================================= */
+
+/* Dedicated Mobile Story & CTA Flow (Hidden on desktop) */
+.growth-hero__mobile-content {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .growth-hero {
+    padding-top: clamp(84px, 12vh, 110px);
+    padding-bottom: 48px;
+  }
+
+  .growth-hero__title {
+    font-size: clamp(36px, 10vw, 78px);
+    gap: clamp(8px, 2vw, 18px);
+  }
+
+  .growth-hero__tagline {
+    font-size: clamp(15px, 2.4vw, 20px);
+    margin-top: 4px;
+  }
+
+  /* 1. The Mascot Box on Mobile: Dedicated Visual Hero Stage (Zero text covering him) */
+  .growth-hero__mascot-box {
+    width: min(100% - clamp(24px, 5vw, 48px), 540px);
+    height: clamp(310px, 46vh, 420px);
+    min-height: 290px;
+    margin: clamp(18px, 3vh, 28px) auto clamp(24px, 3.5vh, 32px);
+    border-radius: clamp(24px, 3.5vw, 32px);
+    box-shadow:
+      0 20px 50px -10px rgba(255, 94, 20, 0.38),
+      0 8px 20px -4px rgba(20, 18, 16, 0.12),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+
+  /* Hide the desktop overlay inside the mascot box on mobile/tablet */
+  .growth-hero__box-overlay {
+    display: none !important;
+  }
+
+  /* 2. Reveal the dedicated story & CTA section below the mascot box */
+  .growth-hero__mobile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 580px;
+    padding: 0 clamp(16px, 4vw, 28px);
+    box-sizing: border-box;
+    z-index: 3;
+    gap: clamp(14px, 2.2vh, 20px);
+  }
+
+  .growth-hero__mobile-vibe {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .growth-hero__mobile-vibe-title {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(30px, 7.5vw, 44px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #1A1613;
+    margin: 0;
+  }
+
+  .growth-hero__mobile-vibe-sub {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: clamp(12.5px, 2.5vw, 14px);
+    font-weight: 600;
+    color: #FF5E14;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 4px 0 0;
+  }
+
+  .growth-hero__mobile-vibe-quote {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(15px, 3.8vw, 18px);
+    font-style: italic;
+    font-weight: 500;
+    color: #4A433D;
+    line-height: 1.4;
+    margin: 6px 0 0;
+  }
+
+  .growth-hero__mobile-pitch {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: clamp(14px, 3.4vw, 15.5px);
+    line-height: 1.55;
+    color: #635A52;
+    margin: 0;
+    max-width: 460px;
+  }
+
+  .growth-hero__mobile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .growth-hero__mobile-btn-primary {
+    flex: 1 1 150px;
+    height: 48px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #FF7B28 0%, #FF5E14 100%);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(255, 94, 20, 0.32);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+
+  .growth-hero__mobile-btn-primary:active {
+    transform: scale(0.97);
+  }
+
+  .growth-hero__mobile-btn-secondary {
+    flex: 1 1 150px;
+    height: 48px;
+    border-radius: 9999px;
+    background: #FFFFFF;
+    border: 1.5px solid rgba(22, 20, 18, 0.12);
+    color: #1A1613;
+    text-decoration: none;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+  }
+
+  .growth-hero__mobile-btn-secondary:active {
+    transform: scale(0.97);
+  }
+
+  .growth-hero__mobile-btn-arrow {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .growth-hero__mobile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    max-width: 480px;
+    margin-top: 4px;
+  }
+
+  .growth-hero__mobile-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    background: rgba(255, 94, 20, 0.08);
+    border: 1px solid rgba(255, 94, 20, 0.18);
+    border-radius: 9999px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #C43802;
+    user-select: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .growth-hero__mobile-tag:hover {
+    background: rgba(255, 94, 20, 0.14);
+    transform: translateY(-1px);
+  }
+}

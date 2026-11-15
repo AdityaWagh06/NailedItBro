@@ -2,199 +2,210 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { PROJECTS } from '../data'
 import { gsap, useGSAP, revealHeading, ScrollTrigger } from '../lib/motion'
 import { scrollToTarget } from '../lib/useSmoothScroll'
-import { Browser, Phone, ProjectScreen, ProjectPhone } from './Mockups'
-import CaseStudy from './CaseStudy'
+import { ProjectScreen } from './Mockups'
+import LivePreviewModal from './LivePreviewModal'
 
 const slugFromHash = () => {
   const m = window.location.hash.match(/^#work\/([\w-]+)$/)
-  return m && PROJECTS.some((p) => p.slug === m[1]) ? m[1] : null
+  if (!m) return null
+  if (m[1] === 'halden' || m[1] === 'chiffon') return 'creme-and-whisk'
+  return PROJECTS.some((p) => p.slug === m[1]) ? m[1] : null
 }
 
 function ProjectVisual({ p }) {
   return (
-    <div className={`proj__stage proj__stage--${p.layout}`} style={{ '--p-bg': p.palette.bg, '--p-ink': p.palette.ink, '--p-accent': p.palette.accent, '--p-soft': p.palette.soft }}>
+    <div
+      className={`proj__stage proj__stage--clean proj__stage--${p.layout}`}
+      style={{
+        '--p-bg': p.palette.bg,
+        '--p-ink': p.palette.ink,
+        '--p-accent': p.palette.accent,
+        '--p-soft': p.palette.soft
+      }}
+    >
       <div className="proj__backdrop" />
-      <div className="proj__browser" data-speed="0.6">
-        <Browser url={p.live ? `naileditbro.com/templates/${p.slug}` : `${p.slug}.concept`}>
-          {p.live ? <img className="proj__shot" src={p.live.replace('index.html', 'desktop.jpg')} alt="" loading="lazy" /> : <ProjectScreen layout={p.layout} />}
-        </Browser>
+      <div className="proj__clean-media">
+        {p.heroImage ? (
+          <img
+            src={p.heroImage}
+            alt={`${p.name} website visual`}
+            className="proj__clean-img"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="proj__clean-screen">
+            <ProjectScreen layout={p.layout} />
+          </div>
+        )}
       </div>
-      <div className="proj__phone" data-speed="1.4">
-        <Phone>{p.live ? <img className="proj__shot" src={p.live.replace('index.html', 'mobile.jpg')} alt="" loading="lazy" /> : <ProjectPhone layout={p.layout} />}</Phone>
-      </div>
-      <span className="proj__badge">{p.live ? 'Live template' : 'Concept'}</span>
     </div>
   )
 }
 
 export default function Work() {
   const root = useRef(null)
-  const track = useRef(null)
-  const [count, setCount] = useState(1)
-  const [openSlug, setOpenSlug] = useState(slugFromHash)
+  const [livePreviewProject, setLivePreviewProject] = useState(null)
 
-  // Case studies live at #work/<slug>: back/forward and direct links work.
-  useEffect(() => {
-    const sync = () => setOpenSlug(slugFromHash())
-    window.addEventListener('popstate', sync)
-    window.addEventListener('hashchange', sync)
-    return () => {
-      window.removeEventListener('popstate', sync)
-      window.removeEventListener('hashchange', sync)
-    }
-  }, [])
-
-  const openProject = (slug) => {
-    history.pushState({ caseStudy: slug }, '', `#work/${slug}`)
-    setOpenSlug(slug)
-  }
-  const closeProject = useCallback(() => {
-    if (history.state?.caseStudy) history.back()
-    else {
-      history.replaceState(null, '', '#work')
-      setOpenSlug(null)
-    }
-  }, [])
-
+  // Raw physical stacking without any fade or dimming
   useGSAP(
     () => {
-      const mm = gsap.matchMedia()
-      mm.add(
-        {
-          horizontal: '(min-width: 1000px) and (prefers-reduced-motion: no-preference)',
-          vertical: '(max-width: 999px) and (prefers-reduced-motion: no-preference)',
-        },
-        (ctx) => {
-          const h = revealHeading('.work__title')
-          const panels = gsap.utils.toArray('.proj')
-
-          if (ctx.conditions.horizontal) {
-            const distance = () => track.current.scrollWidth - window.innerWidth
-            const scroll = gsap.to(track.current, {
-              x: () => -distance(),
-              ease: 'none',
-              scrollTrigger: {
-                trigger: '.work__pin',
-                start: 'top top',
-                end: () => `+=${distance()}`,
-                pin: true,
-                scrub: 0.8,
-                invalidateOnRefresh: true,
-                anticipatePin: 1,
-                onUpdate: (self) => {
-                  gsap.set('.work__bar-fill', { scaleX: self.progress })
-                  setCount(Math.min(PROJECTS.length, Math.max(1, Math.round(self.progress * (PROJECTS.length - 1)) + 1)))
-                  if (self.progress > 0.88) {
-                    gsap.to('.work__progress', { autoAlpha: 0, duration: 0.25, overwrite: 'auto' })
-                  } else {
-                    gsap.to('.work__progress', { autoAlpha: 1, duration: 0.25, overwrite: 'auto' })
-                  }
-                },
-              },
-            })
-
-            panels.forEach((panel) => {
-              // Image reveal as each panel slides into view.
-              gsap.from(panel.querySelector('.proj__stage'), {
-                clipPath: 'inset(0% 0% 0% 100% round 20px)',
-                ease: 'power2.out',
-                scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left 95%', end: 'left 45%', scrub: true },
-              })
-              // Layers drift at different speeds for depth.
-              panel.querySelectorAll('[data-speed]').forEach((el) => {
-                gsap.fromTo(el, { xPercent: 12 * el.dataset.speed }, {
-                  xPercent: -12 * el.dataset.speed, ease: 'none',
-                  scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left right', end: 'right left', scrub: true },
-                })
-              })
-              // Entrance: metadata reveals when panel slides into view
-              gsap.from(panel.querySelectorAll('.proj__meta > *'), {
-                x: 30, autoAlpha: 0, stagger: 0.06, duration: 0.8,
-                scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left 75%', toggleActions: 'play none none reverse' },
-              })
-              // Exit: smoothly dissolve the entire panel as it leaves the viewport on the left
-              gsap.to(panel, {
-                autoAlpha: 0,
-                xPercent: -8,
-                ease: 'power1.inOut',
-                scrollTrigger: {
-                  trigger: panel,
-                  containerAnimation: scroll,
-                  start: 'right 35%',
-                  end: 'right 0%',
-                  scrub: true,
-                },
-              })
-            })
-          } else {
-            panels.forEach((panel) => {
-              gsap.from(panel.querySelector('.proj__stage'), {
-                clipPath: 'inset(20% 10% 0% 10% round 20px)', scale: 1.05, duration: 1.3, ease: 'expo.out',
-                scrollTrigger: { trigger: panel, start: 'top 85%', once: true },
-              })
-              gsap.from(panel.querySelectorAll('.proj__meta > *'), {
-                y: 24, autoAlpha: 0, stagger: 0.06, duration: 0.8,
-                scrollTrigger: { trigger: panel, start: 'top 75%', once: true },
-              })
-            })
-          }
-          return () => h.revert()
-        },
-      )
-      return () => mm.revert()
+      revealHeading('.work__title')
     },
     { scope: root },
   )
 
-  // Opening a deep-linked case study should land the page on the Work section.
-  useEffect(() => {
-    if (openSlug) setTimeout(() => ScrollTrigger.refresh(), 50)
-  }, [openSlug])
-
-  const project = PROJECTS.find((p) => p.slug === openSlug)
-
   return (
-    <section className="work" id="work" ref={root} data-theme="dark" aria-labelledby="work-title">
-      <div className="work__pin">
-        <div className="work__progress" aria-hidden="true">
-          <span className="work__count">{String(count).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</span>
-          <div className="work__bar"><div className="work__bar-fill" /></div>
-        </div>
-        <div className="work__track" ref={track}>
-          <div className="work__intro">
-            <p className="eyebrow">(Selected work)</p>
-            <h2 className="work__title display-2" id="work-title">Studio <em className="serif">explorations</em> in brand, web & product.</h2>
-            <p className="work__note">Self-initiated concepts and ready-to-launch website templates for local businesses. Open any template to click through the live site. Client case studies are shared on request.</p>
-          </div>
+    <section className="work" id="work" ref={root} data-theme="light" aria-labelledby="work-title">
+      {/* Section Header: placed cleanly at the top with NO left text squeezing the cards */}
+      <div className="container work__header">
+        <p className="eyebrow work__eyebrow">(Selected work)</p>
+        <h2 className="work__title display-2" id="work-title">
+          Studio <em className="serif">explorations</em> in<br />
+          brand, web &amp; product.
+        </h2>
+        <p className="work__note">
+          A selection of live client flagship builds and studio explorations in brand, web, and product engineering.
+        </p>
+      </div>
 
+      {/* Full-Scape Vertical Scroll Stack */}
+      <div className="container work__stack-container">
+        <div className="work__stack">
           {PROJECTS.map((p, i) => (
-            <article className={`proj proj--${p.layout}`} key={p.slug} aria-labelledby={`proj-${p.slug}`}>
-              <button className="proj__open" onClick={() => openProject(p.slug)} aria-label={`Open ${p.name} concept case study`}>
-                <ProjectVisual p={p} />
-              </button>
-              <div className="proj__meta">
-                <span className="proj__no">0{i + 1}</span>
-                <h3 className="proj__name" id={`proj-${p.slug}`}>{p.name}</h3>
-                <p className="proj__kind">{p.kind} · <span>{p.year}</span></p>
-                <p className="proj__blurb">{p.blurb}</p>
-                <div className="proj__links">
-                  <button className="u-link proj__link" onClick={() => openProject(p.slug)}>View case study <span aria-hidden="true">→</span></button>
-                  {p.live && <a className="u-link proj__link" href={p.live} target="_blank" rel="noopener">Open live site <span aria-hidden="true">↗</span></a>}
+            <div
+              key={p.slug}
+              className="work__card-wrapper"
+              style={{
+                zIndex: i + 1,
+              }}
+            >
+              <article
+                className={`work__card work__card--${p.layout}`}
+                style={{
+                  '--p-bg': p.palette.bg,
+                  '--p-ink': p.palette.ink,
+                  '--p-accent': p.palette.accent,
+                  '--p-soft': p.palette.soft
+                }}
+                aria-labelledby={`proj-${p.slug}`}
+              >
+                {/* Visual Mockup Stage */}
+                <div className="work__card-visual">
+                  {p.liveUrl ? (
+                    <a
+                      href={p.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="proj__open"
+                      aria-label={`Visit ${p.name} live website at ${p.liveUrl}`}
+                    >
+                      <ProjectVisual p={p} />
+                    </a>
+                  ) : (
+                    <a
+                      href={`#case-study/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="proj__open"
+                      aria-label={`Read ${p.name} case study in a new tab`}
+                    >
+                      <ProjectVisual p={p} />
+                    </a>
+                  )}
                 </div>
-              </div>
-            </article>
+
+                {/* Card Meta & Details */}
+                <div className="work__card-meta">
+                  <div className="work__card-top-bar">
+                    <span className="work__card-badge">0{i + 1} / 0{PROJECTS.length}</span>
+                    <span className="work__card-kind">{p.kind}</span>
+                  </div>
+
+                  <h3 className="work__card-title" id={`proj-${p.slug}`}>
+                    {p.name}
+                  </h3>
+
+                  <p className="work__card-blurb">{p.blurb}</p>
+
+                  {/* Dual Action: Live Website Button + Case Study Button */}
+                  <div className="work__card-action-row">
+                    {p.liveUrl ? (
+                      <a
+                        href={p.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="work__btn-live"
+                        aria-label={`Open live website for ${p.name}`}
+                      >
+                        <span className="work__btn-live-text">Live Website</span>
+                        <span className="work__btn-live-arrow" aria-hidden="true">↗</span>
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className="work__btn-live"
+                        onClick={() => setLivePreviewProject(p)}
+                        aria-label={`Open live preview of ${p.name}`}
+                      >
+                        <span className="work__btn-live-text">Live Website</span>
+                        <span className="work__btn-live-arrow" aria-hidden="true">↗</span>
+                      </button>
+                    )}
+
+                    <a
+                      href={`#case-study/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="work__card-btn"
+                      aria-label={`Read ${p.name} case study in a new tab`}
+                    >
+                      <span>Case study</span>
+                      <span className="work__card-btn-arrow" aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
           ))}
 
-          <div className="work__outro">
-            <p className="display-2">Your project <em className="serif">could be next.</em></p>
-            <a href="#contact" className="btn btn--light" onClick={(e) => { e.preventDefault(); scrollToTarget('#contact') }}>
-              <span className="btn__label" data-text="Tell us about it">Tell us about it</span><span className="btn__icon" aria-hidden="true">→</span>
-            </a>
+          {/* Outro CTA Card in the Stack */}
+          <div
+            className="work__card-wrapper work__card-wrapper--outro"
+            style={{
+              zIndex: PROJECTS.length + 1,
+            }}
+          >
+            <div className="work__card work__card--outro">
+              <div className="work__outro-inner">
+                <p className="eyebrow">(Next Project)</p>
+                <h3 className="display-2 work__outro-title">
+                  Your project <em className="serif">could be next.</em>
+                </h3>
+                <p className="work__outro-sub">
+                  Full-stack engineering, high-speed performance &amp; autonomous intelligence — engineered to get you real customers.
+                </p>
+                <a
+                  href="#contact"
+                  className="work__outro-btn"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToTarget('#contact')
+                  }}
+                >
+                  <span>Start your project</span>
+                  <span className="work__card-btn-arrow" aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
           </div>
+
+          {/* Sticky Runway Spacer: enables the Outro card to stick 100% flush cut-to-cut over Pulse Studio */}
+          <div className="work__stack-spacer" aria-hidden="true" />
         </div>
       </div>
 
-      <CaseStudy project={project} onClose={closeProject} renderVisual={(p) => <ProjectVisual p={p} />} />
+      <LivePreviewModal project={livePreviewProject} onClose={() => setLivePreviewProject(null)} />
     </section>
   )
 }

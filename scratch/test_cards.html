@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #e9eef2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+  }
+  .card1 {
+    width: 200px;
+    height: 220px;
+    background: linear-gradient(155deg, #597355 0%, #3a4f36 100%);
+    border-radius: 28px;
+    transform: perspective(400px) rotateY(32deg) rotateX(16deg) rotateZ(-7deg);
+    box-shadow: 0 35px 70px -15px rgba(20, 30, 20, 0.4);
+  }
+  .card2 {
+    width: 175px;
+    height: 190px;
+    background: #ffffff;
+    border-radius: 26px;
+    transform: perspective(500px) rotateY(16deg) rotateX(8deg) rotateZ(-3.5deg);
+    box-shadow: 0 25px 50px -12px rgba(20, 30, 40, 0.25);
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="card1"></div>
+    <div class="card2"></div>
+  </div>
+</body>
+</html>

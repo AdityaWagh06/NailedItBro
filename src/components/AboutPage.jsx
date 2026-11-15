@@ -209,7 +209,7 @@ export default function AboutPage({ onNavigate }) {
       domain: 'Website and Strategy',
       bio: 'Plans your product and online presence so it has a clear purpose and a clear audience.',
       skills: ['Websites', 'Social Media', 'Product Strategy'],
-      photoSrc: '/team/atharv.webp',
+      photoSrc: '/atharv.webp',
       linkedin: 'https://www.linkedin.com/in/atharv-doiphode-07045125a/',
       instagram: 'https://instagram.com/itsjustatharv',
     },
@@ -219,7 +219,7 @@ export default function AboutPage({ onNavigate }) {
       domain: 'AI, Website and QR Systems  ',
       bio: 'Builds Websites, QR-powered tools and AI automations that cut manual work.',
       skills: ['QR Systems', 'Artificial Intelligence'],
-      photoSrc: '/team/aditya.webp',
+      photoSrc: '/aditya.webp',
       linkedin: 'https://www.linkedin.com/in/aditya-wagh25/',
       instagram: 'https://instagram.com/_adityawagh_7',
     },
@@ -239,7 +239,7 @@ export default function AboutPage({ onNavigate }) {
       domain: 'App Development and UI/UX',
       bio: 'Designs and builds mobile apps that are simple to use and smooth to run.',
       skills: ['App Development', 'UI/UX Design'],
-      photoSrc: '/team/avdhoot.webp',
+      photoSrc: '/avdhoot.webp',
       linkedin: 'https://www.linkedin.com/in/avdhootp144/',
       instagram: 'https://instagram.com/avdhoot14_4',
     },
@@ -351,7 +351,7 @@ export default function AboutPage({ onNavigate }) {
               <div className="about-editorial-aside">
                 <Reveal delay={150}>
                   <TiltedLogoCard
-                    imageSrc="/mascot_head_nohammer.png"
+                    imageSrc="/mascot_head_nohammer.webp"
                     alt="Nailed It Bro Studio Mascot & Logo"
                     badgeText="4 founders, 1 team"
                   />

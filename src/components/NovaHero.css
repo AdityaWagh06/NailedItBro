@@ -1,0 +1,814 @@
+/* ==========================================================================
+   Nailed It Bro — Full-Bleed Cinematic Hero Section
+   Inspired by Celimax high-end editorial full-screen hero layout
+   - 5 Services with full-screen fitted imagery (object-fit: cover)
+   - Deep cinematic screen overlay (vignette & multi-directional gradient scrim)
+   - Content: Preserved exactly, perfectly readable over the screen overlay
+   - Vertical Stepper (1 to 5) with active glowing node & connecting line
+   - Bottom-Left: Eyebrow + Monumental White Headline + Actions (CTA & Play ▶)
+   - Bottom-Right: Star Rating + Client Avatars + Description + Deliverable Chips + Explore ↗
+   - Bottom Bar: Social Follow Pill | Tech Stack Marquee
+   - 100vh viewport fit with responsive adaptations
+   ========================================================================== */
+
+.nova-hero-section {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  max-height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: clamp(72px, 10vh, 92px);
+  padding-bottom: clamp(10px, 1.6vh, 18px);
+  padding-inline: clamp(16px, 3.2vw, 48px);
+  background: #09090C;
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   FULL-BLEED SCREEN-FITTED HERO CONTAINER
+   ========================================================================== */
+.nova-hero-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1460px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: clamp(24px, 3.2vw, 36px);
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    0 2px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0D0D12;
+}
+
+/* Full-Screen Fitted Background Image Layer */
+.nova-bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nova-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.92) contrast(1.05);
+  transform: scale(1.02);
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   CINEMATIC SCREEN OVERLAY
+   Ensures supreme typography contrast & warm luxury ambience
+   ========================================================================== */
+.nova-screen-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    /* Deep bottom gradient for headline & right dossier */
+    linear-gradient(180deg, rgba(9, 9, 12, 0.25) 0%, rgba(9, 9, 12, 0.5) 45%, rgba(9, 9, 12, 0.92) 100%),
+    /* Left-to-right gradient for the headline stack */
+    linear-gradient(90deg, rgba(9, 9, 12, 0.88) 0%, rgba(9, 9, 12, 0.6) 42%, rgba(9, 9, 12, 0.3) 75%, rgba(9, 9, 12, 0.7) 100%),
+    /* Subtle warm Electric Orange brand glow */
+    radial-gradient(ellipse 60% 45% at 20% 80%, rgba(255, 94, 20, 0.18) 0%, transparent 65%);
+}
+
+.nova-screen-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.8);
+}
+
+/* Top Status Badge inside the card */
+.nova-card-top-bar {
+  position: absolute;
+  top: clamp(16px, 2.5vh, 26px);
+  right: clamp(16px, 2.8vw, 32px);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nova-float-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(18, 18, 24, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(10.5px, 0.85vw, 11.5px);
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.03em;
+}
+
+.nova-float-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 10px #10B981;
+  position: relative;
+}
+
+.nova-float-badge__dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid #10B981;
+  animation: dotPulse 2s ease-out infinite;
+}
+
+@keyframes dotPulse {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* ==========================================================================
+   HERO CARD CONTENT GRID (Left Stepper + Title | Right Dossier)
+   ========================================================================== */
+.nova-card-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  align-items: flex-end;
+  gap: clamp(24px, 3.5vw, 56px);
+  padding: clamp(24px, 3.8vh, 48px) clamp(24px, 3.5vw, 52px);
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT COLUMN: Vertical Stepper + Eyebrow + Headline + Action Buttons
+   -------------------------------------------------------------------------- */
+.nova-left-cluster {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(16px, 2.2vw, 32px);
+}
+
+/* Vertical Stepper with Connected Line */
+.nova-stepper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vh, 16px);
+  flex-shrink: 0;
+  user-select: none;
+  padding-top: 6px;
+}
+
+.nova-stepper-line {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  width: 1.5px;
+  background: rgba(255, 255, 255, 0.18);
+  z-index: 0;
+}
+
+.nova-step-btn {
+  position: relative;
+  z-index: 1;
+  width: clamp(30px, 2.5vw, 36px);
+  height: clamp(30px, 2.5vw, 36px);
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  background: rgba(18, 18, 24, 0.65);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(11.5px, 0.9vw, 13px);
+  font-weight: 650;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nova-step-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.08);
+}
+
+.nova-step-btn.is-active {
+  background: #FFFFFF;
+  color: #09090C;
+  font-weight: 850;
+  border-color: #FFFFFF;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 3px rgba(255, 94, 20, 0.55);
+  transform: scale(1.15);
+}
+
+/* Typography Lockup */
+.nova-typography-stack {
+  display: flex;
+  flex-direction: column;
+  max-width: 580px;
+}
+
+.nova-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(10px, 0.8vw, 11.5px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.75);
+  margin-bottom: clamp(6px, 1.2vh, 12px);
+}
+
+.nova-eyebrow__dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: var(--orange, #FF5E14);
+  box-shadow: 0 0 10px rgba(255, 94, 20, 0.8);
+}
+
+/* Monumental Display Headline */
+.nova-headline {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(2.4rem, 4.4vw, 4.4rem);
+  font-weight: 850;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: #FFFFFF;
+  margin: 0 0 clamp(14px, 2.2vh, 22px) 0;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+}
+
+.nova-headline-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.nova-period {
+  color: var(--orange, #FF5E14);
+}
+
+/* Actions: Pill CTA Button + Circular Play Button */
+.nova-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nova-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: clamp(11px, 1.4vh, 14px) clamp(22px, 2vw, 30px);
+  border-radius: 999px;
+  background: var(--orange, #FF5E14);
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(13px, 0.95vw, 14.5px);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 10px 28px rgba(255, 94, 20, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nova-primary-btn:hover {
+  background: #FF7533;
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 36px rgba(255, 94, 20, 0.65),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.nova-btn-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.nova-primary-btn:hover .nova-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Circular Play Button */
+.nova-play-btn {
+  width: clamp(40px, 3.4vw, 46px);
+  height: clamp(40px, 3.4vw, 46px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--orange, #FF5E14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(255, 94, 20, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.nova-play-btn svg {
+  width: 15px;
+  height: 15px;
+  transform: translateX(1px);
+}
+
+.nova-play-btn:hover {
+  transform: scale(1.1);
+  background: #FFFFFF;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(255, 94, 20, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT COLUMN: Social Proof + Description + Deliverable Chips + Explore ↗
+   -------------------------------------------------------------------------- */
+.nova-right-dossier {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 480px;
+  background: rgba(18, 18, 24, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: clamp(16px, 2.2vh, 24px) clamp(18px, 2.2vw, 26px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* Rating & Social Proof Row */
+.nova-proof-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.nova-avatars-group {
+  display: flex;
+  align-items: center;
+}
+
+.nova-avatar-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(18, 18, 24, 0.8);
+  object-fit: cover;
+  background: #1C1C24;
+  margin-left: -8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.nova-avatar-chip:first-child {
+  margin-left: 0;
+}
+
+.nova-rating-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nova-stars {
+  font-size: 11px;
+  color: #FFB800;
+  letter-spacing: 2px;
+}
+
+.nova-proof-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(242, 237, 228, 0.85);
+  letter-spacing: 0.02em;
+}
+
+/* Service Description */
+.nova-description {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(12.5px, 0.95vw, 13.5px);
+  line-height: 1.52;
+  color: rgba(242, 237, 228, 0.8);
+  margin: 0 0 14px 0;
+}
+
+/* Deliverables Chips */
+.nova-deliverables-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.nova-deliverable-chip {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #F2EDE4;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* Right Column Action: Pill Link */
+.nova-dossier-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #09090C;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nova-dossier-btn:hover {
+  background: #FFFFFF;
+  color: var(--orange, #FF5E14);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255, 94, 20, 0.3);
+}
+
+.nova-dossier-arrow {
+  display: inline-block;
+  font-size: 12px;
+  transition: transform 0.25s ease;
+}
+
+.nova-dossier-btn:hover .nova-dossier-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ==========================================================================
+   BOTTOM META BAR: Social Follow Pill | Logos & Tech Partners
+   ========================================================================== */
+.nova-bottom-bar {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 1460px;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 36px);
+  padding-block: clamp(6px, 1vh, 10px);
+}
+
+/* Social Follow Pill */
+.nova-follow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px 6px 14px;
+  border-radius: 999px;
+  background: rgba(18, 18, 24, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.nova-follow-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(242, 237, 228, 0.85);
+  letter-spacing: 0.04em;
+}
+
+.nova-social-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nova-social-link {
+  color: #F2EDE4;
+  opacity: 0.75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.nova-social-link:hover {
+  opacity: 1;
+  color: var(--orange, #FF5E14);
+  transform: translateY(-1.5px);
+}
+
+/* Vertical Hairline Divider */
+.nova-bar-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
+}
+
+/* Logos & Partners Bar */
+.nova-logos-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.nova-logos-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(14px, 2.2vw, 36px);
+  width: 100%;
+}
+
+.nova-logo-item {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(11.5px, 0.95vw, 13px);
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.55);
+  white-space: nowrap;
+  transition: color 0.25s ease, transform 0.25s ease;
+  user-select: none;
+}
+
+.nova-logo-item:hover {
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   INTERACTIVE BLUEPRINT & REEL MODAL
+   ========================================================================== */
+.nova-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.nova-blueprint-card {
+  width: 100%;
+  max-width: 620px;
+  background: #111116;
+  border: 1px solid rgba(255, 94, 20, 0.35);
+  border-radius: 28px;
+  padding: clamp(24px, 3.5vw, 36px);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(255, 94, 20, 0.2);
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+.nova-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.nova-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange, #FF5E14);
+}
+
+.nova-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #F2EDE4;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.nova-modal-close:hover {
+  background: rgba(255, 94, 20, 0.2);
+  color: #FFFFFF;
+}
+
+.nova-modal-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(22px, 2.4vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px 0;
+  color: #FFFFFF;
+}
+
+.nova-modal-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(242, 237, 228, 0.75);
+  margin: 0 0 20px 0;
+}
+
+.nova-modal-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 22px;
+}
+
+.nova-modal-col__title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.5);
+  margin: 0 0 10px 0;
+}
+
+.nova-modal-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nova-modal-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #F2EDE4;
+  font-weight: 550;
+}
+
+.nova-modal-check {
+  color: var(--orange, #FF5E14);
+  font-weight: 800;
+}
+
+.nova-modal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.nova-tech-pill {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 94, 20, 0.1);
+  border: 1px solid rgba(255, 94, 20, 0.25);
+  color: #F2EDE4;
+}
+
+.nova-modal-meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.nova-modal-meta-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 237, 228, 0.45);
+}
+
+.nova-modal-meta-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.nova-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .nova-card-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .nova-right-dossier {
+    max-width: 100%;
+  }
+  .nova-logos-wrap {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .nova-hero-section {
+    height: 100svh;
+    padding-top: 72px;
+    padding-inline: 14px;
+  }
+  .nova-card-content {
+    padding: 20px 16px;
+  }
+  .nova-headline {
+    font-size: clamp(2rem, 8.5vw, 2.8rem);
+  }
+  .nova-headline-line {
+    white-space: normal;
+  }
+  .nova-right-dossier {
+    display: none;
+  }
+  .nova-bottom-bar {
+    justify-content: center;
+  }
+  .nova-bar-divider {
+    display: none;
+  }
+}

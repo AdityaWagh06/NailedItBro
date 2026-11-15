@@ -1,21 +1,25 @@
-import { useRef } from 'react'
-import { EMAIL } from '../data'
+import { useRef, useState } from 'react'
+import { EMAIL, SOCIALS } from '../data'
 import { gsap, useGSAP } from '../lib/motion'
 import { scrollToTarget } from '../lib/useSmoothScroll'
-import SocialLinks from './SocialLinks'
+import FooterWave from './FooterWave'
+import LegalModal from './LegalModal'
 
 export default function Footer({ onNavigate }) {
   const root = useRef(null)
+  const [legalModalOpen, setLegalModalOpen] = useState(false)
+  const [legalInitialTab, setLegalInitialTab] = useState('privacy')
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia()
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.from('.footer__char', {
-          yPercent: 100,
-          stagger: 0.04,
-          duration: 1.2,
-          ease: 'expo.out',
+          y: 40,
+          opacity: 0,
+          stagger: 0.03,
+          duration: 1.1,
+          ease: 'power3.out',
           scrollTrigger: { trigger: '.footer__mark', start: 'top 95%', once: true },
         })
       })
@@ -24,12 +28,25 @@ export default function Footer({ onNavigate }) {
     { scope: root },
   )
 
-  const footerLinks = [
+  const agencyLinks = [
     { href: '#services', label: 'Services' },
     { href: '#work', label: 'Work' },
     { href: '#process', label: 'Process' },
     { href: '#about', label: 'About Us' },
-    { href: '#contact', label: 'Contact' },
+    { href: '#contact', label: 'Contact Us' },
+  ]
+
+  const legalLinks = [
+    { href: '#terms', label: 'Terms & Conditions', isRoute: true },
+    { href: '#privacy', label: 'Privacy Policy', isRoute: true },
+    { href: '#cookies', label: 'Cookie Policy', isRoute: true },
+  ]
+
+  const socialLinks = [
+    { href: 'https://linkedin.com/company/naileditbro', label: 'LinkedIn' },
+    { href: 'https://instagram.com/nailedit.bro', label: 'Instagram' },
+    { href: 'https://www.facebook.com/share/1FFA1GSven/', label: 'Facebook' },
+    { href: 'https://chat.whatsapp.com/JQzCCHsQIDb7MpUVVhTYEr', label: 'WhatsApp' },
   ]
 
   const handleLink = (e, href) => {
@@ -42,19 +59,27 @@ export default function Footer({ onNavigate }) {
   }
 
   const handleBackToTop = () => {
-    if (onNavigate && window.location.hash === '#about') {
+    if (onNavigate && (window.location.hash === '#about' || window.location.hash === '#privacy' || window.location.hash === '#terms' || window.location.hash === '#cookies')) {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
       scrollToTarget('#top')
     }
   }
 
+  const openLegal = (tab = 'privacy') => {
+    setLegalInitialTab(tab)
+    setLegalModalOpen(true)
+  }
+
   const words = ['Nailed', 'It', 'Bro']
 
   return (
     <footer className="footer" ref={root} data-theme="dark">
+      {/* Full-Screen Continuous Living Amber Silk Motion */}
+      <FooterWave />
+
       <div className="container footer__top">
-        {/* Contact Block: Eyebrow stacked over Email */}
+        {/* Left Column: Direct Reach Contact Block */}
         <div className="footer__contact">
           <p className="eyebrow footer__eyebrow">
             <span className="dot" aria-hidden="true" />
@@ -68,25 +93,81 @@ export default function Footer({ onNavigate }) {
           >
             {EMAIL}
           </a>
+          <p className="footer__tagline">
+            Full-stack engineering, high-speed performance & autonomous intelligence.
+          </p>
         </div>
 
-        {/* Navigation Links */}
-        <nav aria-label="Footer" className="footer__nav">
-          {footerLinks.map((l) => (
-            <a
-              key={l.href}
-              className="u-link"
-              href={l.href}
-              onClick={(e) => handleLink(e, l.href)}
-            >
-              {l.label}
-            </a>
-          ))}
-        </nav>
+        {/* Center & Right Navigation Grid: 3 Structured Columns */}
+        <div className="footer__columns">
+          {/* Column 1: Agency */}
+          <div className="footer__col">
+            <h4 className="footer__col-heading">Agency</h4>
+            <ul className="footer__col-list">
+              {agencyLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleLink(e, link.href)}
+                    className="u-link footer__col-link"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Social Links & Back to Top Button */}
+          {/* Column 2: Legal & SEO / Information */}
+          <div className="footer__col">
+            <h4 className="footer__col-heading">Information</h4>
+            <ul className="footer__col-list">
+              {legalLinks.map((link) => (
+                <li key={link.label}>
+                  {link.isRoute ? (
+                    <a
+                      href={link.href}
+                      onClick={(e) => handleLink(e, link.href)}
+                      className="u-link footer__col-link"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => openLegal(link.tab)}
+                      className="u-link footer__col-link footer__btn-link"
+                    >
+                      {link.label}
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Our Socials */}
+          <div className="footer__col">
+            <h4 className="footer__col-heading">Our Socials</h4>
+            <ul className="footer__col-list">
+              {socialLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="u-link footer__col-link"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Far Right: Back to Top */}
         <div className="footer__actions">
-          <SocialLinks className="footer__social-row" />
           <button
             type="button"
             className="footer__top-btn"
@@ -118,6 +199,13 @@ export default function Footer({ onNavigate }) {
         <span>© 2026 Nailed It Bro</span>
         <span className="footer__craft-tag">Designed & built in-house</span>
       </div>
+
+      {/* Legal & Compliance Modal */}
+      <LegalModal
+        isOpen={legalModalOpen}
+        onClose={() => setLegalModalOpen(false)}
+        initialTab={legalInitialTab}
+      />
     </footer>
   )
 }

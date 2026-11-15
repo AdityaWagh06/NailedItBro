@@ -609,13 +609,49 @@ export function GameCard() {
 export function ProjectScreen({ layout }) {
   if (layout === 'shop')
     return (
-      <div className="scr scr--p scr--shop">
-        <div className="scr__nav"><b>HALDEN</b><span>{lines(3, ['16%', '16%', '16%'])}</span></div>
-        <div className="scr--shop__hero">
-          <div className="scr__display">Roasted<br /><em>slowly.</em></div>
-          <div className="scr--shop__bag"><span>HALDEN</span><small>Ethiopia · Guji</small></div>
+      <div className="scr scr--p scr--shop scr--chiffon">
+        <div className="scr__nav">
+          <div className="scr--chiffon__brand">
+            <span className="scr--chiffon__monogram">MC</span>
+            <b>MAISON CHIFFON</b>
+          </div>
+          <div className="scr--chiffon__nav-links">
+            <span className="active">Couture Cakes</span>
+            <span>Tasting Menu</span>
+            <span>Custom Atelier</span>
+          </div>
+          <span className="scr--chiffon__cart-tag">Cart · 01</span>
         </div>
-        <div className="scr--shop__grid">{[0, 1, 2].map((i) => <div key={i}><i />{lines(2, ['70%', '40%'])}</div>)}</div>
+        <div className="scr--shop__hero scr--chiffon__hero">
+          <div className="scr--chiffon__left">
+            <span className="scr--chiffon__badge">Bespoke Patisserie</span>
+            <div className="scr__display scr--chiffon__display">
+              Handcrafted<br /><em>perfection.</em>
+            </div>
+            <p className="scr--chiffon__desc">Madagascar vanilla bean, raspberry ganache &amp; spun gold.</p>
+            <div className="scr--chiffon__price-row">
+              <span className="scr__btn scr__btn--cake">Order For Saturday</span>
+              <span className="scr--chiffon__price">$95 <i>/ 8 servings</i></span>
+            </div>
+          </div>
+          <div className="scr--shop__bag scr--chiffon__cake-preview">
+            <div className="scr--chiffon__cake-art">
+              <div className="scr--chiffon__cake-layer tier-top" />
+              <div className="scr--chiffon__cake-layer tier-mid" />
+              <div className="scr--chiffon__cake-layer tier-bot" />
+              <span className="scr--chiffon__cake-pip">✨</span>
+            </div>
+            <div className="scr--chiffon__cake-meta">
+              <b>Velouté Framboise</b>
+              <small>Custom 3-Tier Layer Gateau</small>
+            </div>
+          </div>
+        </div>
+        <div className="scr--shop__grid scr--chiffon__grid">
+          <div><i>🎂</i><b>Pistachio Praliné</b><small>$85 · 6-inch</small></div>
+          <div><i>🍫</i><b>Valrhona Noir</b><small>$92 · 8-inch</small></div>
+          <div><i>🍋</i><b>Yuzu Meyer</b><small>$88 · 8-inch</small></div>
+        </div>
       </div>
     )
   if (layout === 'app')
@@ -670,11 +706,34 @@ export function ProjectPhone({ layout }) {
       </div>
     )
   }
+  if (layout === 'shop') {
+    return (
+      <div className="scr scr--p scr--mini scr--mini-shop" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px 7px', background: '#201815', color: '#FDF7F2' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <b style={{ fontSize: '8.5px', fontWeight: 800, color: '#E09F67' }}>Maison Chiffon</b>
+          <span style={{ fontSize: '6px', background: 'rgba(224, 159, 103, 0.25)', color: '#E09F67', padding: '1px 5px', borderRadius: '4px', fontWeight: 700 }}>Customizer</span>
+        </div>
+        <div style={{ background: '#2D201C', border: '1px solid rgba(224, 159, 103, 0.3)', borderRadius: '7px', padding: '5px', textAlign: 'center' }}>
+          <div style={{ fontSize: '14px' }}>🎂</div>
+          <div style={{ fontSize: '8px', fontWeight: 800, color: '#FFF' }}>3-Tier Gateau</div>
+          <div style={{ fontSize: '6px', color: '#E09F67' }}>Ready: Tomorrow 2 PM</div>
+        </div>
+        <div style={{ display: 'flex', gap: '3px', justifyContent: 'center' }}>
+          <span style={{ background: '#E09F67', color: '#231B18', fontSize: '6px', padding: '2px 4px', borderRadius: '3px', fontWeight: 800 }}>6"</span>
+          <span style={{ background: 'rgba(255,255,255,0.1)', color: '#FFF', fontSize: '6px', padding: '2px 4px', borderRadius: '3px' }}>8"</span>
+          <span style={{ background: 'rgba(255,255,255,0.1)', color: '#FFF', fontSize: '6px', padding: '2px 4px', borderRadius: '3px' }}>10"</span>
+        </div>
+        <div className="scr__btn" style={{ margin: 0, padding: '3px 6px', fontSize: '7.5px', background: '#E09F67', color: '#231B18', fontWeight: 800, textAlign: 'center', borderRadius: '4px' }}>
+          Preorder $95
+        </div>
+      </div>
+    )
+  }
   return (
     <div className={`scr scr--p scr--mini scr--mini-${layout}`}>
       <div className="scr--mini__img" />
       {lines(3, ['80%', '60%', '40%'])}
-      <div className="scr__btn">{layout === 'shop' ? 'Subscribe' : layout === 'dashboard' ? 'Book' : 'Explore'}</div>
+      <div className="scr__btn">{layout === 'dashboard' ? 'Book' : 'Explore'}</div>
     </div>
   )
 }

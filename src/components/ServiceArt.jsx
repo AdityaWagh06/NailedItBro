@@ -56,12 +56,15 @@ export function ServiceIcon({ id }) {
           <path d="M28 28h5v5h-5zM35 35h5v5h-5zM28 37h4M37 28v5" className="draw" />
         </svg>
       )
+    case 'ai-qr':
+    case 'ai-qr':
     case 'ai':
       return (
         <svg {...common}>
-          <circle cx="24" cy="24" r="7" className="draw" />
-          <path d="M24 8v5M24 35v5M8 24h5M35 24h5M13 13l4 4M31 31l4 4M31 13l-4 4M13 31l4-4" className="draw" />
-          <circle cx="24" cy="24" r="2.5" fill="currentColor" />
+          <rect x="8" y="8" width="12" height="12" rx="2" className="draw" />
+          <circle cx="32" cy="18" r="6" className="draw" />
+          <path d="M26 32h12M32 26v12M14 28h6M14 34h6" className="draw" />
+          <circle cx="32" cy="18" r="2" fill="currentColor" />
         </svg>
       )
     case 'social':
@@ -88,12 +91,19 @@ export function ServiceIcon({ id }) {
         </svg>
       )
     case 'ads':
-    default:
       return (
         <svg {...common}>
           <circle cx="24" cy="24" r="16" className="draw" />
           <circle cx="24" cy="24" r="9" className="draw" />
           <path d="M24 15v9l6 3" className="draw" />
+        </svg>
+      )
+    case 'seo':
+    default:
+      return (
+        <svg {...common}>
+          <circle cx="21" cy="21" r="12" className="draw" />
+          <path d="M30 30l10 10M17 21h8M21 17v8" className="draw" />
         </svg>
       )
   }
@@ -213,6 +223,7 @@ export function ServicePreview({ id }) {
         </div>
       )
 
+    case 'ai-qr':
     case 'ai':
       return (
         <div className="sp sp--ai">
@@ -300,7 +311,6 @@ export function ServicePreview({ id }) {
       )
 
     case 'ads':
-    default:
       return (
         <div className="sp sp--growth">
           <svg viewBox="0 0 300 180" className="sp-growth__chart">
@@ -317,6 +327,29 @@ export function ServicePreview({ id }) {
             </span>
             <span>
               <b>CONV</b> +142%
+            </span>
+          </div>
+        </div>
+      )
+
+    case 'seo':
+    default:
+      return (
+        <div className="sp sp--growth">
+          <svg viewBox="0 0 300 180" className="sp-growth__chart">
+            <path d="M0 150 H300 M0 100 H300 M0 50 H300" className="grid" />
+            <path d="M0 150 C 30 140, 60 120, 100 110 S 180 80, 240 40 S 280 25, 300 15" className="line" />
+            <path d="M0 150 C 30 140, 60 120, 100 110 S 180 80, 240 40 S 280 25, 300 15 V180 H0Z" className="area" />
+          </svg>
+          <div className="sp-growth__kpis">
+            <span>
+              <b>RANK</b> #1 Pos
+            </span>
+            <span>
+              <b>IMPR</b> 480K
+            </span>
+            <span>
+              <b>CLICKS</b> +340%
             </span>
           </div>
         </div>

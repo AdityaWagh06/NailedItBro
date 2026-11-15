@@ -8,10 +8,13 @@ import Magnetic from './Magnetic'
 export function Logo() {
   return (
     <span className="logo">
-      <span className="logo__brand">
-        <span className="logo__text">Nailed<span className="logo__it">It</span>Bro</span>
-        <span className="logo__bar" />
-      </span>
+      <img
+        src="/logo.jpeg"
+        alt="Nailed It Bro Logo"
+        className="logo__img"
+        width="44"
+        height="44"
+      />
     </span>
   )
 }
@@ -20,21 +23,40 @@ export default function Nav({ onNavigate }) {
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeHref, setActiveHref] = useState(() => (typeof window !== 'undefined' && window.location.hash) || '#top')
   const reduced = useReducedMotion()
   const menuBtn = useRef(null)
   const panel = useRef(null)
 
   useEffect(() => {
+    const handleHash = () => setActiveHref(window.location.hash || '#top')
+    window.addEventListener('hashchange', handleHash)
+    const onScroll = () => {
+      if (window.location.hash === '#about' || window.location.hash === '#privacy' || window.location.hash === '#terms' || window.location.hash === '#cookies') return
+      const y = window.scrollY || window.pageYOffset || 0
+      if (y < 250) { setActiveHref('#top'); return }
+      for (const id of ['#about', '#process', '#work', '#services']) {
+        const el = document.querySelector(id)
+        if (el) {
+          const r = el.getBoundingClientRect()
+          if (r.top <= 260 && r.bottom >= 120) { setActiveHref(id); return }
+        }
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
     const st = ScrollTrigger.create({
       start: 0,
       end: 'max',
       onUpdate: (self) => {
         const y = self.scroll()
         setScrolled(y > 40)
-        setHidden(self.direction === 1 && y > 400)
+        const footer = document.querySelector('.footer')
+        const inFooter = footer ? footer.getBoundingClientRect().top <= 120 : false
+        const scrollThreshold = window.innerWidth < 960 ? 220 : 400
+        setHidden(inFooter || (self.direction === 1 && y > scrollThreshold))
       },
     })
-    return () => st.kill()
+    return () => { st.kill(); window.removeEventListener('hashchange', handleHash); window.removeEventListener('scroll', onScroll) }
   }, [])
 
   // Lock scroll, trap focus and close on Escape while the menu is open.
@@ -69,7 +91,7 @@ export default function Nav({ onNavigate }) {
     } else {
       history.pushState(null, '', href)
       window.dispatchEvent(new Event('hashchange'))
-      if (href === '#about') {
+      if (href === '#about' || href === '#privacy' || href === '#terms' || href === '#cookies') {
         window.scrollTo(0, 0)
         getLenis()?.scrollTo(0, { immediate: true })
       } else {
@@ -83,24 +105,53 @@ export default function Nav({ onNavigate }) {
   return (
     <header className={`nav ${hidden && !open ? 'is-hidden' : ''} ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
       <div className="nav__inner">
-        <a href="#top" className="nav__logo" onClick={(e) => go(e, '#top')} aria-label="Nailed It Bro, back to top"><Logo /></a>
-        <nav className="nav__links" aria-label="Primary">
-          {NAV.map((l) => (
-            <a key={l.href} href={l.href} className="u-link" onClick={(e) => go(e, l.href)}>{l.label}</a>
-          ))}
+        {/* Left: Brand Logo */}
+        <a href="#top" className="nav__logo" onClick={(e) => { setActiveHref('#top'); go(e, '#top'); }} aria-label="Nailed It Bro, back to top">
+          <Logo />
+        </a>
+
+        {/* Center: Bigger Solma-style Pill Capsule Navbar */}
+        <nav className="nav__center-capsule" aria-label="Primary Navigation">
+          {NAV.map((l) => {
+            const isActive = activeHref === l.href || (l.href === '#top' && (!activeHref || activeHref === '#top'))
+            return (
+              <a
+                key={l.href}
+                href={l.href}
+                className={`nav__capsule-link ${isActive ? 'is-active' : ''}`}
+                onClick={(e) => {
+                  setActiveHref(l.href)
+                  go(e, l.href)
+                }}
+              >
+                {l.label}
+              </a>
+            )
+          })}
         </nav>
-        <div className="nav__cta-wrap">
+
+        {/* Top Right: Contact Us pill button with rolling text & diagonal sliding arrow */}
+        <div className="nav__right-actions">
           <a
             href="#contact"
-            className="nav-quote-btn"
+            className="nav__quote-pill"
             onClick={(e) => go(e, '#contact')}
+            aria-label="Contact Us"
           >
-            <span>Get a Quote</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <span className="nav__quote-text-roll">
+              <span className="nav__quote-text-inner">
+                <span className="nav__quote-text nav__quote-text--primary">Contact Us</span>
+                <span className="nav__quote-text nav__quote-text--clone" aria-hidden="true">Contact Us</span>
+              </span>
+            </span>
+            <span className="nav__quote-arrow-box" aria-hidden="true">
+              <span className="nav__quote-arrow nav__quote-arrow--primary">↗</span>
+              <span className="nav__quote-arrow nav__quote-arrow--clone">↗</span>
+            </span>
           </a>
         </div>
+
+        {/* Mobile Burger Button */}
         <button
           ref={menuBtn}
           className="nav__burger"
@@ -153,6 +204,18 @@ export default function Nav({ onNavigate }) {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
+              </a>
+              <a
+                href="https://chat.whatsapp.com/JQzCCHsQIDb7MpUVVhTYEr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp-mobile"
+                aria-label="Join Nailed It Bro WhatsApp Community"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                </svg>
+                <span>Chat on WhatsApp</span>
               </a>
             </div>
             <m.div
