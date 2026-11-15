@@ -8,11 +8,11 @@ export default function Loader({ onReveal }) {
   useGSAP(
     () => {
       const tl = gsap.timeline()
-      tl.from('.loader__char', { yPercent: 120, duration: 0.7, ease: EASE.out, stagger: 0.035 })
-        .from('.loader__rule', { scaleX: 0, duration: 0.6, ease: EASE.inOut }, 0.15)
-        .to('.loader__word', { yPercent: -120, duration: 0.5, ease: 'power3.in', stagger: 0.04 }, 0.85)
-        .add(() => onReveal?.(), 1.05)
-        .to(root.current, { clipPath: 'inset(0 0 100% 0)', duration: 0.8, ease: EASE.inOut }, 0.95)
+      tl.from('.loader__char', { yPercent: 120, duration: 0.45, ease: EASE.out, stagger: 0.022 })
+        .from('.loader__rule', { scaleX: 0, duration: 0.35, ease: EASE.inOut }, 0.1)
+        .to('.loader__word', { yPercent: -120, duration: 0.38, ease: 'power3.in', stagger: 0.025 }, 0.52)
+        .add(() => onReveal?.(), 0.62)
+        .to(root.current, { clipPath: 'inset(0 0 100% 0)', duration: 0.5, ease: EASE.inOut }, 0.58)
         .set(root.current, { display: 'none' })
     },
     { scope: root },

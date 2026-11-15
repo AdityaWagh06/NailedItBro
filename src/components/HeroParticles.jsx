@@ -176,12 +176,28 @@ export default function HeroParticles({ scrollProgress = 0 }) {
         }
       }
 
-      animationFrameId = requestAnimationFrame(render)
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(render)
+      }
     }
 
-    render()
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible
+        isVisible = entry.isIntersecting
+        if (isVisible && !wasVisible) {
+          animationFrameId = requestAnimationFrame(render)
+        }
+      },
+      { threshold: 0.02 }
+    )
+    observer.observe(canvas)
+
+    animationFrameId = requestAnimationFrame(render)
 
     return () => {
+      observer.disconnect()
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)

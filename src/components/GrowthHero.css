@@ -706,78 +706,205 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
 }
 
-/* Mobile & Tablet Responsive */
-@media (max-width: 900px) {
-  .growth-hero__box-top-row {
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-  }
-  .growth-hero__box-middle-row {
-    flex-direction: column;
-    gap: 24px;
-    align-items: center;
-    text-align: center;
-  }
-  .growth-hero__box-vibe {
-    align-items: center;
-    text-align: center;
-    max-width: 340px;
-  }
-  .growth-hero__box-right-quote-wrap {
-    align-items: center;
-    text-align: center;
-    max-width: 320px;
-  }
-  .growth-hero__box-statement-quote {
-    text-align: center;
-  }
-  .growth-hero__mascot-box {
-    height: auto;
-    min-height: 600px;
-  }
-  .growth-hero__box-bottom {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .growth-hero__box-pitch-col {
-    align-items: center;
-  }
-  .growth-hero__box-actions {
-    justify-content: center;
-  }
-  .growth-hero__box-tags-col {
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-  .growth-hero__box-tags-row {
-    display: contents;
-  }
-  .growth-hero__box-stats {
-    padding: 20px 24px 0;
-  }
+/* =========================================================================
+   Mobile & Tablet Responsive System (< 1024px)
+   Keeps the 3D mascot box 100% clean and unobstructed, with copy & CTAs
+   flowing gracefully below on the luxury cream page background.
+   ========================================================================= */
+
+/* Dedicated Mobile Story & CTA Flow (Hidden on desktop) */
+.growth-hero__mobile-content {
+  display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .growth-hero {
-    padding-top: 92px;
+    padding-top: clamp(84px, 12vh, 110px);
+    padding-bottom: 48px;
   }
+
   .growth-hero__title {
-    font-size: clamp(36px, 10.5vw, 70px);
-    gap: 8px;
+    font-size: clamp(36px, 10vw, 78px);
+    gap: clamp(8px, 2vw, 18px);
   }
+
+  .growth-hero__tagline {
+    font-size: clamp(15px, 2.4vw, 20px);
+    margin-top: 4px;
+  }
+
+  /* 1. The Mascot Box on Mobile: Dedicated Visual Hero Stage (Zero text covering him) */
   .growth-hero__mascot-box {
-    border-radius: 20px;
-    margin: 28px auto 36px;
+    width: min(100% - clamp(24px, 5vw, 48px), 540px);
+    height: clamp(310px, 46vh, 420px);
+    min-height: 290px;
+    margin: clamp(18px, 3vh, 28px) auto clamp(24px, 3.5vh, 32px);
+    border-radius: clamp(24px, 3.5vw, 32px);
+    box-shadow:
+      0 20px 50px -10px rgba(255, 94, 20, 0.38),
+      0 8px 20px -4px rgba(20, 18, 16, 0.12),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
   }
-  .growth-hero__box-stat-num {
-    font-size: 22px;
+
+  /* Hide the desktop overlay inside the mascot box on mobile/tablet */
+  .growth-hero__box-overlay {
+    display: none !important;
   }
-  .growth-hero__box-stat-label {
-    font-size: 11px;
+
+  /* 2. Reveal the dedicated story & CTA section below the mascot box */
+  .growth-hero__mobile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 580px;
+    padding: 0 clamp(16px, 4vw, 28px);
+    box-sizing: border-box;
+    z-index: 3;
+    gap: clamp(14px, 2.2vh, 20px);
+  }
+
+  .growth-hero__mobile-vibe {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .growth-hero__mobile-vibe-title {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(30px, 7.5vw, 44px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #1A1613;
+    margin: 0;
+  }
+
+  .growth-hero__mobile-vibe-sub {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: clamp(12.5px, 2.5vw, 14px);
+    font-weight: 600;
+    color: #FF5E14;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 4px 0 0;
+  }
+
+  .growth-hero__mobile-vibe-quote {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(15px, 3.8vw, 18px);
+    font-style: italic;
+    font-weight: 500;
+    color: #4A433D;
+    line-height: 1.4;
+    margin: 6px 0 0;
+  }
+
+  .growth-hero__mobile-pitch {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: clamp(14px, 3.4vw, 15.5px);
+    line-height: 1.55;
+    color: #635A52;
+    margin: 0;
+    max-width: 460px;
+  }
+
+  .growth-hero__mobile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .growth-hero__mobile-btn-primary {
+    flex: 1 1 150px;
+    height: 48px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #FF7B28 0%, #FF5E14 100%);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(255, 94, 20, 0.32);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+
+  .growth-hero__mobile-btn-primary:active {
+    transform: scale(0.97);
+  }
+
+  .growth-hero__mobile-btn-secondary {
+    flex: 1 1 150px;
+    height: 48px;
+    border-radius: 9999px;
+    background: #FFFFFF;
+    border: 1.5px solid rgba(22, 20, 18, 0.12);
+    color: #1A1613;
+    text-decoration: none;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+  }
+
+  .growth-hero__mobile-btn-secondary:active {
+    transform: scale(0.97);
+  }
+
+  .growth-hero__mobile-btn-arrow {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .growth-hero__mobile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    max-width: 480px;
+    margin-top: 4px;
+  }
+
+  .growth-hero__mobile-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    background: rgba(255, 94, 20, 0.08);
+    border: 1px solid rgba(255, 94, 20, 0.18);
+    border-radius: 9999px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #C43802;
+    user-select: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .growth-hero__mobile-tag:hover {
+    background: rgba(255, 94, 20, 0.14);
+    transform: translateY(-1px);
   }
 }

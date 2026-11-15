@@ -44,8 +44,8 @@ export default function Footer({ onNavigate }) {
 
   const socialLinks = [
     { href: 'https://linkedin.com/company/naileditbro', label: 'LinkedIn' },
-    { href: 'https://instagram.com/naileditbro', label: 'Instagram' },
-    { href: 'https://facebook.com/naileditbro', label: 'Facebook' },
+    { href: 'https://instagram.com/nailedit.bro', label: 'Instagram' },
+    { href: 'https://www.facebook.com/share/1FFA1GSven/', label: 'Facebook' },
     { href: 'https://chat.whatsapp.com/JQzCCHsQIDb7MpUVVhTYEr', label: 'WhatsApp' },
   ]
 

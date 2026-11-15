@@ -7,8 +7,18 @@
   width: var(--bubu-size); height: calc(var(--bubu-size) * 1.12);
   will-change: transform; touch-action: none;
 }
-/* On phones Bubu stands about 1 cm higher, clear of the screen edge. */
-@media (max-width: 640px) { .bubu { --bubu-size: 80px; --bubu-pad: 12px; --bubu-lift: 38px; } }
+/* On mobile devices Bubu scales down neatly and speech bubble hint is hidden so content is never blocked */
+@media (max-width: 768px) {
+  .bubu {
+    --bubu-size: 56px;
+    --bubu-pad: 8px;
+    --bubu-lift: 14px;
+    opacity: 0.92;
+  }
+  .bubu__hint {
+    display: none !important;
+  }
+}
 .bubu__lean, .bubu__bob { width: 100%; height: 100%; transform-origin: 50% 100%; }
 .bubu__flip { width: 100%; height: 100%; transition: transform 0.25s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)); }
 .bubu__flip.is-left { transform: scaleX(-1); }

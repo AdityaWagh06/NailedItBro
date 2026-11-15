@@ -375,8 +375,22 @@ export default function FooterWave() {
       ctx.restore()
     }
 
+    let isVisible = false
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible
+        isVisible = entry.isIntersecting
+        if (isVisible && !wasVisible) {
+          lastTime = performance.now()
+          animId = requestAnimationFrame(loop)
+        }
+      },
+      { rootMargin: '300px' }
+    )
+    observer.observe(canvas)
+
     const loop = (currentTime) => {
-      // Run continuously without stopping
+      if (!isVisible) return
       animId = requestAnimationFrame(loop)
       const dt = Math.min((currentTime - lastTime) / 1000, 0.05)
       lastTime = currentTime
@@ -385,9 +399,9 @@ export default function FooterWave() {
     }
 
     lastTime = performance.now()
-    animId = requestAnimationFrame(loop)
 
     return () => {
+      observer.disconnect()
       if (animId) cancelAnimationFrame(animId)
       window.removeEventListener('resize', resize)
       if (parent) {

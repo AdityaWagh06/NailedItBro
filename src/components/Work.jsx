@@ -3,7 +3,6 @@ import { PROJECTS } from '../data'
 import { gsap, useGSAP, revealHeading, ScrollTrigger } from '../lib/motion'
 import { scrollToTarget } from '../lib/useSmoothScroll'
 import { ProjectScreen } from './Mockups'
-import CaseStudy from './CaseStudy'
 import LivePreviewModal from './LivePreviewModal'
 
 const slugFromHash = () => {
@@ -32,6 +31,7 @@ function ProjectVisual({ p }) {
             alt={`${p.name} website visual`}
             className="proj__clean-img"
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="proj__clean-screen">
@@ -45,31 +45,7 @@ function ProjectVisual({ p }) {
 
 export default function Work() {
   const root = useRef(null)
-  const [openSlug, setOpenSlug] = useState(slugFromHash)
   const [livePreviewProject, setLivePreviewProject] = useState(null)
-
-  // Case studies live at #work/<slug>: back/forward and direct links work.
-  useEffect(() => {
-    const sync = () => setOpenSlug(slugFromHash())
-    window.addEventListener('popstate', sync)
-    window.addEventListener('hashchange', sync)
-    return () => {
-      window.removeEventListener('popstate', sync)
-      window.removeEventListener('hashchange', sync)
-    }
-  }, [])
-
-  const openProject = (slug) => {
-    history.pushState({ caseStudy: slug }, '', `#work/${slug}`)
-    setOpenSlug(slug)
-  }
-  const closeProject = useCallback(() => {
-    if (history.state?.caseStudy) history.back()
-    else {
-      history.replaceState(null, '', '#work')
-      setOpenSlug(null)
-    }
-  }, [])
 
   // Raw physical stacking without any fade or dimming
   useGSAP(
@@ -78,13 +54,6 @@ export default function Work() {
     },
     { scope: root },
   )
-
-  // Opening a deep-linked case study should refresh ScrollTrigger positions.
-  useEffect(() => {
-    if (openSlug) setTimeout(() => ScrollTrigger.refresh(), 50)
-  }, [openSlug])
-
-  const project = PROJECTS.find((p) => p.slug === openSlug)
 
   return (
     <section className="work" id="work" ref={root} data-theme="light" aria-labelledby="work-title">
@@ -134,14 +103,15 @@ export default function Work() {
                       <ProjectVisual p={p} />
                     </a>
                   ) : (
-                    <button
-                      type="button"
+                    <a
+                      href={`#case-study/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="proj__open"
-                      onClick={() => openProject(p.slug)}
-                      aria-label={`Open ${p.name} case study`}
+                      aria-label={`Read ${p.name} case study in a new tab`}
                     >
                       <ProjectVisual p={p} />
-                    </button>
+                    </a>
                   )}
                 </div>
 
@@ -183,14 +153,16 @@ export default function Work() {
                       </button>
                     )}
 
-                    <button
-                      type="button"
+                    <a
+                      href={`#case-study/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="work__card-btn"
-                      onClick={() => openProject(p.slug)}
+                      aria-label={`Read ${p.name} case study in a new tab`}
                     >
                       <span>Case study</span>
                       <span className="work__card-btn-arrow" aria-hidden="true">→</span>
-                    </button>
+                    </a>
                   </div>
                 </div>
               </article>
@@ -233,7 +205,6 @@ export default function Work() {
         </div>
       </div>
 
-      <CaseStudy project={project} onClose={closeProject} renderVisual={(p) => <ProjectVisual p={p} />} />
       <LivePreviewModal project={livePreviewProject} onClose={() => setLivePreviewProject(null)} />
     </section>
   )

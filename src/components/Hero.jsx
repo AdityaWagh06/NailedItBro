@@ -11,8 +11,9 @@ export default function Hero({ ready }) {
   // Interactive 3D Mascot pointer tracking (horizontal only) with slight upward face tilt
   useEffect(() => {
     let animId
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024
     const BASE_PHI = 97 // Tilted slightly back, looking upward
-    const BASE_Y = 0.29 // Perfectly balanced vertical camera target
+    const BASE_Y = 0.28 // Perfectly centered face & upper torso in the studio box
 
     let targetTheta = 0
     let currentTheta = 0
@@ -87,12 +88,29 @@ export default function Hero({ ready }) {
         )
       }
 
-      animId = requestAnimationFrame(animate)
+      if (isVisible) {
+        animId = requestAnimationFrame(animate)
+      }
     }
+
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible
+        isVisible = entry.isIntersecting
+        if (isVisible && !wasVisible) {
+          animId = requestAnimationFrame(animate)
+        }
+      },
+      { threshold: 0.05 }
+    )
+
+    if (boxRef.current) observer.observe(boxRef.current)
 
     animId = requestAnimationFrame(animate)
 
     return () => {
+      observer.disconnect()
       cancelAnimationFrame(animId)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('touchmove', onTouchMove)
@@ -187,9 +205,10 @@ export default function Hero({ ready }) {
         <model-viewer
           ref={modelViewerRef}
           src="/mascot.glb"
+          poster="/avatar_front_clean.webp"
           alt="Nailed It Bro 3D Studio Mascot"
           camera-orbit="0deg 97deg 1.06m"
-          camera-target="0m 0.29m 0m"
+          camera-target="0m 0.28m 0m"
           field-of-view="28deg"
           min-camera-orbit="auto auto 0m"
           min-field-of-view="5deg"
@@ -303,6 +322,56 @@ export default function Hero({ ready }) {
           </div>
         </div>
       </m.div>
+
+      {/* 4. DEDICATED MOBILE & TABLET STORY + CTA FLOW (< 1024px) */}
+      <div className="growth-hero__mobile-content">
+        <div className="growth-hero__mobile-vibe">
+          <h2 className="growth-hero__mobile-vibe-title">We don't do boring.</h2>
+          <p className="growth-hero__mobile-vibe-sub">4 founders · All builders · Zero fluff</p>
+          <p className="growth-hero__mobile-vibe-quote">“Code like artists. Design like engineers.”</p>
+        </div>
+
+        <p className="growth-hero__mobile-pitch">
+          Full-stack web engineering, fluid mobile apps &amp; autonomous AI systems — crafted to get you real customers.
+        </p>
+
+        <div className="growth-hero__mobile-actions">
+          <a
+            href="#contact"
+            className="growth-hero__mobile-btn-primary"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToTarget('#contact')
+            }}
+            aria-label="Start your project"
+          >
+            <span>Start your project</span>
+            <span className="growth-hero__mobile-btn-arrow">↗</span>
+          </a>
+
+          <a
+            href="#work"
+            className="growth-hero__mobile-btn-secondary"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToTarget('#work')
+            }}
+            aria-label="Explore our work"
+          >
+            <span>Explore our work</span>
+            <span className="growth-hero__mobile-btn-arrow">↗</span>
+          </a>
+        </div>
+
+        <div className="growth-hero__mobile-tags">
+          <span className="growth-hero__mobile-tag">Websites</span>
+          <span className="growth-hero__mobile-tag">Games</span>
+          <span className="growth-hero__mobile-tag">Mobile Apps</span>
+          <span className="growth-hero__mobile-tag">AI &amp; QR Automation</span>
+          <span className="growth-hero__mobile-tag">Social Media</span>
+          <span className="growth-hero__mobile-tag">CRM Dashboards</span>
+        </div>
+      </div>
     </section>
   )
 }

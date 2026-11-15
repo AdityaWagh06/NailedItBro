@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { LazyMotion, domAnimation } from 'motion/react'
+import { useEffect, useState, lazy, Suspense } from 'react'
+import { LazyMotion, domAnimation, AnimatePresence, m } from 'motion/react'
 import { useSmoothScroll, getLenis, scrollToTarget } from './lib/useSmoothScroll'
 import { ScrollTrigger, prefersReducedMotion } from './lib/motion'
 import Loader from './components/Loader'
@@ -11,15 +11,17 @@ import Services from './components/Services'
 import Work from './components/Work'
 import Process from './components/Process'
 import Contact from './components/Contact'
-import AboutPage from './components/AboutPage'
-import PrivacyPolicyPage from './components/PrivacyPolicyPage'
-import TermsConditionsPage from './components/TermsConditionsPage'
-import CookiePolicyPage from './components/CookiePolicyPage'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
-import Bubu from './components/Bubu'
 import FloatingSocials from './components/FloatingSocials'
 import { useThemeSections } from './lib/useThemeSections'
+
+const AboutPage = lazy(() => import('./components/AboutPage'))
+const PrivacyPolicyPage = lazy(() => import('./components/PrivacyPolicyPage'))
+const TermsConditionsPage = lazy(() => import('./components/TermsConditionsPage'))
+const CookiePolicyPage = lazy(() => import('./components/CookiePolicyPage'))
+const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'))
+const Bubu = lazy(() => import('./components/Bubu'))
 
 function getRoute() {
   const hash = window.location.hash
@@ -36,13 +38,26 @@ function getRoute() {
   if (hash === '#cookies' || hash === '#cookie-policy' || path === '/cookies' || path === '/cookie-policy') {
     return 'cookies'
   }
+  if (hash.startsWith('#case-study/') || hash.startsWith('#work/') || path.startsWith('/case-study/')) {
+    return 'case-study'
+  }
   return 'home'
+}
+
+function getCaseStudySlug() {
+  const hash = window.location.hash
+  const path = window.location.pathname
+  if (hash.startsWith('#case-study/')) return hash.replace('#case-study/', '')
+  if (hash.startsWith('#work/')) return hash.replace('#work/', '')
+  if (path.startsWith('/case-study/')) return path.replace('/case-study/', '')
+  return 'creme-and-whisk'
 }
 
 export default function App() {
   // Skip the brand reveal for reduced motion and for deep links (#work etc.).
   const [ready, setReady] = useState(() => prefersReducedMotion() || !!window.location.hash)
   const [route, setRoute] = useState(getRoute)
+  const [isNavigating, setIsNavigating] = useState(false)
 
   useSmoothScroll()
   useThemeSections(route)
@@ -50,12 +65,16 @@ export default function App() {
   useEffect(() => {
     const handleRoute = () => {
       const nextRoute = getRoute()
+      setIsNavigating(true)
       setRoute(nextRoute)
-      if (nextRoute === 'about' || nextRoute === 'privacy' || nextRoute === 'terms' || nextRoute === 'cookies') {
+      if (nextRoute === 'about' || nextRoute === 'privacy' || nextRoute === 'terms' || nextRoute === 'cookies' || nextRoute === 'case-study') {
         window.scrollTo(0, 0)
         getLenis()?.scrollTo(0, { immediate: true })
       }
-      setTimeout(() => ScrollTrigger.refresh(), 100)
+      setTimeout(() => {
+        setIsNavigating(false)
+        ScrollTrigger.refresh()
+      }, 450)
     }
     window.addEventListener('hashchange', handleRoute)
     window.addEventListener('popstate', handleRoute)
@@ -76,9 +95,17 @@ export default function App() {
             ? 'terms'
             : href === '#cookies' || href === '#cookie-policy'
               ? 'cookies'
-              : 'home'
+              : href.startsWith('#case-study/') || href.startsWith('#work/') || href.startsWith('/case-study/')
+                ? 'case-study'
+                : 'home'
+
+    if (nextRoute !== route) {
+      setIsNavigating(true)
+      setTimeout(() => setIsNavigating(false), 450)
+    }
+
     setRoute(nextRoute)
-    if (nextRoute === 'about' || nextRoute === 'privacy' || nextRoute === 'terms' || nextRoute === 'cookies') {
+    if (nextRoute === 'about' || nextRoute === 'privacy' || nextRoute === 'terms' || nextRoute === 'cookies' || nextRoute === 'case-study') {
       window.scrollTo(0, 0)
       getLenis()?.scrollTo(0, { immediate: true })
     } else {
@@ -111,36 +138,66 @@ export default function App() {
     return () => clearTimeout(id)
   }, [])
 
+  const isCaseStudy = route === 'case-study'
+
   return (
     <LazyMotion features={domAnimation} strict>
       <a className="skip-link" href="#main">Skip to content</a>
       {!ready && <Loader onReveal={() => setReady(true)} />}
-      <Nav onNavigate={handleNavigate} />
-      <ScrollProgress />
-      <FloatingSocials />
+      {!isCaseStudy && <Nav onNavigate={handleNavigate} />}
+      {!isCaseStudy && <ScrollProgress />}
+      {!isCaseStudy && <FloatingSocials />}
+      {isNavigating && (
+        <m.div
+          className="page-route-top-bar"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+        />
+      )}
       <main id="main">
-        {route === 'about' ? (
-          <AboutPage onNavigate={handleNavigate} />
-        ) : route === 'privacy' ? (
-          <PrivacyPolicyPage onNavigate={handleNavigate} />
-        ) : route === 'terms' ? (
-          <TermsConditionsPage onNavigate={handleNavigate} />
-        ) : route === 'cookies' ? (
-          <CookiePolicyPage onNavigate={handleNavigate} />
-        ) : (
-          <>
-            <Hero ready={ready} />
-            <Marquee />
-            <Manifesto />
-            <Services />
-            <Work />
-            <Process />
-            <Contact />
-          </>
-        )}
+        <AnimatePresence mode="wait">
+          <m.div
+            key={route}
+            className="page-transition-wrap"
+            initial={{ opacity: 0, y: 18, filter: 'blur(5px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -16, filter: 'blur(5px)' }}
+            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Suspense fallback={null}>
+              {route === 'about' ? (
+                <AboutPage onNavigate={handleNavigate} />
+              ) : route === 'privacy' ? (
+                <PrivacyPolicyPage onNavigate={handleNavigate} />
+              ) : route === 'terms' ? (
+                <TermsConditionsPage onNavigate={handleNavigate} />
+              ) : route === 'cookies' ? (
+                <CookiePolicyPage onNavigate={handleNavigate} />
+              ) : route === 'case-study' ? (
+                <CaseStudyPage slug={getCaseStudySlug()} onNavigate={handleNavigate} />
+              ) : (
+                <>
+                  <Hero ready={ready} />
+                  <Marquee />
+                  <Manifesto />
+                  <Services />
+                  <Work />
+                  <Process />
+                  <Contact />
+                </>
+              )}
+            </Suspense>
+          </m.div>
+        </AnimatePresence>
       </main>
-      <Footer onNavigate={handleNavigate} />
-      {ready && <Bubu />}
+      {!isCaseStudy && <Footer onNavigate={handleNavigate} />}
+      {!isCaseStudy && ready && (
+        <Suspense fallback={null}>
+          <Bubu />
+        </Suspense>
+      )}
     </LazyMotion>
   )
 }
