@@ -12,15 +12,29 @@ import Work from './components/Work'
 import Process from './components/Process'
 import Contact from './components/Contact'
 import AboutPage from './components/AboutPage'
+import PrivacyPolicyPage from './components/PrivacyPolicyPage'
+import TermsConditionsPage from './components/TermsConditionsPage'
+import CookiePolicyPage from './components/CookiePolicyPage'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
 import Bubu from './components/Bubu'
+import FloatingSocials from './components/FloatingSocials'
 import { useThemeSections } from './lib/useThemeSections'
 
 function getRoute() {
   const hash = window.location.hash
-  if (hash === '#about' || hash === '#about-us' || window.location.pathname === '/about') {
+  const path = window.location.pathname
+  if (hash === '#about' || hash === '#about-us' || path === '/about') {
     return 'about'
+  }
+  if (hash === '#privacy' || hash === '#privacy-policy' || path === '/privacy' || path === '/privacy-policy') {
+    return 'privacy'
+  }
+  if (hash === '#terms' || hash === '#terms-and-conditions' || path === '/terms' || path === '/terms-and-conditions') {
+    return 'terms'
+  }
+  if (hash === '#cookies' || hash === '#cookie-policy' || path === '/cookies' || path === '/cookie-policy') {
+    return 'cookies'
   }
   return 'home'
 }
@@ -37,7 +51,7 @@ export default function App() {
     const handleRoute = () => {
       const nextRoute = getRoute()
       setRoute(nextRoute)
-      if (nextRoute === 'about') {
+      if (nextRoute === 'about' || nextRoute === 'privacy' || nextRoute === 'terms' || nextRoute === 'cookies') {
         window.scrollTo(0, 0)
         getLenis()?.scrollTo(0, { immediate: true })
       }
@@ -53,9 +67,18 @@ export default function App() {
 
   const handleNavigate = (href) => {
     history.pushState(null, '', href)
-    const nextRoute = href === '#about' ? 'about' : 'home'
+    const nextRoute =
+      href === '#about'
+        ? 'about'
+        : href === '#privacy' || href === '#privacy-policy'
+          ? 'privacy'
+          : href === '#terms' || href === '#terms-and-conditions'
+            ? 'terms'
+            : href === '#cookies' || href === '#cookie-policy'
+              ? 'cookies'
+              : 'home'
     setRoute(nextRoute)
-    if (nextRoute === 'about') {
+    if (nextRoute === 'about' || nextRoute === 'privacy' || nextRoute === 'terms' || nextRoute === 'cookies') {
       window.scrollTo(0, 0)
       getLenis()?.scrollTo(0, { immediate: true })
     } else {
@@ -94,9 +117,16 @@ export default function App() {
       {!ready && <Loader onReveal={() => setReady(true)} />}
       <Nav onNavigate={handleNavigate} />
       <ScrollProgress />
+      <FloatingSocials />
       <main id="main">
         {route === 'about' ? (
           <AboutPage onNavigate={handleNavigate} />
+        ) : route === 'privacy' ? (
+          <PrivacyPolicyPage onNavigate={handleNavigate} />
+        ) : route === 'terms' ? (
+          <TermsConditionsPage onNavigate={handleNavigate} />
+        ) : route === 'cookies' ? (
+          <CookiePolicyPage onNavigate={handleNavigate} />
         ) : (
           <>
             <Hero ready={ready} />

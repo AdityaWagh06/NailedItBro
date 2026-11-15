@@ -32,7 +32,7 @@ export default function Nav({ onNavigate }) {
     const handleHash = () => setActiveHref(window.location.hash || '#top')
     window.addEventListener('hashchange', handleHash)
     const onScroll = () => {
-      if (window.location.hash === '#about') return
+      if (window.location.hash === '#about' || window.location.hash === '#privacy' || window.location.hash === '#terms' || window.location.hash === '#cookies') return
       const y = window.scrollY || window.pageYOffset || 0
       if (y < 250) { setActiveHref('#top'); return }
       for (const id of ['#about', '#process', '#work', '#services']) {
@@ -50,7 +50,9 @@ export default function Nav({ onNavigate }) {
       onUpdate: (self) => {
         const y = self.scroll()
         setScrolled(y > 40)
-        setHidden(self.direction === 1 && y > 400)
+        const footer = document.querySelector('.footer')
+        const inFooter = footer ? footer.getBoundingClientRect().top <= 120 : false
+        setHidden(inFooter || (self.direction === 1 && y > 400))
       },
     })
     return () => { st.kill(); window.removeEventListener('hashchange', handleHash); window.removeEventListener('scroll', onScroll) }
@@ -88,7 +90,7 @@ export default function Nav({ onNavigate }) {
     } else {
       history.pushState(null, '', href)
       window.dispatchEvent(new Event('hashchange'))
-      if (href === '#about') {
+      if (href === '#about' || href === '#privacy' || href === '#terms' || href === '#cookies') {
         window.scrollTo(0, 0)
         getLenis()?.scrollTo(0, { immediate: true })
       } else {
@@ -127,26 +129,23 @@ export default function Nav({ onNavigate }) {
           })}
         </nav>
 
-        {/* Top Right: Get a Quote button with animated arrow */}
+        {/* Top Right: Contact Us pill button with rolling text & diagonal sliding arrow */}
         <div className="nav__right-actions">
           <a
             href="#contact"
             className="nav__quote-pill"
             onClick={(e) => go(e, '#contact')}
-            aria-label="Get a Quote"
+            aria-label="Contact Us"
           >
-            <span className="nav__quote-text">Get a Quote</span>
-            <span className="nav__quote-arrow-badge" aria-hidden="true">
-              <span className="nav__arrow-slider">
-                <svg className="nav__arrow-svg nav__arrow-svg--primary" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="7" y1="17" x2="17" y2="7" />
-                  <polyline points="7 7 17 7 17 17" />
-                </svg>
-                <svg className="nav__arrow-svg nav__arrow-svg--clone" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="7" y1="17" x2="17" y2="7" />
-                  <polyline points="7 7 17 7 17 17" />
-                </svg>
+            <span className="nav__quote-text-roll">
+              <span className="nav__quote-text-inner">
+                <span className="nav__quote-text nav__quote-text--primary">Contact Us</span>
+                <span className="nav__quote-text nav__quote-text--clone" aria-hidden="true">Contact Us</span>
               </span>
+            </span>
+            <span className="nav__quote-arrow-box" aria-hidden="true">
+              <span className="nav__quote-arrow nav__quote-arrow--primary">↗</span>
+              <span className="nav__quote-arrow nav__quote-arrow--clone">↗</span>
             </span>
           </a>
         </div>

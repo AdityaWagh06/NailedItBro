@@ -57,12 +57,37 @@ export default function CaseStudy({ project, onClose, renderVisual }) {
             transition={{ ...ease, duration: reduced ? 0 : 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
             <div className="cs__top">
-              <span className="eyebrow">Concept case study</span>
+              <span className="eyebrow">
+                {project.isClientWork ? 'Live Client Case Study' : 'Concept case study'}
+              </span>
               <button className="cs__close" onClick={onClose} aria-label="Close case study"><span /><span /></button>
             </div>
             <m.h2 className="cs__title display-2" id="cs-title" {...item(0.3)}>{project.name}</m.h2>
-            <m.p className="cs__kind" {...item(0.38)}>{project.kind} · Self-initiated concept, not client work</m.p>
+            <m.p className="cs__kind" {...item(0.38)}>
+              {project.kind} {project.isClientWork ? '· Client Project' : '· Self-initiated concept'}
+            </m.p>
             <m.div className="cs__visual" {...item(0.45)}>{renderVisual(project)}</m.div>
+
+            {project.isClientWork && project.liveUrl && (
+              <m.div className="cs__live-bar" {...item(0.5)}>
+                <div className="cs__live-info">
+                  <span className="cs__live-status">🟢 Verified Production Deployment</span>
+                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="cs__live-link">
+                    {project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')} ↗
+                  </a>
+                </div>
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cs__visit-action"
+                >
+                  <span>Launch Live Site</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </m.div>
+            )}
+
             <div className="cs__grid">
               <m.div {...item(0.55)}>
                 <h3 className="cs__h">The challenge</h3>
@@ -73,11 +98,20 @@ export default function CaseStudy({ project, onClose, renderVisual }) {
                 <ul className="cs__list">{project.approach.map((a) => <li key={a}>{a}</li>)}</ul>
               </m.div>
             </div>
+
+            {project.deliverables && (
+              <m.div className="cs__deliverables-box" {...item(0.66)}>
+                <h3 className="cs__h">Deliverables</h3>
+                <div className="cs__tags-row">
+                  {project.deliverables.map((d) => (
+                    <span key={d} className="cs__tag-pill">{d}</span>
+                  ))}
+                </div>
+              </m.div>
+            )}
+
             <m.div className="cs__foot" {...item(0.7)}>
               <p>Want something like this for your business?</p>
-              {project.live && (
-                <a href={project.live} target="_blank" rel="noopener" className="u-link">Open live site <span aria-hidden="true">↗</span></a>
-              )}
               <a href="#contact" className="btn btn--dark" onClick={(e) => { e.preventDefault(); onClose(); setTimeout(() => scrollToTarget('#contact'), 700) }}>
                 <span className="btn__label" data-text="Start a project">Start a project</span><span className="btn__icon" aria-hidden="true">→</span>
               </a>

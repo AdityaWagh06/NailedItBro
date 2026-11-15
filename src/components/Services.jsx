@@ -1,111 +1,217 @@
-import { useRef, useState } from 'react'
-import { AnimatePresence, m } from 'motion/react'
+import { useEffect, useRef, useState } from 'react'
 import { SERVICES } from '../data'
-import { gsap, useGSAP, revealHeading, MOTION_EASE, useMediaQuery, useReducedMotion } from '../lib/motion'
-import { scrollToTarget } from '../lib/useSmoothScroll'
+import { gsap, useGSAP, revealHeading, useReducedMotion } from '../lib/motion'
 import { ServiceIcon, ServicePreview } from './ServiceArt'
+
+const SERVICE_META = {
+  web: {
+    badgeIcon: '⚡',
+    metric: '99/100',
+    metricLabel: 'CORE WEB VITALS',
+    image: '/web.png',
+  },
+  apps: {
+    badgeIcon: '📱',
+    metric: '120 FPS',
+    metricLabel: 'NATIVE GESTURES',
+    image: '/pet.png',
+  },
+  game: {
+    badgeIcon: '🎮',
+    metric: '99,450',
+    metricLabel: 'LIVE HIGH SCORE',
+    image: '/game.png',
+  },
+  'ai-qr': {
+    badgeIcon: '✨',
+    metric: '< 1.8s',
+    metricLabel: 'AI & QR WORKFLOWS',
+    image: '/ai_automation.jpg',
+  },
+  social: {
+    badgeIcon: '🎬',
+    metric: '+1.2M',
+    metricLabel: 'IMPRESSIONS',
+    image: '/social_growth.jpg',
+  },
+  brand: {
+    badgeIcon: '✦',
+    metric: 'Complete',
+    metricLabel: 'BRAND SYSTEM',
+    image: '/brand_identity.jpg',
+  },
+  crm: {
+    badgeIcon: '🛡️',
+    metric: 'Real-time',
+    metricLabel: 'TELEMETRY',
+    image: '/crm_dashboard.jpg',
+  },
+  ads: {
+    badgeIcon: '🎯',
+    metric: '4.8x',
+    metricLabel: 'AVERAGE ROAS',
+    image: '/google_meta_ads.jpg',
+  },
+}
 
 export default function Services() {
   const root = useRef(null)
   const [active, setActive] = useState(0)
-  const desktop = useMediaQuery('(min-width: 1000px)')
+  const [prevActive, setPrevActive] = useState(null)
+  const [lastActive, setLastActive] = useState(0)
   const reduced = useReducedMotion()
+
+  // Preload all discipline images so they switch instantly without any decode flash
+  useEffect(() => {
+    Object.values(SERVICE_META).forEach((item) => {
+      if (item.image) {
+        const img = new Image()
+        img.src = item.image
+      }
+    })
+  }, [])
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia()
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         const h = revealHeading('.services__title')
-        gsap.from('.svc', {
-          y: 50, autoAlpha: 0, stagger: 0.07, duration: 1,
-          scrollTrigger: { trigger: '.services__list', start: 'top 80%', once: true },
-        })
-        if (root.current.querySelector('.services__preview')) gsap.from('.services__preview', {
-          clipPath: 'inset(12% 12% 12% 12% round 24px)', autoAlpha: 0, duration: 1.4, ease: 'expo.out',
-          scrollTrigger: { trigger: '.services__list', start: 'top 75%', once: true },
-        })
-        return () => h.revert()
+        return () => h?.revert && h.revert()
       })
       return () => mm.revert()
     },
     { scope: root },
   )
 
-  const s = SERVICES[active]
+  const handleCardClick = (i) => {
+    setActive((prev) => {
+      if (prev === i) {
+        return -1
+      }
+      setPrevActive(prev >= 0 ? prev : lastActive)
+      setLastActive(i)
+      return i
+    })
+  }
+
+  const activeIndex = active >= 0 ? active : lastActive
+  const activeSvc = SERVICES[activeIndex] || SERVICES[0]
 
   return (
-    <section className="services section" id="services" ref={root} data-theme="dark" aria-labelledby="services-title">
+    <section className="services" id="services" ref={root} aria-labelledby="services-title">
       <div className="container">
-        <div className="section-head">
-          <p className="eyebrow">(Services)</p>
-          <h2 className="services__title display-2" id="services-title">Ten disciplines, <em className="serif">one</em> obsessive team.</h2>
+        {/* Section Header */}
+        <div className="services__head text-center">
+          <p className="services__eyebrow">(Our Disciplines)</p>
+          <h2 className="services__title" id="services-title">
+            Our Services
+          </h2>
+          <p className="services__lead">
+            End-to-end design, engineering, and growth.
+          </p>
         </div>
 
-        <div className="services__layout">
-          <ul className="services__list">
-            {SERVICES.map((svc, i) => {
-              const isActive = i === active
-              return (
-                <li
-                  key={svc.id}
-                  className={`svc ${isActive ? 'is-active' : ''}`}
-                  style={{ '--tone': svc.tone }}
-                  onMouseEnter={() => desktop && setActive(i)}
-                >
-                  <h3 className="svc__h">
-                    <button
-                      className="svc__btn"
-                      aria-expanded={isActive}
-                      aria-controls={`svc-panel-${svc.id}`}
-                      onFocus={() => desktop && setActive(i)}
-                      onClick={() => setActive(desktop ? i : isActive ? -1 : i)}
-                    >
-                      <span className="svc__no">{svc.no}</span>
-                      <span className="svc__title">{svc.title}</span>
-                      <span className="svc__icon"><ServiceIcon id={svc.id} /></span>
-                      <span className="svc__plus" aria-hidden="true" />
-                    </button>
-                  </h3>
-                  <div className="svc__panel" id={`svc-panel-${svc.id}`} role="region" aria-label={svc.title}>
-                    <div className="svc__panel-inner">
-                      <p className="svc__short">{svc.short}</p>
-                      <p className="svc__body">{svc.body}</p>
-                      <ul className="svc__tags">{svc.deliverables.map((d) => <li key={d}>{d}</li>)}</ul>
-                      {!desktop && <div className="svc__mobile-art"><ServicePreview id={svc.id} /></div>}
-                      <a href="#contact" className="svc__cta u-link" tabIndex={isActive ? 0 : -1} onClick={(e) => { e.preventDefault(); scrollToTarget('#contact') }}>
-                        Discuss {svc.title.split(' ')[0].toLowerCase()} <span aria-hidden="true">→</span>
-                      </a>
-                    </div>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
+        {/* 2-Column Split: Showcase Image on Left, Vertical Cards Stack on Right */}
+        <div className="services__split">
+          {/* LEFT: Showcase Image (Clean, Smooth Crossfade, No Black Gaps) */}
+          <div className="services__showcase-col">
+            <div
+              className="services__showcase"
+              style={{ '--tone': activeSvc.tone }}
+            >
+              <div className="services__showcase-media">
+                {SERVICES.map((svc) => {
+                  const isCurrent = svc.id === activeSvc.id
+                  const isPrevious = prevActive !== null && svc.id === SERVICES[prevActive]?.id && !isCurrent
+                  const svcMeta = SERVICE_META[svc.id]
 
-          {desktop && s && (
-            <div className="services__preview" aria-hidden="true" style={{ '--tone': s.tone }}>
-              <AnimatePresence mode="popLayout" initial={false}>
-                <m.div
-                  key={s.id}
-                  className="services__preview-stage is-active"
-                  initial={reduced ? false : { opacity: 0, y: 40, scale: 0.96, filter: 'blur(6px)' }}
-                  animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-                  exit={reduced ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, y: -30, scale: 1.02, filter: 'blur(4px)' }}
-                  transition={{ duration: 0.6, ease: MOTION_EASE }}
-                >
-                  <ServicePreview id={s.id} />
-                </m.div>
-              </AnimatePresence>
-              <div className="services__preview-cap">
-                <span>{s.no} / {String(SERVICES.length).padStart(2, '0')}</span>
-                <AnimatePresence mode="wait" initial={false}>
-                  <m.b key={s.id} initial={{ y: '100%' }} animate={{ y: '0%' }} exit={{ y: '-100%' }} transition={{ duration: reduced ? 0 : 0.4, ease: MOTION_EASE }}>
-                    {s.title}
-                  </m.b>
-                </AnimatePresence>
+                  return (
+                    <div
+                      key={svc.id}
+                      className={`services__showcase-layer ${isCurrent ? 'is-active' : ''} ${isPrevious ? 'is-previous' : ''}`}
+                      aria-hidden={!isCurrent}
+                    >
+                      <div className="services__showcase-art">
+                        <ServicePreview id={svc.id} />
+                      </div>
+
+                      {svcMeta?.image && (
+                        <div className="services__showcase-img-wrap">
+                          <img
+                            src={svcMeta.image}
+                            alt={svc.title}
+                            className="services__showcase-img"
+                            loading="eager"
+                            decoding="async"
+                          />
+                          <div className="services__showcase-overlay" />
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+
+                {/* Active Service Badge */}
+                <div className="svc-showcase__overlay-badge">
+                  <span className="svc-showcase__overlay-no">{activeSvc.no}</span>
+                  <span className="svc-showcase__overlay-title">{activeSvc.title}</span>
+                </div>
               </div>
             </div>
-          )}
+          </div>
+
+          {/* RIGHT: Vertical Services List — Just name, description only on click */}
+          <div className="services__cards-col">
+            <div
+              className="services__vertical-list"
+              role="tablist"
+              aria-label="Services Disciplines"
+            >
+              {SERVICES.map((svc, i) => {
+                const isActive = i === active
+
+                return (
+                  <div
+                    key={svc.id}
+                    className={`svc-v-card ${isActive ? 'is-active' : ''}`}
+                    style={{ '--tone': svc.tone }}
+                    onClick={() => handleCardClick(i)}
+                    role="tab"
+                    tabIndex={0}
+                    aria-selected={isActive}
+                    aria-controls={`svc-panel-${svc.id}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        handleCardClick(i)
+                      }
+                    }}
+                  >
+                    {/* Header Row: Number + Icon + Title + Toggle Icon */}
+                    <div className="svc-v-card__header">
+                      <div className="svc-v-card__title-wrap">
+                        <span className="svc-v-card__no">{svc.no}</span>
+                        <span className="svc-v-card__icon" aria-hidden="true">
+                          <ServiceIcon id={svc.id} />
+                        </span>
+                        <h3 className="svc-v-card__title">{svc.title}</h3>
+                      </div>
+                      <span className="svc-v-card__toggle" aria-hidden="true">
+                        {isActive ? '−' : '+'}
+                      </span>
+                    </div>
+
+                    {/* Expandable Description: Visible only after clicking */}
+                    <div className="svc-v-card__collapse">
+                      <div className="svc-v-card__body">
+                        <p className="svc-v-card__desc">{svc.short}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>
