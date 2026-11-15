@@ -75,6 +75,9 @@ export default function CaseStudy({ project, onClose, renderVisual }) {
             </div>
             <m.div className="cs__foot" {...item(0.7)}>
               <p>Want something like this for your business?</p>
+              {project.live && (
+                <a href={project.live} target="_blank" rel="noopener" className="u-link">Open live site <span aria-hidden="true">↗</span></a>
+              )}
               <a href="#contact" className="btn btn--dark" onClick={(e) => { e.preventDefault(); onClose(); setTimeout(() => scrollToTarget('#contact'), 700) }}>
                 <span className="btn__label" data-text="Start a project">Start a project</span><span className="btn__icon" aria-hidden="true">→</span>
               </a>

@@ -14,6 +14,7 @@ import Contact from './components/Contact'
 import AboutPage from './components/AboutPage'
 import Footer from './components/Footer'
 import ScrollProgress from './components/ScrollProgress'
+import Bubu from './components/Bubu'
 import { useThemeSections } from './lib/useThemeSections'
 
 function getRoute() {
@@ -109,6 +110,7 @@ export default function App() {
         )}
       </main>
       <Footer onNavigate={handleNavigate} />
+      {ready && <Bubu />}
     </LazyMotion>
   )
 }

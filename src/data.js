@@ -50,7 +50,7 @@ export const TEAM_MEMBERS = [
     name: 'Aditya Wagh',
     role: 'Co-Founder',
     discipline: 'QR & AI',
-    craftTagline: 'QR Architecture · Artificial Intelligence',
+    craftTagline: 'Artificial Intelligence · QR Architecture · Website Development ',
     initials: 'AW',
     avatarTone: '#06B6D4',
     linkedin: 'https://www.linkedin.com/in/aditya-wagh25/',
@@ -172,7 +172,57 @@ export const SERVICES = [
 ]
 
 // Concept projects: studio explorations, not client work.
+// Entries with `live` are full website templates in public/templates/<slug>/,
+// shown via their screenshots instead of the drawn mockups.
 export const PROJECTS = [
+  {
+    slug: 'ember-leaf',
+    name: 'Ember & Leaf',
+    kind: 'Restaurant Website · Template',
+    year: 'Template',
+    blurb: 'A dark, warm site for a modern Indian restaurant, with a tabbed menu and a table-booking form above the fold.',
+    palette: { bg: '#15100C', ink: '#F3E7D6', accent: '#E3A33B', soft: '#261D16' },
+    layout: 'shop',
+    live: '/templates/ember-leaf/index.html',
+    challenge: 'Most restaurant sites hide the menu in a PDF and the booking behind a phone number. Guests decide in seconds, so both had to be one tap away.',
+    approach: ['Booking CTA in the nav and hero', 'Tabbed menu with prices, no PDF', 'Hours, address and group bookings in one block'],
+  },
+  {
+    slug: 'lumen-dental',
+    name: 'Lumen Dental',
+    kind: 'Clinic Website · Template',
+    year: 'Template',
+    blurb: 'A calm clinic site where the booking widget is the hero, with clear treatment prices to ease nervous patients.',
+    palette: { bg: '#E3EEEC', ink: '#0E2A2E', accent: '#14857E', soft: '#C7E2DD' },
+    layout: 'dashboard',
+    live: '/templates/lumen-dental/index.html',
+    challenge: 'People put off the dentist because of cost and fear. The site had to answer "how much?" and "what happens?" before they ever call.',
+    approach: ['Interactive slot picker as the first thing you see', 'Transparent prices on every treatment', 'A "first visit" walkthrough and FAQ'],
+  },
+  {
+    slug: 'velvet-vine',
+    name: 'Velvet & Vine',
+    kind: 'Salon Website · Template',
+    year: 'Template',
+    blurb: 'An editorial hair and beauty studio site with a full price list, stylist profiles and a recent-work gallery.',
+    palette: { bg: '#F7EFEA', ink: '#2B1A1F', accent: '#B4566B', soft: '#EFE2DA' },
+    layout: 'editorial',
+    live: '/templates/velvet-vine/index.html',
+    challenge: 'Salon clients choose a stylist, not a building. The site needed to sell the people and the vibe, then make booking effortless.',
+    approach: ['Readable price list grouped by service', 'Stylist profiles with specialities', 'Live "open today" status and hours'],
+  },
+  {
+    slug: 'northline-realty',
+    name: 'Northline Realty',
+    kind: 'Real Estate Website · Template',
+    year: 'Template',
+    blurb: 'A local estate agency site with property search, listing cards and a seller section built around a free valuation.',
+    palette: { bg: '#142230', ink: '#F4F2ED', accent: '#C4673A', soft: '#1F3346' },
+    layout: 'app',
+    live: '/templates/northline-realty/index.html',
+    challenge: 'Agencies need two funnels at once: buyers browsing homes and sellers deciding who to trust. Both had to work from the homepage.',
+    approach: ['Search bar overlapping the hero', 'Listing cards with price and specs at a glance', 'Proof numbers and a valuation CTA for sellers'],
+  },
   {
     slug: 'halden',
     name: 'Halden Coffee',
@@ -227,3 +277,79 @@ export const PROCESS = [
 ]
 
 export const MARQUEE = ['Websites', 'Mobile Apps', 'Social Media', 'QR Solutions', 'Business Automation', 'UI/UX Design', 'Modern Tech']
+
+// Bubu the mascot answers these fixed questions. Checked in order, first match wins.
+const SERVICE_KEYS = {
+  uiux: /\b(ui|ux|ui\/ux|design systems?|wireframes?|prototyp(e|ing)|user research)\b/,
+  web: /\b(web ?sites?|web|landing ?pages?|cms|site|front-?end)\b/,
+  apps: /\b(apps?|ios|android|mobile)\b/,
+  game: /\b(games?|gaming|webgl|3d|unity|physics)\b/,
+  qr: /\b(qr|qr codes?|contactless|menus?|nfc)\b/,
+  ai: /\b(ai|artificial intelligence|agents?|automation|workflows?|crm sync)\b/,
+  social: /\b(social|instagram|reels?|tiktok|content|video|growth)\b/,
+  brand: /\b(brand(ing)?|logos?|identity|guidelines)\b/,
+  crm: /\b(crm|dashboards?|admin portals?|analytics)\b/,
+  ads: /\b(ads?|google ads|meta ads|ppc|advertising|roas)\b/,
+}
+const lower = (list) => list.map((d) => d.toLowerCase())
+const joinList = (list) => `${list.slice(0, -1).join(', ')} and ${list[list.length - 1]}`
+
+export const BUBU = {
+  greeting: "Hi, I'm Bubu! I can tell you about Nailed It Bro's services, how we work, pricing and how to get in touch. What would you like to know?",
+  suggestions: ['What services do you offer?', 'How does your process work?', 'How much does it cost?', 'Show me your work', 'How do I contact you?'],
+  fallback: {
+    text: "I'm a little panda, so I only know the basics. Try asking about our services, process, pricing, timelines or how to reach the team.",
+    mood: 'curious',
+  },
+  faq: [
+    { keys: /\b(dance|dancing|party)\b/, text: 'Say no more!', action: 'dance' },
+    { keys: /^(hi+|hello|hey+|yo|namaste|sup|hola)\b/, text: 'Hey hey! What can I help you with?', action: 'wave' },
+    {
+      keys: /\b(price|pricing|cost|costs|budget|how much|quote|rates?|charge|fees?|expensive|cheap)\b/,
+      text: 'There is no fixed price list, because every project is scoped to what you actually need. Tell us about your project and we reply within one working day with next steps, a rough timeline and honest advice.',
+      link: { href: '#contact', label: 'Get a quote' }, mood: 'curious',
+    },
+    {
+      keys: /\b(how long|timeline|time ?frame|deadline|turnaround|weeks?|months?)\b/,
+      text: 'It depends on the size of the project. We agree the timeline in the Discover phase, then you get weekly previews while we build, so there are no surprises.',
+      link: { href: '#process', label: 'See our process' },
+    },
+    {
+      keys: /\b(contact|email|e-mail|mail|reach|call|phone|hire|get in touch|start a project|talk to)\b/,
+      text: `Email the team at ${EMAIL} or use the contact form at the bottom of the page. We reply within one working day.`,
+      link: { href: '#contact', label: 'Go to contact' }, mood: 'excited',
+    },
+    {
+      keys: /\b(process|steps?|how do you work|how does it work|workflow|approach)\b/,
+      text: `We work in four steps. ${PROCESS.map((p) => `${p.title}: ${p.body.split('. ')[0].replace(/\.$/, '')}.`).join(' ')}`,
+      link: { href: '#process', label: 'See our process' },
+    },
+    {
+      keys: /\b(work|portfolio|projects?|examples?|case stud(y|ies)|clients?|previous)\b/,
+      text: `Our Work section shows ${PROJECTS.length} studio explorations: ${joinList(PROJECTS.map((p) => p.name))}. They are concept projects and live website templates that show how we approach brand, web and product.`,
+      link: { href: '#work', label: 'See the work' },
+    },
+    {
+      keys: /\b(support|maintenance|maintain|after launch|updates?|hosting)\b/,
+      text: 'Yes. After launch we handle QA, training and ongoing support, and we keep measuring and improving the site with you.',
+      mood: 'happy',
+    },
+    {
+      keys: /\b(tech|stack|react|wordpress|framework|technology|built with|code)\b/,
+      text: 'We build on modern stacks, with a CMS your team can edit and motion that earns its place. This site runs on React with GSAP animations.',
+    },
+    ...SERVICES.map((s) => ({
+      keys: SERVICE_KEYS[s.id] || new RegExp(`\\b${s.id}\\b`),
+      text: `${s.title}: ${s.body} You get ${joinList(lower(s.deliverables))}.`,
+      link: { href: '#services', label: 'See services' }, mood: 'happy',
+    })),
+    {
+      keys: /\b(services?|offer|do you do|what do you|help with|what can you)\b/,
+      text: `We offer ${SERVICES.length} services: ${joinList(SERVICES.map((s) => s.title))}. Ask me about any of them!`,
+      link: { href: '#services', label: 'See services' }, mood: 'excited',
+      suggest: ['Websites', 'Mobile apps', 'AI Automation', 'UI/UX Design', 'QR Solutions'],
+    },
+    { keys: /\b(who are you|your name|bubu|are you (a )?(bot|robot|human|ai|real))\b/, text: "I'm Bubu, the Nailed It Bro mascot! I answer the common questions. For anything detailed, the team is one message away.", mood: 'shy' },
+    { keys: /\b(thanks?|thank you|thx|ty|great|awesome|cool|nice|love it)\b/, text: 'Anytime! Tap me if you want to see a dance.', mood: 'shy' },
+  ],
+}
