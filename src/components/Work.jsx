@@ -153,6 +153,7 @@ export default function Work() {
                       </button>
                     )}
 
+                    {p.caseStudy !== false && (
                     <a
                       href={`#case-study/${p.slug}`}
                       target="_blank"
@@ -163,6 +164,7 @@ export default function Work() {
                       <span>Case study</span>
                       <span className="work__card-btn-arrow" aria-hidden="true">→</span>
                     </a>
+                    )}
                   </div>
                 </div>
               </article>

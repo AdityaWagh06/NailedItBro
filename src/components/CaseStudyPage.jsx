@@ -326,8 +326,9 @@ export default function CaseStudyPage({ slug, onNavigate }) {
   const data = CASE_STUDY_DATA[project.slug] || CASE_STUDY_DATA['creme-and-whisk']
 
   // Find next project in circular order
-  const currentIndex = PROJECTS.findIndex((p) => p.slug === project.slug)
-  const nextProject = PROJECTS[(currentIndex + 1) % PROJECTS.length]
+  const studies = PROJECTS.filter((p) => p.caseStudy !== false)
+  const currentIndex = studies.findIndex((p) => p.slug === project.slug)
+  const nextProject = studies[(currentIndex + 1) % studies.length]
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
